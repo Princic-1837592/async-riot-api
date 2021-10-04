@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 from json import loads
 from fuzzywuzzy import fuzz
 from aiohttp import request
@@ -249,13 +249,13 @@ class LoLAPI:
     async def get_nth_match(self, encrypted_account_id: str, n: int = 0) -> Dict[str, Any]:
         return await self.get_match((await self.get_matches(encrypted_account_id, n))['matches'][0]['gameId'])'''
     
-    async def get_nth_match_v5(self, puuid: str, n: int = 0) -> Dict[str, Any]:
-        return await self.get_match_v5((await self.get_matches_v5(puuid, n, 1))[0])
+    async def get_nth_match_v5(self, puuid: str, n: int = 0) -> Optional[Dict[str, Any]]:
+        return await self.get_match_v5((await self.get_matches_v5(puuid, n, 1) or [None])[0])
     
     '''async def get_first_match(self, encrypted_account_id: str) -> Dict[str, Any]:
         return await self.get_nth_match(encrypted_account_id, await self.get_match_number(encrypted_account_id) - 1)'''
     
-    async def get_last_match(self, puuid: str) -> Dict[str, Any]:
+    async def get_last_match(self, puuid: str) -> Optional[Dict[str, Any]]:
         return await self.get_nth_match_v5(puuid)
     
     async def __get_league_type(self, encrypted_summoner_id: str, league_type: str = 'SOLO') -> Dict[str, Any]:
