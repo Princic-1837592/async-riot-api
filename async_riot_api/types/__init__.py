@@ -179,7 +179,7 @@ class MetadataDto(AsyncRiotApiResponse):
 class InfoDto(AsyncRiotApiResponse):
     def __init__(self, gameCreation: int, gameDuration: int, gameId: int, gameMode: str, gameName: str,
                  gameStartTimestamp: int, gameType: str, gameVersion: str, mapId: int, participants: List[str],
-                 platformId: str, queueId: int, teams: List[dict], tournamentCode: str):
+                 platformId: str, queueId: int, teams: List[dict], tournamentCode: str, **kwargs):
         self.gameCreation = gameCreation
         self.gameDuration = gameDuration
         self.gameId = gameId
