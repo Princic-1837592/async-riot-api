@@ -385,3 +385,97 @@ class ObjectiveDto(AsyncRiotApiResponse):
     def __init__(self, first: bool, kills: int):
         self.first = first
         self.kills = kills
+
+
+class CurrentGameInfo(AsyncRiotApiResponse):
+    def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
+                 gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,
+                 participants: List[dict]):
+        self.gameId = gameId
+        self.gameType = gameType
+        self.gameStartTime = gameStartTime
+        self.mapId = mapId
+        self.gameLength = gameLength
+        self.platformId = platformId
+        self.gameMode = gameMode
+        self.bannedChampions: List[dict] = bannedChampions
+        self.gameQueueConfigId = gameQueueConfigId
+        self.observers: Optional[dict] = observers
+        self.participants: List[dict] = participants
+
+
+class BannedChampion(AsyncRiotApiResponse):
+    def __init__(self, championId: int, teamId: int, pickTurn: int):
+        self.pickTurn = pickTurn
+        self.championId = championId
+        self.teamId = teamId
+
+
+class CurrentGameParticipant(AsyncRiotApiResponse):
+    def __init__(self, championId: int, perks: dict, profileIconId: int, bot: bool, teamId: int, summonerName: str,
+                 summonerId: str, spell1Id: int, spell2Id: int, gameCustomizationObjects: List[dict]):
+        self.championId = championId
+        self.perks: Perks = Perks(**perks)
+        self.profileIconId = profileIconId
+        self.bot = bot
+        self.teamId = teamId
+        self.summonerName = summonerName
+        self.summonerId = summonerId
+        self.spell1Id = spell1Id
+        self.spell2Id = spell2Id
+        self.gameCustomizationObjects: List[GameCustomizationObject] = list(
+            map(lambda x: GameCustomizationObject(**x), gameCustomizationObjects)
+        )
+
+
+class Perks(AsyncRiotApiResponse):
+    def __init__(self, perkIds: List[int], perkStyle: int, perkSubStyle: int):
+        self.perkIds: List[int] = perkIds
+        self.perkStyle = perkStyle
+        self.perkSubStyle = perkSubStyle
+
+
+class GameCustomizationObject(AsyncRiotApiResponse):
+    def __init__(self, category: str, content: str):
+        self.category = category
+        self.content = content
+
+
+class FeaturedGames(AsyncRiotApiResponse):
+    def __init__(self, gameList: List[dict], clientRefreshInterval: int):
+        self.gameList: List[FeaturedGameInfo] = list(map(lambda x: FeaturedGameInfo(**x), gameList))
+        self.clientRefreshInterval = clientRefreshInterval
+
+
+class FeaturedGameInfo(AsyncRiotApiResponse):
+    def __init__(self, gameMode: str, gameLength: int, mapId: int, gameType: str, bannedChampions: List[dict],
+                 gameId: int, observers: dict, gameQueueConfigId: int, gameStartTime: int,
+                 participants: List[dict], platformId: str):
+        self.gameMode = gameMode
+        self.gameLength = gameLength
+        self.mapId = mapId
+        self.gameType = gameType
+        self.bannedChampions: List[BannedChampion] = list(map(lambda x: BannedChampion(**x), bannedChampions))
+        self.gameId = gameId
+        self.gameQueueConfigId = gameQueueConfigId
+        self.gameStartTime = gameStartTime
+        self.participants: List[Participant] = list(map(lambda x: Participant(**x), participants))
+        self.platformId = platformId
+        self.observers: Observer = Observer(**observers)
+
+
+class Observer(AsyncRiotApiResponse):
+    def __init__(self, encryptionKey: str):
+        self.encryptionKey = encryptionKey
+
+
+class Participant(AsyncRiotApiResponse):
+    def __init__(self, teamId: int, spell1Id: int, spell2Id: int, championId: int, profileIconId: int,
+                 summonerName: str, bot: bool):
+        self.teamId = teamId
+        self.spell1Id = spell1Id
+        self.spell2Id = spell2Id
+        self.championId = championId
+        self.profileIconId = profileIconId
+        self.summonerName = summonerName
+        self.bot = bot

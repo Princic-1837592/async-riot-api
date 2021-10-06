@@ -183,22 +183,24 @@ class LoLAPI:
         )
     
     # SPECTATOR-V4
-    async def get_active_games(self, encrypted_summoner_id: str) -> Dict[str, Any]:
+    async def get_active_games(self, encrypted_summoner_id: str) -> types.CurrentGameInfo:
         """
         /lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}
         :param encrypted_summoner_id:
         :return:
         """
         
-        return await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{encrypted_summoner_id}')
+        return types.CurrentGameInfo(
+            **await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{encrypted_summoner_id}')
+        )
     
-    async def get_featured_games(self) -> Dict[str, Any]:
+    async def get_featured_games(self) -> types.FeaturedGames:
         """
         /lol/spectator/v4/featured-games
         :return:
         """
         
-        return await self.__make_api_request('/lol/spectator/v4/featured-games')
+        return types.FeaturedGames(**await self.__make_api_request('/lol/spectator/v4/featured-games'))
     
     # SUMMONER-V4
     async def get_summoner_by_encrypted_account_id(self, encrypted_account_id: str) -> types.SummonerDTO:
