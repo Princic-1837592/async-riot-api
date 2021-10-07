@@ -429,10 +429,10 @@ class CurrentGameInfo(RiotApiResponse):
         self.gameLength = gameLength
         self.platformId = platformId
         self.gameMode = gameMode
-        self.bannedChampions: List[dict] = bannedChampions
+        self.bannedChampions: List[BannedChampion] = list(map(lambda x: BannedChampion(**x), bannedChampions))
         self.gameQueueConfigId = gameQueueConfigId
-        self.observers: Optional[dict] = observers
-        self.participants: List[dict] = participants
+        self.observers: Observer = Observer(**observers)
+        self.participants: List[Participant] = list(map(lambda x: Participant(**x), participants))
 
 
 class BannedChampion(RiotApiResponse):
