@@ -1,7 +1,11 @@
 from typing import List, Optional
 
 
-class AsyncRiotApiResponse:
+class RiotApiResponse:
+    def __init__(self, succeed: bool = True):
+        self.succeed = succeed
+        self.error = not succeed
+    
     def __str__(self):
         return '{}({})'.format(
             type(self).__name__,
@@ -12,9 +16,10 @@ class AsyncRiotApiResponse:
         return str(self)
 
 
-class SummonerDTO(AsyncRiotApiResponse):
+class SummonerDTO(RiotApiResponse):
     def __init__(self, accountId: str, profileIconId: int, revisionDate: int, name: str, id: str, puuid: str,
                  summonerLevel: int):
+        super().__init__()
         self.accountId = accountId
         self.profileIconId = profileIconId
         self.revisionDate = revisionDate
@@ -24,10 +29,11 @@ class SummonerDTO(AsyncRiotApiResponse):
         self.summonerLevel = summonerLevel
 
 
-class ChampionMasteryDto(AsyncRiotApiResponse):
+class ChampionMasteryDto(RiotApiResponse):
     def __init__(self, championPointsUntilNextLevel: int, chestGranted: bool, championId: int, lastPlayTime: int,
                  championLevel: int, summonerId: str, championPoints: int, championPointsSinceLastLevel: int,
                  tokensEarned: int):
+        super().__init__()
         self.championPointsUntilNextLevel = championPointsUntilNextLevel
         self.chestGranted = chestGranted
         self.championId = championId
@@ -39,17 +45,19 @@ class ChampionMasteryDto(AsyncRiotApiResponse):
         self.tokensEarned = tokensEarned
 
 
-class ChampionInfo(AsyncRiotApiResponse):
+class ChampionInfo(RiotApiResponse):
     def __init__(self, maxNewPlayerLevel: int, freeChampionIdsForNewPlayers: List[int], freeChampionIds: List[int]):
+        super().__init__()
         self.maxNewPlayerLevel = maxNewPlayerLevel
         self.freeChampionIdsForNewPlayers = freeChampionIdsForNewPlayers
         self.freeChampionIds = freeChampionIds
 
 
-class LeagueEntryDTO(AsyncRiotApiResponse):
+class LeagueEntryDTO(RiotApiResponse):
     def __init__(self, leagueId: str, summonerId: str, summonerName: str, queueType: str, tier: str, rank: str,
                  leaguePoints: int, wins: int, losses: int, hotStreak: bool, veteran: bool, freshBlood: bool,
                  inactive: bool, miniSeries: Optional[dict] = None):
+        super().__init__()
         self.leagueId = leagueId
         self.summonerId = summonerId
         self.summonerName = summonerName
@@ -66,17 +74,18 @@ class LeagueEntryDTO(AsyncRiotApiResponse):
         self.miniSeries: Optional[MiniSeriesDTO] = None if miniSeries is None else MiniSeriesDTO(**miniSeries)
 
 
-class MiniSeriesDTO(AsyncRiotApiResponse):
+class MiniSeriesDTO(RiotApiResponse):
     def __init__(self, losses: int, progress: str, target: int, wins: int):
+        super().__init__()
         self.losses = losses
         self.progress = progress
         self.target = target
         self.wins = wins
 
 
-class ShardStatus(AsyncRiotApiResponse):
-    def __init__(self, name: str, slug: str, locales: List[str], hostname: str, region_tag: str,
-                 services: List[dict]):
+class ShardStatus(RiotApiResponse):
+    def __init__(self, name: str, slug: str, locales: List[str], hostname: str, region_tag: str, services: List[dict]):
+        super().__init__()
         self.name = name
         self.slug = slug
         self.locales = locales
@@ -85,25 +94,28 @@ class ShardStatus(AsyncRiotApiResponse):
         self.services: List[Service] = list(map(lambda x: Service(**x), services))
 
 
-class Service(AsyncRiotApiResponse):
+class Service(RiotApiResponse):
     def __init__(self, name: str, slug: str, status: str, incidents: List[dict]):
+        super().__init__()
         self.name = name
         self.slug = slug
         self.status = status
         self.incidents: List[Incident] = list(map(lambda x: Incident(**x), incidents))
 
 
-class Incident(AsyncRiotApiResponse):
+class Incident(RiotApiResponse):
     def __init__(self, id: int, active: bool, created_at: str, updates: List[dict]):
+        super().__init__()
         self.id = id
         self.active = active
         self.created_at = created_at
         self.updates: List[Message] = list(map(lambda x: Message(**x), updates))
 
 
-class Message(AsyncRiotApiResponse):
+class Message(RiotApiResponse):
     def __init__(self, id: str, author: str, heading: str, content: str, severity: str, created_at: str,
                  updated_at: str, translations: List[dict]):
+        super().__init__()
         self.id = id
         self.author = author
         self.heading = heading
@@ -114,15 +126,17 @@ class Message(AsyncRiotApiResponse):
         self.translations: List[Translation] = list(map(lambda x: Translation(**x), translations))
 
 
-class Translation(AsyncRiotApiResponse):
+class Translation(RiotApiResponse):
     def __init__(self, locale: str, heading: str, content: str):
+        super().__init__()
         self.locale = locale
         self.heading = heading
         self.content = content
 
 
-class PlatformDataDto(AsyncRiotApiResponse):
+class PlatformDataDto(RiotApiResponse):
     def __init__(self, id: str, name: str, locales: List[str], maintenances: List[dict], incidents: List[dict]):
+        super().__init__()
         self.id = id
         self.name = name
         self.locales = locales
@@ -130,10 +144,11 @@ class PlatformDataDto(AsyncRiotApiResponse):
         self.incidents: List[StatusDto] = list(map(lambda x: StatusDto(**x), incidents))
 
 
-class StatusDto(AsyncRiotApiResponse):
+class StatusDto(RiotApiResponse):
     def __init__(self, id: int, maintenance_status: str, incident_severity: Optional[str], titles: List[dict],
                  updates: List[dict], created_at: str, archive_at: str, updated_at: Optional[str],
                  platforms: List[str]):
+        super().__init__()
         self.id = id
         self.maintenance_status = maintenance_status
         self.incident_severity = incident_severity
@@ -145,15 +160,17 @@ class StatusDto(AsyncRiotApiResponse):
         self.platforms = platforms
 
 
-class ContentDto(AsyncRiotApiResponse):
+class ContentDto(RiotApiResponse):
     def __init__(self, locale: str, content: str):
+        super().__init__()
         self.locale = locale
         self.content = content
 
 
-class UpdateDto(AsyncRiotApiResponse):
+class UpdateDto(RiotApiResponse):
     def __init__(self, id: int, author: str, publish: bool, publish_locations: List[str], translations: List[dict],
                  created_at: str, updated_at: str):
+        super().__init__()
         self.id = id
         self.author = author
         self.publish = publish
@@ -163,29 +180,33 @@ class UpdateDto(AsyncRiotApiResponse):
         self.updated_at = updated_at
 
 
-class MatchDto(AsyncRiotApiResponse):
+class MatchDto(RiotApiResponse):
     def __init__(self, metadata: dict, info: dict):
+        super().__init__()
         self.metadata: MetadataDto = MetadataDto(**metadata)
         self.info: InfoDto = InfoDto(**info)
 
 
-class MetadataDto(AsyncRiotApiResponse):
+class MetadataDto(RiotApiResponse):
     def __init__(self, dataVersion: str, matchId: str, participants: List[str]):
+        super().__init__()
         self.dataVersion = dataVersion
         self.matchId = matchId
         self.participants = participants
 
 
-class InfoDto(AsyncRiotApiResponse):
+class InfoDto(RiotApiResponse):
     def __init__(self, gameCreation: int, gameDuration: int, gameId: int, gameMode: str, gameName: str,
                  gameStartTimestamp: int, gameType: str, gameVersion: str, mapId: int, participants: List[str],
-                 platformId: str, queueId: int, teams: List[dict], tournamentCode: str, **kwargs):
+                 platformId: str, queueId: int, teams: List[dict], tournamentCode: str, gameEndTimestamp: int = 0):
+        super().__init__()
         self.gameCreation = gameCreation
         self.gameDuration = gameDuration
         self.gameId = gameId
         self.gameMode = gameMode
         self.gameName = gameName
         self.gameStartTimestamp = gameStartTimestamp
+        self.gameEndTimestamp = gameEndTimestamp or gameStartTimestamp + gameDuration
         self.gameType = gameType
         self.gameVersion = gameVersion
         self.mapId = mapId
@@ -194,9 +215,10 @@ class InfoDto(AsyncRiotApiResponse):
         self.queueId = queueId
         self.teams: List[TeamDto] = list(map(lambda x: TeamDto(**x), teams))
         self.tournamentCode = tournamentCode
+        self.gameDurationSeconds: int = gameDuration > 10000 and gameDuration // 1000 or gameDuration
 
 
-class ParticipantDto(AsyncRiotApiResponse):
+class ParticipantDto(RiotApiResponse):
     def __init__(self, assists: int, baronKills: int, bountyLevel: int, champExperience: int, champLevel: int,
                  championId: int, championName: str, championTransform: int, consumablesPurchased: int,
                  damageDealtToBuildings: int, damageDealtToObjectives: int, damageDealtToTurrets: int,
@@ -221,6 +243,7 @@ class ParticipantDto(AsyncRiotApiResponse):
                  tripleKills: int, trueDamageDealt: int, trueDamageDealtToChampions: int, trueDamageTaken: int,
                  turretKills: int, turretTakedowns: int, turretsLost: int, unrealKills: int, visionScore: int,
                  visionWardsBoughtInGame: int, wardsKilled: int, wardsPlaced: int, win: bool):
+        super().__init__()
         self.assists = assists
         self.baronKills = baronKills
         self.bountyLevel = bountyLevel
@@ -328,51 +351,57 @@ class ParticipantDto(AsyncRiotApiResponse):
         self.win = win
 
 
-class PerksDto(AsyncRiotApiResponse):
+class PerksDto(RiotApiResponse):
     def __init__(self, statPerks: dict, styles: List[dict]):
+        super().__init__()
         self.statPerks: PerkStatsDto = PerkStatsDto(**statPerks)
         self.styles: List[PerkStyleDto] = list(map(lambda x: PerkStyleDto(**x), styles))
 
 
-class PerkStatsDto(AsyncRiotApiResponse):
+class PerkStatsDto(RiotApiResponse):
     def __init__(self, defense: int, flex: int, offense: int):
+        super().__init__()
         self.defense = defense
         self.flex = flex
         self.offense = offense
 
 
-class PerkStyleDto(AsyncRiotApiResponse):
+class PerkStyleDto(RiotApiResponse):
     def __init__(self, description: str, selections: List[dict], style: int):
+        super().__init__()
         self.description = description
         self.selections: List[PerkStyleSelectionDto] = list(map(lambda x: PerkStyleSelectionDto(**x), selections))
         self.style = style
 
 
-class PerkStyleSelectionDto(AsyncRiotApiResponse):
+class PerkStyleSelectionDto(RiotApiResponse):
     def __init__(self, perk: int, var1: int, var2: int, var3: int):
+        super().__init__()
         self.perk = perk
         self.var1 = var1
         self.var2 = var2
         self.var3 = var3
 
 
-class TeamDto(AsyncRiotApiResponse):
+class TeamDto(RiotApiResponse):
     def __init__(self, bans: List[dict], objectives: dict, teamId: int, win: bool):
+        super().__init__()
         self.bans: List[BanDto] = list(map(lambda x: BanDto(**x), bans))
         self.objectives: ObjectivesDto = ObjectivesDto(**objectives)
         self.teamId = teamId
         self.win = win
 
 
-class BanDto(AsyncRiotApiResponse):
+class BanDto(RiotApiResponse):
     def __init__(self, championId: int, pickTurn: int):
+        super().__init__()
         self.championId = championId
         self.pickTurn = pickTurn
 
 
-class ObjectivesDto(AsyncRiotApiResponse):
-    def __init__(self, baron: dict, champion: dict, dragon: dict,
-                 inhibitor: dict, riftHerald: dict, tower: dict):
+class ObjectivesDto(RiotApiResponse):
+    def __init__(self, baron: dict, champion: dict, dragon: dict, inhibitor: dict, riftHerald: dict, tower: dict):
+        super().__init__()
         self.baron: ObjectiveDto = ObjectiveDto(**baron)
         self.champion: ObjectiveDto = ObjectiveDto(**champion)
         self.dragon: ObjectiveDto = ObjectiveDto(**dragon)
@@ -381,16 +410,18 @@ class ObjectivesDto(AsyncRiotApiResponse):
         self.tower: ObjectiveDto = ObjectiveDto(**tower)
 
 
-class ObjectiveDto(AsyncRiotApiResponse):
+class ObjectiveDto(RiotApiResponse):
     def __init__(self, first: bool, kills: int):
+        super().__init__()
         self.first = first
         self.kills = kills
 
 
-class CurrentGameInfo(AsyncRiotApiResponse):
+class CurrentGameInfo(RiotApiResponse):
     def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
                  gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,
                  participants: List[dict]):
+        super().__init__()
         self.gameId = gameId
         self.gameType = gameType
         self.gameStartTime = gameStartTime
@@ -404,16 +435,18 @@ class CurrentGameInfo(AsyncRiotApiResponse):
         self.participants: List[dict] = participants
 
 
-class BannedChampion(AsyncRiotApiResponse):
+class BannedChampion(RiotApiResponse):
     def __init__(self, championId: int, teamId: int, pickTurn: int):
+        super().__init__()
         self.pickTurn = pickTurn
         self.championId = championId
         self.teamId = teamId
 
 
-class CurrentGameParticipant(AsyncRiotApiResponse):
+class CurrentGameParticipant(RiotApiResponse):
     def __init__(self, championId: int, perks: dict, profileIconId: int, bot: bool, teamId: int, summonerName: str,
                  summonerId: str, spell1Id: int, spell2Id: int, gameCustomizationObjects: List[dict]):
+        super().__init__()
         self.championId = championId
         self.perks: Perks = Perks(**perks)
         self.profileIconId = profileIconId
@@ -428,29 +461,33 @@ class CurrentGameParticipant(AsyncRiotApiResponse):
         )
 
 
-class Perks(AsyncRiotApiResponse):
+class Perks(RiotApiResponse):
     def __init__(self, perkIds: List[int], perkStyle: int, perkSubStyle: int):
+        super().__init__()
         self.perkIds: List[int] = perkIds
         self.perkStyle = perkStyle
         self.perkSubStyle = perkSubStyle
 
 
-class GameCustomizationObject(AsyncRiotApiResponse):
+class GameCustomizationObject(RiotApiResponse):
     def __init__(self, category: str, content: str):
+        super().__init__()
         self.category = category
         self.content = content
 
 
-class FeaturedGames(AsyncRiotApiResponse):
+class FeaturedGames(RiotApiResponse):
     def __init__(self, gameList: List[dict], clientRefreshInterval: int):
+        super().__init__()
         self.gameList: List[FeaturedGameInfo] = list(map(lambda x: FeaturedGameInfo(**x), gameList))
         self.clientRefreshInterval = clientRefreshInterval
 
 
-class FeaturedGameInfo(AsyncRiotApiResponse):
+class FeaturedGameInfo(RiotApiResponse):
     def __init__(self, gameMode: str, gameLength: int, mapId: int, gameType: str, bannedChampions: List[dict],
-                 gameId: int, observers: dict, gameQueueConfigId: int, gameStartTime: int,
-                 participants: List[dict], platformId: str):
+                 gameId: int, observers: dict, gameQueueConfigId: int, gameStartTime: int, participants: List[dict],
+                 platformId: str):
+        super().__init__()
         self.gameMode = gameMode
         self.gameLength = gameLength
         self.mapId = mapId
@@ -464,14 +501,16 @@ class FeaturedGameInfo(AsyncRiotApiResponse):
         self.observers: Observer = Observer(**observers)
 
 
-class Observer(AsyncRiotApiResponse):
+class Observer(RiotApiResponse):
     def __init__(self, encryptionKey: str):
+        super().__init__()
         self.encryptionKey = encryptionKey
 
 
-class Participant(AsyncRiotApiResponse):
+class Participant(RiotApiResponse):
     def __init__(self, teamId: int, spell1Id: int, spell2Id: int, championId: int, profileIconId: int,
                  summonerName: str, bot: bool):
+        super().__init__()
         self.teamId = teamId
         self.spell1Id = spell1Id
         self.spell2Id = spell2Id
@@ -479,3 +518,10 @@ class Participant(AsyncRiotApiResponse):
         self.profileIconId = profileIconId
         self.summonerName = summonerName
         self.bot = bot
+
+
+class RiotApiError(RiotApiResponse):
+    def __init__(self, message: str = 'Bad Request', status_code: int = 400):
+        super().__init__(False)
+        self.message = message
+        self.status_code = status_code

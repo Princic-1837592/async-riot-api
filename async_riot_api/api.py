@@ -1,7 +1,7 @@
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from json import loads
 from fuzzywuzzy import fuzz
-from aiohttp import request
+from aiohttp import ClientResponse, request
 import asyncio
 from urllib.parse import quote_plus
 from pprint import pprint
@@ -27,7 +27,7 @@ class LoLAPI:
     )['data']
     
     # integer champion ID -> correct champion name
-    __ID_TO_CHAMP_CORRECT_NAME: Dict[int, str] = {
+    __CHAMP_ID_TO_CORRECT_NAME: Dict[int, str] = {
         int(info['key']): champ for champ, info in __CHAMPS.items()
     }
     __LANGUAGES: List[str] = loads(requests.get('https://ddragon.leagueoflegends.com/cdn/languages.json').text)
@@ -42,14 +42,14 @@ class LoLAPI:
         self.v5_routing_value = routing_value_v5
     
     @staticmethod
-    async def __make_request(method: str, url: str, headers = None) -> Any:
+    async def __make_request(method: str, url: str, headers = None) -> Tuple[int, Any]:
         if headers is None:
             headers = {}
         async with request(method, url, headers = headers) as response:
-            print(response.status, url)
-            return await response.json() if response.status == 200 else {}
+            # print(response.status, url)
+            return response.status, await response.json()
     
-    async def __make_api_request(self, url: str) -> Any:
+    async def __make_api_request(self, url: str) -> Tuple[int, Any]:
         return await self.__make_request(
             'GET',
             LoLAPI.__BASE_URL.format(self.region, url),
@@ -57,6 +57,20 @@ class LoLAPI:
                 'X-Riot-Token': self.api_key
             }
         )
+    
+    @staticmethod
+    async def create_object(response: Tuple[int, Any], object_class = None) -> Any:
+        status, json_response = response
+        if 200 <= status < 300:
+            t = type(json_response)
+            if not (object_class is None):
+                if t == dict:
+                    return object_class(**json_response)
+                if t == list:
+                    return list(map(lambda x: object_class(**x), json_response))
+            return json_response
+        else:
+            return types.RiotApiError(**json_response.get('status', {}))
     
     # CHAMPION-MASTERY-V4
     async def get_masteries(self, encrypted_summoner_id: str) -> List[types.ChampionMasteryDto]:
@@ -66,13 +80,10 @@ class LoLAPI:
         :return:
         """
         
-        return list(
-            map(
-                lambda m: types.ChampionMasteryDto(**m),
-                await self.__make_api_request(
-                    f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{encrypted_summoner_id}'
-                )
-            )
+        return await LoLAPI.create_object(
+            await self.__make_api_request(
+                f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{encrypted_summoner_id}'
+            ), types.ChampionMasteryDto
         )
     
     async def get_champion_mastery(self, encrypted_summoner_id: str, champion_id: int) -> types.ChampionMasteryDto:
@@ -83,10 +94,10 @@ class LoLAPI:
         :return:
         """
         
-        return types.ChampionMasteryDto(
-            **await self.__make_api_request(
+        return await LoLAPI.create_object(
+            await self.__make_api_request(
                 f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{encrypted_summoner_id}/by-champion/{champion_id}'
-            )
+            ), types.ChampionMasteryDto
         )
     
     async def get_mastery_score(self, encrypted_summoner_id: str) -> int:
@@ -96,7 +107,9 @@ class LoLAPI:
         :return:
         """
         
-        return await self.__make_api_request(f'/lol/champion-mastery/v4/scores/by-summoner/{encrypted_summoner_id}')
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/champion-mastery/v4/scores/by-summoner/{encrypted_summoner_id}')
+        )
     
     # CHAMPION-V3
     async def get_champion_rotation(self) -> types.ChampionInfo:
@@ -105,7 +118,10 @@ class LoLAPI:
         :return:
         """
         
-        return types.ChampionInfo(**await self.__make_api_request('/lol/platform/v3/champion-rotations'))
+        return await LoLAPI.create_object(
+            await self.__make_api_request('/lol/platform/v3/champion-rotations'),
+            types.ChampionInfo
+        )
     
     # LEAGUE-V4
     async def get_league(self, encrypted_summoner_id: str) -> Set[types.LeagueEntryDTO]:
@@ -115,11 +131,10 @@ class LoLAPI:
         :return:
         """
         
-        # return await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{encrypted_summoner_id}')
         return set(
-            map(
-                lambda m: types.LeagueEntryDTO(**m),
-                await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{encrypted_summoner_id}')
+            await LoLAPI.create_object(
+                await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{encrypted_summoner_id}'),
+                types.LeagueEntryDTO
             )
         )
     
@@ -130,7 +145,7 @@ class LoLAPI:
         :return:
         """
         
-        return types.ShardStatus(**await self.__make_api_request('/lol/status/v3/shard-data'))
+        return await LoLAPI.create_object(await self.__make_api_request('/lol/status/v3/shard-data'), types.ShardStatus)
     
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
@@ -139,7 +154,10 @@ class LoLAPI:
         :return:
         """
         
-        return types.PlatformDataDto(**await self.__make_api_request('/lol/status/v4/platform-data'))
+        return await LoLAPI.create_object(
+            await self.__make_api_request('/lol/status/v4/platform-data'),
+            types.PlatformDataDto
+        )
     
     # MATCH-V5
     async def get_matches_v5(self, puuid: str, start: int = 0, count: int = 20) -> List[str]:
@@ -151,15 +169,17 @@ class LoLAPI:
         :return:
         """
         
-        return await self.__make_request(
-            'GET',
-            LoLAPI.__BASE_URL.format(
-                self.v5_routing_value,
-                f'/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}'
-            ),
-            {
-                'X-Riot-Token': self.api_key
-            }
+        return await LoLAPI.create_object(
+            await self.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(
+                    self.v5_routing_value,
+                    f'/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}'
+                ),
+                {
+                    'X-Riot-Token': self.api_key
+                }
+            )
         )
     
     async def get_match_v5(self, match_id: str) -> types.MatchDto:
@@ -169,8 +189,8 @@ class LoLAPI:
         :return:
         """
         
-        return types.MatchDto(
-            **await self.__make_request(
+        return await LoLAPI.create_object(
+            await self.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
                     self.v5_routing_value,
@@ -179,7 +199,7 @@ class LoLAPI:
                 {
                     'X-Riot-Token': self.api_key
                 }
-            )
+            ), types.MatchDto
         )
     
     # SPECTATOR-V4
@@ -190,8 +210,9 @@ class LoLAPI:
         :return:
         """
         
-        return types.CurrentGameInfo(
-            **await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{encrypted_summoner_id}')
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{encrypted_summoner_id}'),
+            types.CurrentGameInfo
         )
     
     async def get_featured_games(self) -> types.FeaturedGames:
@@ -200,7 +221,10 @@ class LoLAPI:
         :return:
         """
         
-        return types.FeaturedGames(**await self.__make_api_request('/lol/spectator/v4/featured-games'))
+        return await LoLAPI.create_object(
+            await self.__make_api_request('/lol/spectator/v4/featured-games'),
+            types.FeaturedGames
+        )
     
     # SUMMONER-V4
     async def get_summoner_by_encrypted_account_id(self, encrypted_account_id: str) -> types.SummonerDTO:
@@ -210,8 +234,9 @@ class LoLAPI:
         :return:
         """
         
-        return types.SummonerDTO(
-            **await self.__make_api_request(f'/lol/summoner/v4/summoners/by-account/{encrypted_account_id}')
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-account/{encrypted_account_id}'),
+            types.SummonerDTO
         )
     
     async def get_summoner_by_name(self, summoner_name: str) -> types.SummonerDTO:
@@ -221,8 +246,9 @@ class LoLAPI:
         :return:
         """
         
-        return types.SummonerDTO(
-            **await self.__make_api_request(f'/lol/summoner/v4/summoners/by-name/{quote_plus(summoner_name)}')
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-name/{quote_plus(summoner_name)}'),
+            types.SummonerDTO
         )
     
     async def get_summoner_by_encrypted_puuid(self, encrypted_puuid: str) -> types.SummonerDTO:
@@ -232,8 +258,9 @@ class LoLAPI:
         :return:
         """
         
-        return types.SummonerDTO(
-            **await self.__make_api_request(f'/lol/summoner/v4/summoners/by-puuid/{encrypted_puuid}')
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-puuid/{encrypted_puuid}'),
+            types.SummonerDTO
         )
     
     async def get_summoner_by_encrypted_summoner_id(self, encrypted_summoner_id: str) -> types.SummonerDTO:
@@ -243,7 +270,10 @@ class LoLAPI:
         :return:
         """
         
-        return types.SummonerDTO(**await self.__make_api_request(f'/lol/summoner/v4/summoners/{encrypted_summoner_id}'))
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/{encrypted_summoner_id}'),
+            types.SummonerDTO
+        )
     
     '''async def get_me(self) -> Dict[str, Any]:
         """
@@ -287,7 +317,7 @@ class LoLAPI:
     
     @staticmethod
     def get_champion_icon_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
-        return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__ID_TO_CHAMP_CORRECT_NAME.get(champ_id)}_{skin}.jpg'
+        return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id)}_{skin}.jpg'
     
     @staticmethod
     def compute_champion_from_similar_name(search_name: str) -> Dict[str, Any]:
@@ -329,7 +359,7 @@ class LoLAPI:
         :param champ_id: integer champion ID
         :return: short champion
         """
-        return LoLAPI.get_champion_from_correct_name(LoLAPI.__ID_TO_CHAMP_CORRECT_NAME.get(champ_id))
+        return LoLAPI.get_champion_from_correct_name(LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id))
     
     @staticmethod
     async def get_full_champion_from_correct_name(name: str, language: str):
@@ -338,4 +368,4 @@ class LoLAPI:
         return (await LoLAPI.__make_request(
             'GET',
             f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
-        ))['data'][name]
+        ))[1]['data'][name]
