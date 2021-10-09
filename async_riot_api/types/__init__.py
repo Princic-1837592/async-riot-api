@@ -72,6 +72,11 @@ class LeagueEntryDTO(RiotApiResponse):
         self.freshBlood = freshBlood
         self.inactive = inactive
         self.miniSeries: Optional[MiniSeriesDTO] = None if miniSeries is None else MiniSeriesDTO(**miniSeries)
+        self.short: str = LeagueEntryDTO.__get_short(self.tier, self.rank)
+    
+    @staticmethod
+    def __get_short(tier: str, rank: str) -> str:
+        return ('GM' if tier.startswith('GR') else tier[0]) + ('4' if rank.lower().endswith('v') else len(rank))
 
 
 class MiniSeriesDTO(RiotApiResponse):
