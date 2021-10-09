@@ -198,7 +198,8 @@ class MetadataDto(RiotApiResponse):
 class InfoDto(RiotApiResponse):
     def __init__(self, gameCreation: int, gameDuration: int, gameId: int, gameMode: str, gameName: str,
                  gameStartTimestamp: int, gameType: str, gameVersion: str, mapId: int, participants: List[str],
-                 platformId: str, queueId: int, teams: List[dict], tournamentCode: str, gameEndTimestamp: int = 0):
+                 platformId: str, queueId: int, teams: List[dict], tournamentCode: Optional[str] = None,
+                 gameEndTimestamp: int = 0):
         super().__init__()
         self.gameCreation = gameCreation
         self.gameDuration = gameDuration
