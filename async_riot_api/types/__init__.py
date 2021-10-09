@@ -231,12 +231,12 @@ class ParticipantDto(RiotApiResponse):
                  damageSelfMitigated: int, deaths: int, detectorWardsPlaced: int, doubleKills: int, dragonKills: int,
                  firstBloodAssist: bool, firstBloodKill: bool, firstTowerAssist: bool, firstTowerKill: bool,
                  gameEndedInEarlySurrender: bool, gameEndedInSurrender: bool, goldEarned: int, goldSpent: int,
-                 individualPosition: str, inhibitorKills: int, inhibitorTakedowns: int, inhibitorsLost: int, item0: int,
+                 individualPosition: str, inhibitorKills: int, inhibitorsLost: int, item0: int,
                  item1: int, item2: int, item3: int, item4: int, item5: int, item6: int, itemsPurchased: int,
                  killingSprees: int, kills: int, lane: str, largestCriticalStrike: int, largestKillingSpree: int,
                  largestMultiKill: int, longestTimeSpentLiving: int, magicDamageDealt: int,
                  magicDamageDealtToChampions: int, magicDamageTaken: int, neutralMinionsKilled: int, nexusKills: int,
-                 nexusLost: int, nexusTakedowns: int, objectivesStolen: int, objectivesStolenAssists: int,
+                 nexusLost: int, objectivesStolen: int, objectivesStolenAssists: int,
                  participantId: int, pentaKills: int, perks: dict, physicalDamageDealt: int,
                  physicalDamageDealtToChampions: int, physicalDamageTaken: int, profileIcon: int, puuid: str,
                  quadraKills: int, riotIdName: str, riotIdTagline: str, role: str, sightWardsBoughtInGame: int,
@@ -247,8 +247,9 @@ class ParticipantDto(RiotApiResponse):
                  totalDamageShieldedOnTeammates: int, totalDamageTaken: int, totalHeal: int, totalHealsOnTeammates: int,
                  totalMinionsKilled: int, totalTimeCCDealt: int, totalTimeSpentDead: int, totalUnitsHealed: int,
                  tripleKills: int, trueDamageDealt: int, trueDamageDealtToChampions: int, trueDamageTaken: int,
-                 turretKills: int, turretTakedowns: int, turretsLost: int, unrealKills: int, visionScore: int,
-                 visionWardsBoughtInGame: int, wardsKilled: int, wardsPlaced: int, win: bool):
+                 turretKills: int, turretsLost: int, unrealKills: int, visionScore: int,
+                 visionWardsBoughtInGame: int, wardsKilled: int, wardsPlaced: int, win: bool,
+                 inhibitorTakedowns: int = 0, nexusTakedowns: int = 0, turretTakedowns: int = 0):
         super().__init__()
         self.assists = assists
         self.baronKills = baronKills

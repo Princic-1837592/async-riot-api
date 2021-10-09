@@ -311,16 +311,17 @@ class LoLAPI:
     async def get_last_match(self, puuid: str) -> types.MatchDto:
         return await self.get_nth_match_v5(puuid)
     
-    async def __get_league_type(self, encrypted_summoner_id: str, league_type: str = 'SOLO') -> types.LeagueEntryDTO:
+    async def __get_league_type(self, encrypted_summoner_id: str, league_type: str) -> Optional[
+        types.LeagueEntryDTO]:
         league_type = league_type.lower()
         for league in await self.get_league(encrypted_summoner_id):
             if league_type in league.queueType.lower():
                 return league
     
-    async def get_solo_league(self, encrypted_summoner_id: str) -> types.LeagueEntryDTO:
-        return await self.__get_league_type(encrypted_summoner_id)
+    async def get_solo_league(self, encrypted_summoner_id: str) -> Optional[types.LeagueEntryDTO]:
+        return await self.__get_league_type(encrypted_summoner_id, 'SOLO')
     
-    async def get_flex_league(self, encrypted_summoner_id: str) -> types.LeagueEntryDTO:
+    async def get_flex_league(self, encrypted_summoner_id: str) -> Optional[types.LeagueEntryDTO]:
         return await self.__get_league_type(encrypted_summoner_id, 'FLEX')
     
     @staticmethod
