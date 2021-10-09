@@ -55,9 +55,8 @@ class LoLAPI:
         return await LoLAPI.__make_request(
             'GET',
             LoLAPI.__BASE_URL.format(self.region, url),
-            {
-                'X-Riot-Token': self.api_key
-            }
+            {'X-Riot-Token': self.api_key},
+            debug = self.debug
         )
     
     @staticmethod
@@ -162,25 +161,36 @@ class LoLAPI:
         )
     
     # MATCH-V5
-    async def get_matches_v5(self, puuid: str, start: int = 0, count: int = 20) -> List[str]:
+    async def get_matches_v5(self, puuid: str, startTime: Optional[int] = None, endTime: Optional[int] = None,
+                             queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
+                             count: int = 20) -> List[str]:
         """
         /lol/match/v5/matches/by-puuid/{puuid}/ids
         :param puuid:
+        :param queue:
+        :param startTime:
+        :param endTime:
+        :param type:
         :param start:
         :param count:
         :return:
         """
         
+        url = f'/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}'
+        if startTime:
+            url += f'&startTime={startTime}'
+        if endTime:
+            url += f'&endTime={endTime}'
+        if queue:
+            url += f'&queue={queue}'
+        if type:
+            url += f'&type={type}'
         return await LoLAPI.create_object(
             await LoLAPI.__make_request(
                 'GET',
-                LoLAPI.__BASE_URL.format(
-                    self.v5_routing_value,
-                    f'/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}'
-                ),
-                {
-                    'X-Riot-Token': self.api_key
-                }
+                LoLAPI.__BASE_URL.format(self.v5_routing_value, url),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
             )
         )
     
@@ -198,10 +208,10 @@ class LoLAPI:
                     self.v5_routing_value,
                     f'/lol/match/v5/matches/{match_id}'
                 ),
-                {
-                    'X-Riot-Token': self.api_key
-                }
-            ), types.MatchDto
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.MatchDto,
         )
     
     # SPECTATOR-V4
