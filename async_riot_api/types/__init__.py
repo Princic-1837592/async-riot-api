@@ -76,7 +76,7 @@ class LeagueEntryDTO(RiotApiResponse):
     
     @staticmethod
     def __get_short(tier: str, rank: str) -> str:
-        return ('GM' if tier.startswith('GR') else tier[0]) + ('4' if rank.lower().endswith('v') else len(rank))
+        return f"{('GM' if tier.startswith('GR') else tier[0])}{'4' if rank.lower().endswith('v') else len(rank)}"
 
 
 class MiniSeriesDTO(RiotApiResponse):
