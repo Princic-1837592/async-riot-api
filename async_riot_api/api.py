@@ -36,21 +36,23 @@ class LoLAPI:
         'en': 'en_US'
     }
     
-    def __init__(self, api_key: str, region: str = 'euw1', routing_value_v5: str = 'europe'):
+    def __init__(self, api_key: str, region: str = 'euw1', routing_value_v5: str = 'europe', debug: bool = False):
         self.api_key = api_key
         self.region = region
         self.v5_routing_value = routing_value_v5
+        self.debug = debug
     
     @staticmethod
-    async def __make_request(method: str, url: str, headers = None) -> Tuple[int, Any]:
+    async def __make_request(method: str, url: str, headers: dict = None, debug: bool = False) -> Tuple[int, Any]:
         if headers is None:
             headers = {}
         async with request(method, url, headers = headers) as response:
-            # print(response.status, url)
+            if debug:
+                print(response.status, url)
             return response.status, await response.json()
     
     async def __make_api_request(self, url: str) -> Tuple[int, Any]:
-        return await self.__make_request(
+        return await LoLAPI.__make_request(
             'GET',
             LoLAPI.__BASE_URL.format(self.region, url),
             {
@@ -170,7 +172,7 @@ class LoLAPI:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_request(
+            await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
                     self.v5_routing_value,
@@ -190,7 +192,7 @@ class LoLAPI:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_request(
+            await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
                     self.v5_routing_value,
