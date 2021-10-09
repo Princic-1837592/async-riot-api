@@ -1,10 +1,8 @@
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple
 from json import loads
 from fuzzywuzzy import fuzz
-from aiohttp import ClientResponse, request
-import asyncio
+from aiohttp import request
 from urllib.parse import quote_plus
-from pprint import pprint
 import requests
 from . import types
 
@@ -161,7 +159,7 @@ class LoLAPI:
         )
     
     # MATCH-V5
-    async def get_matches_v5(self, puuid: str, startTime: Optional[int] = None, endTime: Optional[int] = None,
+    async def get_matches_v5(self, puuid: str, *, startTime: Optional[int] = None, endTime: Optional[int] = None,
                              queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
                              count: int = 20) -> List[str]:
         """
@@ -303,7 +301,7 @@ class LoLAPI:
         return await self.get_match((await self.get_matches(encrypted_account_id, n))['matches'][0]['gameId'])'''
     
     async def get_nth_match_v5(self, puuid: str, n: int = 0) -> types.MatchDto:
-        return await self.get_match_v5((await self.get_matches_v5(puuid, n, 1) or [None])[0])
+        return await self.get_match_v5((await self.get_matches_v5(puuid, start = n, count = 1) or [None])[0])
     
     '''async def get_first_match(self, encrypted_account_id: str) -> Dict[str, Any]:
         return await self.get_nth_match(encrypted_account_id, await self.get_match_number(encrypted_account_id) - 1)'''
