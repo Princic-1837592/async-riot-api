@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 
+# SUPER-CLASS
 class RiotApiResponse:
     def __init__(self, succeed: bool = True):
         self.succeed = succeed
@@ -16,19 +17,32 @@ class RiotApiResponse:
         return str(self)
 
 
-class SummonerDTO(RiotApiResponse):
-    def __init__(self, accountId: str, profileIconId: int, revisionDate: int, name: str, id: str, puuid: str,
-                 summonerLevel: int):
+# ERROR
+class RiotApiError(RiotApiResponse):
+    def __init__(self, message: str = 'Bad Request', status_code: int = 400):
+        super().__init__(False)
+        self.message = message
+        self.status_code = status_code
+
+
+# ACCOUNT-V1
+class AccountDto(RiotApiResponse):
+    def __init__(self, puuid: str, gameName: str, tagLine: str):
         super().__init__()
-        self.accountId = accountId
-        self.profileIconId = profileIconId
-        self.revisionDate = revisionDate
-        self.name = name
-        self.id = id
         self.puuid = puuid
-        self.summonerLevel = summonerLevel
+        self.gameName = gameName
+        self.tagLine = tagLine
 
 
+class ActiveShardDto(RiotApiResponse):
+    def __init__(self, puuid: str, game: str, activeShard: str):
+        super().__init__()
+        self.puuid = puuid
+        self.game = game
+        self.activeShard = activeShard
+
+
+# CHAMPION-MASTERY-V4
 class ChampionMasteryDto(RiotApiResponse):
     def __init__(self, championPointsUntilNextLevel: int, chestGranted: bool, championId: int, lastPlayTime: int,
                  championLevel: int, summonerId: str, championPoints: int, championPointsSinceLastLevel: int,
@@ -45,12 +59,70 @@ class ChampionMasteryDto(RiotApiResponse):
         self.tokensEarned = tokensEarned
 
 
+# CHAMPION-V3
 class ChampionInfo(RiotApiResponse):
     def __init__(self, maxNewPlayerLevel: int, freeChampionIdsForNewPlayers: List[int], freeChampionIds: List[int]):
         super().__init__()
         self.maxNewPlayerLevel = maxNewPlayerLevel
         self.freeChampionIdsForNewPlayers = freeChampionIdsForNewPlayers
         self.freeChampionIds = freeChampionIds
+
+
+# CLASH-V1
+class PlayerDto(RiotApiResponse):
+    def __init__(self, summonerId: str, teamId: str, position: str, role: str):
+        super().__init__()
+        self.summonerId = summonerId
+        self.teamId = teamId
+        self.position = position
+        self.role = role
+
+
+class TournamentDto(RiotApiResponse):
+    def __init__(self, id: int, themeId: int, nameKey: str, nameKeySecondary: str, schedule: List[dict]):
+        super().__init__()
+        self.id = id
+        self.themeId = themeId
+        self.nameKey = nameKey
+        self.nameKeySecondary = nameKeySecondary
+        self.schedule: List[TournamentPhaseDto] = list(map(lambda x: TournamentPhaseDto(**x), schedule))
+
+
+class TournamentPhaseDto(RiotApiResponse):
+    def __init__(self, id: int, registrationTime: int, startTime: int, cancelled: bool):
+        super().__init__()
+        self.id = id
+        self.registrationTime = registrationTime
+        self.startTime = startTime
+        self.cancelled = cancelled
+
+
+# LEAGUE-V4
+class LeagueListDTO(RiotApiResponse):
+    def __init__(self, tier: str, leagueId: str, queue: str, name: str, entries: List[dict]):
+        super().__init__()
+        self.tier = tier
+        self.leagueId = leagueId
+        self.queue = queue
+        self.name = name
+        self.entries: List[LeagueItemDTO] = list(map(lambda x: LeagueItemDTO(**x), entries))
+
+
+class LeagueItemDTO(RiotApiResponse):
+    def __init__(self, summonerId: str, summonerName: str, leaguePoints: int, rank: str, wins: int, losses: int,
+                 veteran: bool, inactive: bool, freshBlood: bool, hotStreak: bool, miniSeries: Optional[dict] = None):
+        super().__init__()
+        self.summonerId = summonerId
+        self.summonerName = summonerName
+        self.leaguePoints = leaguePoints
+        self.rank = rank
+        self.wins = wins
+        self.losses = losses
+        self.veteran = veteran
+        self.inactive = inactive
+        self.freshBlood = freshBlood
+        self.hotStreak = hotStreak
+        self.miniSeries: Optional[MiniSeriesDTO] = None if miniSeries is None else MiniSeriesDTO(**miniSeries)
 
 
 class LeagueEntryDTO(RiotApiResponse):
@@ -88,6 +160,7 @@ class MiniSeriesDTO(RiotApiResponse):
         self.wins = wins
 
 
+# LOL-STATUS-V3
 class ShardStatus(RiotApiResponse):
     def __init__(self, name: str, slug: str, locales: List[str], hostname: str, region_tag: str, services: List[dict]):
         super().__init__()
@@ -139,6 +212,7 @@ class Translation(RiotApiResponse):
         self.content = content
 
 
+# LOL-STATUS-V4
 class PlatformDataDto(RiotApiResponse):
     def __init__(self, id: str, name: str, locales: List[str], maintenances: List[dict], incidents: List[dict]):
         super().__init__()
@@ -185,6 +259,47 @@ class UpdateDto(RiotApiResponse):
         self.updated_at = updated_at
 
 
+# LOR-MATCH-V1
+class LorMatchDto(RiotApiResponse):
+    def __init__(self, metadata: dict, info: dict):
+        super().__init__()
+        self.metadata: LorMetadataDto = LorMetadataDto(**metadata)
+        self.info: LorInfoDto = LorInfoDto(**info)
+
+
+class LorMetadataDto(RiotApiResponse):
+    def __init__(self, data_version: str, match_id: str, participants: List[str]):
+        super().__init__()
+        self.data_version = data_version
+        self.match_id = match_id
+        self.participants: List[str] = participants
+
+
+class LorInfoDto(RiotApiResponse):
+    def __init__(self, game_mode: str, game_type: str, game_start_time_utc: str, game_version: str, players: List[dict],
+                 total_turn_count: int):
+        super().__init__()
+        self.game_mode = game_mode
+        self.game_type = game_type
+        self.game_start_time_utc = game_start_time_utc
+        self.game_version = game_version
+        self.players: List[LorPlayerDto] = list(map(lambda x: LorPlayerDto(**x), players))
+        self.total_turn_count = total_turn_count
+
+
+class LorPlayerDto(RiotApiResponse):
+    def __init__(self, puuid: str, deck_id: str, deck_code: str, factions: List[str], game_outcome: str,
+                 order_of_play: int):
+        super().__init__()
+        self.puuid = puuid
+        self.deck_id = deck_id
+        self.deck_code = deck_code
+        self.factions: List[str] = factions
+        self.game_outcome = game_outcome
+        self.order_of_play = order_of_play
+
+
+# MATCH-V5
 class MatchDto(RiotApiResponse):
     def __init__(self, metadata: dict, info: dict):
         super().__init__()
@@ -424,6 +539,7 @@ class ObjectiveDto(RiotApiResponse):
         self.kills = kills
 
 
+# SPECTATOR-V4
 class CurrentGameInfo(RiotApiResponse):
     def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
                  gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,
@@ -527,8 +643,15 @@ class Participant(RiotApiResponse):
         self.bot = bot
 
 
-class RiotApiError(RiotApiResponse):
-    def __init__(self, message: str = 'Bad Request', status_code: int = 400):
-        super().__init__(False)
-        self.message = message
-        self.status_code = status_code
+# SUMMONER-V4
+class SummonerDTO(RiotApiResponse):
+    def __init__(self, accountId: str, profileIconId: int, revisionDate: int, name: str, id: str, puuid: str,
+                 summonerLevel: int):
+        super().__init__()
+        self.accountId = accountId
+        self.profileIconId = profileIconId
+        self.revisionDate = revisionDate
+        self.name = name
+        self.id = id
+        self.puuid = puuid
+        self.summonerLevel = summonerLevel

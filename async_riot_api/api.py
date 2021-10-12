@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from json import loads
 from fuzzywuzzy import fuzz
 from aiohttp import request
@@ -34,10 +34,10 @@ class LoLAPI:
         'en': 'en_US'
     }
     
-    def __init__(self, api_key: str, region: str = 'euw1', routing_value_v5: str = 'europe', debug: bool = False):
+    def __init__(self, api_key: str, region: str = 'euw1', routing_value: str = 'europe', debug: bool = False):
         self.api_key = api_key
         self.region = region
-        self.v5_routing_value = routing_value_v5
+        self.routing_value = routing_value
         self.debug = debug
     
     @staticmethod
@@ -71,43 +71,87 @@ class LoLAPI:
         else:
             return types.RiotApiError(**json_response.get('status', {}))
     
+    # ACCOUNT-V1
+    async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(
+                    self.routing_value,
+                    f'/riot/account/v1/accounts/by-puuid/{puuid}'
+                ),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.AccountDto,
+        )
+    
+    async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(
+                    self.routing_value,
+                    f'/riot/account/v1/accounts/by-riot-id/{game_name}/{tag_line}'
+                ),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.AccountDto,
+        )
+    
+    async def get_active_shards(self, game: str, puuid: str) -> types.ActiveShardDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(
+                    self.routing_value,
+                    f'/riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}'
+                ),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.ActiveShardDto,
+        )
+    
     # CHAMPION-MASTERY-V4
-    async def get_masteries(self, encrypted_summoner_id: str) -> List[types.ChampionMasteryDto]:
+    async def get_masteries(self, summoner_id: str) -> List[types.ChampionMasteryDto]:
         """
         /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :return:
         """
         
         return await LoLAPI.create_object(
             await self.__make_api_request(
-                f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{encrypted_summoner_id}'
-            ), types.ChampionMasteryDto
+                f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}'
+            ),
+            types.ChampionMasteryDto
         )
     
-    async def get_champion_mastery(self, encrypted_summoner_id: str, champion_id: int) -> types.ChampionMasteryDto:
+    async def get_champion_mastery(self, summoner_id: str, champion_id: int) -> types.ChampionMasteryDto:
         """
         /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}/by-champion/{championId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :param champion_id:
         :return:
         """
         
         return await LoLAPI.create_object(
             await self.__make_api_request(
-                f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{encrypted_summoner_id}/by-champion/{champion_id}'
+                f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}/by-champion/{champion_id}'
             ), types.ChampionMasteryDto
         )
     
-    async def get_mastery_score(self, encrypted_summoner_id: str) -> int:
+    async def get_mastery_score(self, summoner_id: str) -> int:
         """
         /lol/champion-mastery/v4/scores/by-summoner/{encryptedSummonerId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :return:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_api_request(f'/lol/champion-mastery/v4/scores/by-summoner/{encrypted_summoner_id}')
+            await self.__make_api_request(f'/lol/champion-mastery/v4/scores/by-summoner/{summoner_id}')
         )
     
     # CHAMPION-V3
@@ -122,19 +166,83 @@ class LoLAPI:
             types.ChampionInfo
         )
     
+    # CLASH-V1
+    async def get_clash_players_by_summoner_id(self, summoner_id: str) -> List[types.PlayerDto]:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/clash/v1/players/by-summoner/{summoner_id}'),
+            types.PlayerDto
+        )
+    
+    async def get_clash_team_by_id(self, team_id: str) -> types.TeamDto:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/clash/v1/teams/{team_id}'),
+            types.TeamDto
+        )
+    
+    async def get_clash_tournaments(self) -> List[types.TournamentDto]:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/clash/v1/tournaments'),
+            types.TournamentDto
+        )
+    
+    async def get_clash_tournament_by_team_id(self, team_id: str) -> types.TournamentDto:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/clash/v1/tournaments/by-team/{team_id}'),
+            types.TournamentDto
+        )
+    
+    async def get_clash_tournament_by_id(self, tournament_id: int) -> types.TournamentDto:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/clash/v1/tournaments/{tournament_id}'),
+            types.TournamentDto
+        )
+    
     # LEAGUE-V4
-    async def get_league(self, encrypted_summoner_id: str) -> Set[types.LeagueEntryDTO]:
+    async def get_challenger_leagues(self, queue: str) -> types.LeagueListDTO:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/league/v4/challengerleagues/by-queue/{queue}'),
+            types.LeagueListDTO
+        )
+    
+    async def get_league(self, summoner_id: str) -> Set[types.LeagueEntryDTO]:
         """
         /lol/league/v4/entries/by-summoner/{encryptedSummonerId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :return:
         """
         
         return set(
             await LoLAPI.create_object(
-                await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{encrypted_summoner_id}'),
+                await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{summoner_id}'),
                 types.LeagueEntryDTO
             )
+        )
+    
+    async def get_summoners_by_league(self, queue: str, tier: str, division: str, page: int = 1) -> Set[
+        types.LeagueEntryDTO]:
+        return set(
+            await LoLAPI.create_object(
+                await self.__make_api_request(f'/lol/league/v4/entries/{queue}/{tier}/{division}?page={page}'),
+                types.LeagueEntryDTO
+            )
+        )
+    
+    async def get_grand_master_leagues(self, queue: str) -> types.LeagueListDTO:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/league/v4/grandmasterleagues/by-queue/{queue}'),
+            types.LeagueListDTO
+        )
+    
+    async def get_leagues(self, league_id: str) -> types.LeagueListDTO:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/league/v4/leagues/{league_id}'),
+            types.LeagueListDTO
+        )
+    
+    async def get_master_leagues(self, queue: str) -> types.LeagueListDTO:
+        return await LoLAPI.create_object(
+            await self.__make_api_request(f'/lol/league/v4/masterleagues/by-queue/{queue}'),
+            types.LeagueListDTO
         )
     
     # LOL-STATUS-V3
@@ -158,10 +266,32 @@ class LoLAPI:
             types.PlatformDataDto
         )
     
+    # LOR-MATCH-V1
+    async def get_lor_matches(self, puuid: str) -> List[str]:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/match/v1/matches/by-puuid/{puuid}/ids'),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            )
+        )
+    
+    async def get_lor_match(self, match_id: str) -> types.LorMatchDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/match/v1/matches/{match_id}'),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.LorMatchDto
+        )
+    
     # MATCH-V5
-    async def get_matches_v5(self, puuid: str, *, startTime: Optional[int] = None, endTime: Optional[int] = None,
-                             queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
-                             count: int = 20) -> List[str]:
+    async def get_matches(self, puuid: str, *, startTime: Optional[int] = None, endTime: Optional[int] = None,
+                          queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
+                          count: int = 20) -> List[str]:
         """
         /lol/match/v5/matches/by-puuid/{puuid}/ids
         :param puuid:
@@ -186,13 +316,13 @@ class LoLAPI:
         return await LoLAPI.create_object(
             await LoLAPI.__make_request(
                 'GET',
-                LoLAPI.__BASE_URL.format(self.v5_routing_value, url),
+                LoLAPI.__BASE_URL.format(self.routing_value, url),
                 {'X-Riot-Token': self.api_key},
                 debug = self.debug
             )
         )
     
-    async def get_match_v5(self, match_id: str) -> types.MatchDto:
+    async def get_match(self, match_id: str) -> types.MatchDto:
         """
         /lol/match/v5/matches/{matchId}
         :param match_id:
@@ -203,7 +333,7 @@ class LoLAPI:
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
-                    self.v5_routing_value,
+                    self.routing_value,
                     f'/lol/match/v5/matches/{match_id}'
                 ),
                 {'X-Riot-Token': self.api_key},
@@ -213,15 +343,15 @@ class LoLAPI:
         )
     
     # SPECTATOR-V4
-    async def get_active_games(self, encrypted_summoner_id: str) -> types.CurrentGameInfo:
+    async def get_active_games(self, summoner_id: str) -> types.CurrentGameInfo:
         """
         /lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :return:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{encrypted_summoner_id}'),
+            await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{summoner_id}'),
             types.CurrentGameInfo
         )
     
@@ -237,15 +367,15 @@ class LoLAPI:
         )
     
     # SUMMONER-V4
-    async def get_summoner_by_encrypted_account_id(self, encrypted_account_id: str) -> types.SummonerDTO:
+    async def get_summoner_by_account_id(self, account_id: str) -> types.SummonerDTO:
         """
         /lol/summoner/v4/summoners/by-account/{encryptedAccountId}
-        :param encrypted_account_id:
+        :param account_id:
         :return:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-account/{encrypted_account_id}'),
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-account/{account_id}'),
             types.SummonerDTO
         )
     
@@ -261,27 +391,27 @@ class LoLAPI:
             types.SummonerDTO
         )
     
-    async def get_summoner_by_encrypted_puuid(self, encrypted_puuid: str) -> types.SummonerDTO:
+    async def get_summoner_by_puuid(self, puuid: str) -> types.SummonerDTO:
         """
         /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID}
-        :param encrypted_puuid:
+        :param puuid:
         :return:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-puuid/{encrypted_puuid}'),
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/by-puuid/{puuid}'),
             types.SummonerDTO
         )
     
-    async def get_summoner_by_encrypted_summoner_id(self, encrypted_summoner_id: str) -> types.SummonerDTO:
+    async def get_summoner_by_summoner_id(self, summoner_id: str) -> types.SummonerDTO:
         """
         /lol/summoner/v4/summoners/{encryptedSummonerId}
-        :param encrypted_summoner_id:
+        :param summoner_id:
         :return:
         """
         
         return await LoLAPI.create_object(
-            await self.__make_api_request(f'/lol/summoner/v4/summoners/{encrypted_summoner_id}'),
+            await self.__make_api_request(f'/lol/summoner/v4/summoners/{summoner_id}'),
             types.SummonerDTO
         )
     
@@ -294,33 +424,36 @@ class LoLAPI:
         return loads(await self.__make_request(f'/lol/summoner/v4/summoners/me'))'''
     
     # UTILS
-    '''async def get_match_number(self, encrypted_account_id: str) -> int:
-        return (await self.get_matches(encrypted_account_id, 101))['totalGames']
+    '''async def get_match_number(self, account_id: str) -> int:
+        return (await self.get_matches(account_id, 101))['totalGames']
 
-    async def get_nth_match(self, encrypted_account_id: str, n: int = 0) -> Dict[str, Any]:
-        return await self.get_match((await self.get_matches(encrypted_account_id, n))['matches'][0]['gameId'])'''
+    async def get_nth_match(self, account_id: str, n: int = 0) -> Dict[str, Any]:
+        return await self.get_match((await self.get_matches(account_id, n))['matches'][0]['gameId'])'''
     
     async def get_nth_match_v5(self, puuid: str, n: int = 0) -> types.MatchDto:
-        return await self.get_match_v5((await self.get_matches_v5(puuid, start = n, count = 1) or [None])[0])
+        return await self.get_match((await self.get_matches(puuid, start = n, count = 1) or [None])[0])
     
-    '''async def get_first_match(self, encrypted_account_id: str) -> Dict[str, Any]:
-        return await self.get_nth_match(encrypted_account_id, await self.get_match_number(encrypted_account_id) - 1)'''
+    '''async def get_first_match(self, account_id: str) -> Dict[str, Any]:
+        return await self.get_nth_match(account_id, await self.get_match_number(account_id) - 1)'''
     
     async def get_last_match(self, puuid: str) -> types.MatchDto:
         return await self.get_nth_match_v5(puuid)
     
-    async def __get_league_type(self, encrypted_summoner_id: str, league_type: str) -> Optional[
-        types.LeagueEntryDTO]:
+    async def __get_league_type(self, summoner_id: str, league_type: str) -> Union[
+        types.LeagueEntryDTO, types.RiotApiError]:
         league_type = league_type.lower()
-        for league in await self.get_league(encrypted_summoner_id):
+        leagues = await self.get_league(summoner_id)
+        if type(leagues) != set:
+            return leagues
+        for league in leagues:
             if league_type in league.queueType.lower():
                 return league
     
-    async def get_solo_league(self, encrypted_summoner_id: str) -> Optional[types.LeagueEntryDTO]:
-        return await self.__get_league_type(encrypted_summoner_id, 'SOLO')
+    async def get_solo_league(self, summoner_id: str) -> Optional[types.LeagueEntryDTO]:
+        return await self.__get_league_type(summoner_id, 'SOLO')
     
-    async def get_flex_league(self, encrypted_summoner_id: str) -> Optional[types.LeagueEntryDTO]:
-        return await self.__get_league_type(encrypted_summoner_id, 'FLEX')
+    async def get_flex_league(self, summoner_id: str) -> Optional[types.LeagueEntryDTO]:
+        return await self.__get_league_type(summoner_id, 'FLEX')
     
     @staticmethod
     def get_profile_icon_url(icon_id: int) -> str:
