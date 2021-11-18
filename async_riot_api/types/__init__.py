@@ -130,12 +130,12 @@ class LeagueEntryDTO(RiotApiResponse):
                  hotStreak: bool, veteran: bool, freshBlood: bool, inactive: bool, miniSeries: Optional[dict] = None,
                  leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None):
         super().__init__()
-        self.leagueId = leagueId
+        self.leagueId: str = leagueId or '?'
         self.summonerId = summonerId
         self.summonerName = summonerName
         self.queueType = queueType
-        self.tier = tier
-        self.rank = rank
+        self.tier: str = tier or '?'
+        self.rank: str = rank or '?'
         self.leaguePoints = leaguePoints
         self.wins = wins
         self.losses = losses
