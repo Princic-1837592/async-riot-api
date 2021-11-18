@@ -126,9 +126,9 @@ class LeagueItemDTO(RiotApiResponse):
 
 
 class LeagueEntryDTO(RiotApiResponse):
-    def __init__(self, leagueId: str, summonerId: str, summonerName: str, queueType: str, tier: str, rank: str,
-                 leaguePoints: int, wins: int, losses: int, hotStreak: bool, veteran: bool, freshBlood: bool,
-                 inactive: bool, miniSeries: Optional[dict] = None):
+    def __init__(self, summonerId: str, summonerName: str, queueType: str, leaguePoints: int, wins: int, losses: int,
+                 hotStreak: bool, veteran: bool, freshBlood: bool, inactive: bool, miniSeries: Optional[dict] = None,
+                 leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None):
         super().__init__()
         self.leagueId = leagueId
         self.summonerId = summonerId
@@ -148,6 +148,8 @@ class LeagueEntryDTO(RiotApiResponse):
     
     @staticmethod
     def __get_short(tier: str, rank: str) -> str:
+        if not (tier and rank):
+            return '??'
         return f"{('GM' if tier.startswith('GR') else tier[0])}{'4' if rank.lower().endswith('v') else len(rank)}"
 
 
@@ -297,6 +299,21 @@ class LorPlayerDto(RiotApiResponse):
         self.factions: List[str] = factions
         self.game_outcome = game_outcome
         self.order_of_play = order_of_play
+
+
+# LOR-RANKED-V1
+class LorLeaderboardDto(RiotApiResponse):
+    def __init__(self, players: List[dict]):
+        super().__init__()
+        self.players: List[LorLeaderboardPlayerDto] = list(map(lambda x: LorLeaderboardPlayerDto(**x), players))
+
+
+class LorLeaderboardPlayerDto(RiotApiResponse):
+    def __init__(self, name: str, rank: int, lp: int):
+        super().__init__()
+        self.name = name
+        self.rank = rank
+        self.lp = lp
 
 
 # MATCH-V5
@@ -539,7 +556,207 @@ class ObjectiveDto(RiotApiResponse):
         self.kills = kills
 
 
+class MatchTimelineDto(RiotApiResponse):
+    def __init__(self, metadata: dict, info: dict):
+        super().__init__()
+        self.metadata: MetadataDto = MetadataDto(**metadata)
+        self.info: MTLInfoDto = MTLInfoDto(**info)
+
+
+class MTLInfoDto(RiotApiResponse):
+    def __init__(self, frameInterval: int, frames: List[dict], gameId: int, participants: List[dict]):
+        super().__init__()
+        self.frameInterval = frameInterval
+        self.frames: List[MTLFrameDto] = list(map(lambda x: MTLFrameDto(**x), frames))
+        self.gameId = gameId
+        self.participants: List[MTLParticipantDto] = list(map(lambda x: MTLParticipantDto(**x), participants))  # TODO
+
+
+class MTLFrameDto(RiotApiResponse):
+    def __init__(self, events: List[dict], participantFrames: dict, timestamp: int):
+        super().__init__()
+        self.events: List[MTLEventDto] = list(map(lambda x: MTLEventDto(**x), events))
+        self.participantFrames: MTLParticipantFramesDto = MTLParticipantFramesDto(
+            **{f'f{k}': v for k, v in participantFrames.items()}
+        )
+        self.timestamp = timestamp
+
+
+class MTLEventDto(RiotApiResponse):
+    def __init__(self, timestamp: int, type: str, levelUpType: Optional[str] = None,
+                 participantId: Optional[int] = None, skillSlot: Optional[int] = None,
+                 realTimestamp: Optional[int] = None, itemId: Optional[int] = None, afterId: Optional[int] = None,
+                 beforeId: Optional[int] = None, goldGain: Optional[int] = None, creatorId: Optional[int] = None,
+                 wardType: Optional[int] = None, assistingParticipantIds: Optional[List[int]] = None,
+                 bounty: Optional[int] = None, killStreakLength: Optional[int] = None, killerId: Optional[int] = None,
+                 position: Optional[dict] = None, victimDamageDealt: Optional[List[dict]] = None,
+                 victimDamageReceived: Optional[List[dict]] = None, victimId: Optional[int] = None,
+                 killType: Optional[int] = None, level: Optional[int] = None, multiKillLength: Optional[int] = None,
+                 laneType: Optional[str] = None, teamId: Optional[int] = None, killerTeamId: Optional[int] = None,
+                 monsterSubType: Optional[str] = None, monsterType: Optional[str] = None,
+                 buildingType: Optional[str] = None, towerType: Optional[str] = None, name: Optional[str] = None,
+                 gameId: Optional[int] = None, winningTeam: Optional[int] = None):
+        super().__init__()
+        self.timestamp = timestamp
+        self.type = type
+        self.levelUpType = levelUpType
+        self.participantId = participantId
+        self.skillSlot = skillSlot
+        self.realTimestamp = realTimestamp
+        self.itemId = itemId
+        self.afterId = afterId
+        self.beforeId = beforeId
+        self.goldGain = goldGain
+        self.creatorId = creatorId
+        self.wardType = wardType
+        self.assistingParticipantIds = assistingParticipantIds
+        self.bounty = bounty
+        self.killStreakLength = killStreakLength
+        self.killerId = killerId
+        self.position: Optional[MTLPositionDto] = None if position is None else MTLPositionDto(**position)
+        self.victimDamageDealt: Optional[List[MTLDamageDto]] = None if victimDamageDealt is None else list(
+            map(lambda x: MTLDamageDto(**x), victimDamageDealt)
+        )
+        self.victimDamageReceived: Optional[List[MTLDamageDto]] = None if victimDamageDealt is None else list(
+            map(lambda x: MTLDamageDto(**x), victimDamageReceived)
+        )
+        self.victimId = victimId
+        self.killType = killType
+        self.level = level
+        self.multiKillLength = multiKillLength
+        self.laneType = laneType
+        self.teamId = teamId
+        self.killerTeamId = killerTeamId
+        self.monsterSubType = monsterSubType
+        self.monsterType = monsterType
+        self.buildingType = buildingType
+        self.towerType = towerType
+        self.name = name
+        self.gameId = gameId
+        self.winningTeam = winningTeam
+
+
+class MTLDamageDto(RiotApiResponse):
+    def __init__(self, basic: bool, magicDamage: int, name: str, participantId: int, physicalDamage: int,
+                 spellName: str, spellSlot: int, trueDamage: int, type: str):
+        super().__init__()
+        self.basic = basic
+        self.magicDamage = magicDamage
+        self.name = name
+        self.participantId = participantId
+        self.physicalDamage = physicalDamage
+        self.spellName = spellName
+        self.spellSlot = spellSlot
+        self.trueDamage = trueDamage
+        self.type = type
+
+
+class MTLParticipantFramesDto(RiotApiResponse):
+    def __init__(self, f1: dict, f2: dict, f3: dict, f4: dict, f5: dict, f6: dict, f7: dict, f8: dict, f9: dict,
+                 f10: dict):
+        super().__init__()
+        self.f1: MTLParticipantFrameDto = MTLParticipantFrameDto(**f1)
+        self.f2: MTLParticipantFrameDto = MTLParticipantFrameDto(**f2)
+        self.f3: MTLParticipantFrameDto = MTLParticipantFrameDto(**f3)
+        self.f4: MTLParticipantFrameDto = MTLParticipantFrameDto(**f4)
+        self.f5: MTLParticipantFrameDto = MTLParticipantFrameDto(**f5)
+        self.f6: MTLParticipantFrameDto = MTLParticipantFrameDto(**f6)
+        self.f7: MTLParticipantFrameDto = MTLParticipantFrameDto(**f7)
+        self.f8: MTLParticipantFrameDto = MTLParticipantFrameDto(**f8)
+        self.f9: MTLParticipantFrameDto = MTLParticipantFrameDto(**f9)
+        self.f10: MTLParticipantFrameDto = MTLParticipantFrameDto(**f10)
+
+
+class MTLParticipantFrameDto(RiotApiResponse):
+    def __init__(self, championStats: dict, currentGold: int, damageStats: dict, goldPerSecond: int,
+                 jungleMinionsKilled: int, level: int, minionsKilled: int, participantId: int, position: dict,
+                 timeEnemySpentControlled: int, totalGold: int, xp: int):
+        super().__init__()
+        self.championStats: MTLChampionStatsDto = MTLChampionStatsDto(**championStats)
+        self.currentGold = currentGold
+        self.damageStats: MTLDamageStatsDto = MTLDamageStatsDto(**damageStats)
+        self.goldPerSecond = goldPerSecond
+        self.jungleMinionsKilled = jungleMinionsKilled
+        self.level = level
+        self.minionsKilled = minionsKilled
+        self.participantId = participantId
+        self.position: MTLPositionDto = MTLPositionDto(**position)
+        self.timeEnemySpentControlled = timeEnemySpentControlled
+        self.totalGold = totalGold
+        self.xp = xp
+
+
+class MTLChampionStatsDto(RiotApiResponse):
+    def __init__(self, abilityHaste: int, abilityPower: int, armor: int, armorPen: int, armorPenPercent: int,
+                 attackDamage: int, attackSpeed: int, bonusArmorPenPercent: int, bonusMagicPenPercent: int,
+                 ccReduction: int, cooldownReduction: int, health: int, healthMax: int, healthRegen: int,
+                 lifesteal: int, magicPen: int, magicPenPercent: int, magicResist: int, movementSpeed: int,
+                 omnivamp: int, physicalVamp: int, power: int, powerMax: int, powerRegen: int, spellVamp: int):
+        super().__init__()
+        self.abilityHaste = abilityHaste
+        self.abilityPower = abilityPower
+        self.armor = armor
+        self.armorPen = armorPen
+        self.armorPenPercent = armorPenPercent
+        self.attackDamage = attackDamage
+        self.attackSpeed = attackSpeed
+        self.bonusArmorPenPercent = bonusArmorPenPercent
+        self.bonusMagicPenPercent = bonusMagicPenPercent
+        self.ccReduction = ccReduction
+        self.cooldownReduction = cooldownReduction
+        self.health = health
+        self.healthMax = healthMax
+        self.healthRegen = healthRegen
+        self.lifesteal = lifesteal
+        self.magicPen = magicPen
+        self.magicPenPercent = magicPenPercent
+        self.magicResist = magicResist
+        self.movementSpeed = movementSpeed
+        self.omnivamp = omnivamp
+        self.physicalVamp = physicalVamp
+        self.power = power
+        self.powerMax = powerMax
+        self.powerRegen = powerRegen
+        self.spellVamp = spellVamp
+
+
+class MTLDamageStatsDto(RiotApiResponse):
+    def __init__(self, magicDamageDone: int, magicDamageDoneToChampions: int, magicDamageTaken: int,
+                 physicalDamageDone: int, physicalDamageDoneToChampions: int, physicalDamageTaken: int,
+                 totalDamageDone: int, totalDamageDoneToChampions: int, totalDamageTaken: int, trueDamageDone: int,
+                 trueDamageDoneToChampions: int, trueDamageTaken: int):
+        super().__init__()
+        self.magicDamageDone = magicDamageDone
+        self.magicDamageDoneToChampions = magicDamageDoneToChampions
+        self.magicDamageTaken = magicDamageTaken
+        self.physicalDamageDone = physicalDamageDone
+        self.physicalDamageDoneToChampions = physicalDamageDoneToChampions
+        self.physicalDamageTaken = physicalDamageTaken
+        self.totalDamageDone = totalDamageDone
+        self.totalDamageDoneToChampions = totalDamageDoneToChampions
+        self.totalDamageTaken = totalDamageTaken
+        self.trueDamageDone = trueDamageDone
+        self.trueDamageDoneToChampions = trueDamageDoneToChampions
+        self.trueDamageTaken = trueDamageTaken
+
+
+class MTLPositionDto(RiotApiResponse):
+    def __init__(self, x: int, y: int):
+        super().__init__()
+        self.x = x
+        self.y = y
+
+
+class MTLParticipantDto(RiotApiResponse):
+    def __init__(self, participantId: int, puuid: str):
+        super().__init__()
+        self.participantId = participantId
+        self.puuid = puuid
+
+
 # SPECTATOR-V4
+
+
 class CurrentGameInfo(RiotApiResponse):
     def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
                  gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,

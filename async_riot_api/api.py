@@ -288,6 +288,30 @@ class LoLAPI:
             types.LorMatchDto
         )
     
+    # LOR-RANKED-V1
+    async def get_lor_leaderboards(self) -> types.LorLeaderboardDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/ranked/v1/leaderboards'),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.LorLeaderboardDto
+        )
+    
+    # LOR-STATUS-V1
+    async def get_lor_status(self) -> types.PlatformDataDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/status/v1/platform-data'),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.PlatformDataDto
+        )
+    
     # MATCH-V5
     async def get_matches(self, puuid: str, *, startTime: Optional[int] = None, endTime: Optional[int] = None,
                           queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
@@ -340,6 +364,20 @@ class LoLAPI:
                 debug = self.debug
             ),
             types.MatchDto,
+        )
+    
+    async def get_timeline(self, match_id: str) -> types.MatchTimelineDto:
+        return await LoLAPI.create_object(
+            await LoLAPI.__make_request(
+                'GET',
+                LoLAPI.__BASE_URL.format(
+                    self.routing_value,
+                    f'/lol/match/v5/matches/{match_id}/timeline'
+                ),
+                {'X-Riot-Token': self.api_key},
+                debug = self.debug
+            ),
+            types.MatchTimelineDto,
         )
     
     # SPECTATOR-V4
