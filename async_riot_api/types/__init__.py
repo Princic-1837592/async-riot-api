@@ -4,13 +4,33 @@ from typing import List, Optional
 # SUPER-CLASS
 class RiotApiResponse:
     def __init__(self, succeed: bool = True):
-        self.succeed = succeed
+        self.success = succeed
         self.error = not succeed
     
     def __str__(self):
-        return '{}({})'.format(
+        return self.__str()
+    
+    def __str(self, level: int = 0, sep = '    '):
+        def recursion(obj, level: int = level, sep = sep):
+            if isinstance(obj, RiotApiResponse):
+                return obj.__str(level + 1, sep)
+            if isinstance(obj, list):
+                return f'[\n{sep * (level + 2)}' + (
+                    f',\n{sep * (level + 2)}'.join(
+                        map(lambda x: recursion(x, level + 1, sep), obj)
+                    )) + f'\n{sep * (level + 1)}]'
+            return obj
+        
+        return '{}(\n{}{}\n{})'.format(
             type(self).__name__,
-            ', '.join('{} = {}'.format(*item) for item in vars(self).items())
+            sep * (level + 1),
+            f',\n{sep * (level + 1)}'.join(
+                '{} = {}'.format(*item) for item in map(
+                    lambda x: (x[0], recursion(x[1])),
+                    filter(lambda x: x[0] not in ['success', 'error'], vars(self).items())
+                )
+            ),
+            sep * level,
         )
     
     def __repr__(self):
@@ -130,12 +150,12 @@ class LeagueEntryDTO(RiotApiResponse):
                  hotStreak: bool, veteran: bool, freshBlood: bool, inactive: bool, miniSeries: Optional[dict] = None,
                  leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None):
         super().__init__()
-        self.leagueId: str = leagueId or '?'
+        self.leagueId = leagueId
         self.summonerId = summonerId
         self.summonerName = summonerName
         self.queueType = queueType
-        self.tier: str = tier or '?'
-        self.rank: str = rank or '?'
+        self.tier = tier
+        self.rank = rank
         self.leaguePoints = leaguePoints
         self.wins = wins
         self.losses = losses
@@ -150,7 +170,7 @@ class LeagueEntryDTO(RiotApiResponse):
     def __get_short(tier: str, rank: str) -> str:
         if not (tier and rank):
             return '??'
-        return f"{('GM' if tier.startswith('GR') else tier[0])}{'4' if rank.lower().endswith('v') else len(rank)}"
+        return f"{('GM' if tier.startswith('GR') else tier[0])}{'4' if rank.lower() == 'iv' else len(rank)}"
 
 
 class MiniSeriesDTO(RiotApiResponse):

@@ -468,14 +468,14 @@ class LoLAPI:
     async def get_nth_match(self, account_id: str, n: int = 0) -> Dict[str, Any]:
         return await self.get_match((await self.get_matches(account_id, n))['matches'][0]['gameId'])'''
     
-    async def get_nth_match_v5(self, puuid: str, n: int = 0) -> types.MatchDto:
+    async def get_nth_match(self, puuid: str, n: int = 0) -> types.MatchDto:
         return await self.get_match((await self.get_matches(puuid, start = n, count = 1) or [None])[0])
     
     '''async def get_first_match(self, account_id: str) -> Dict[str, Any]:
         return await self.get_nth_match(account_id, await self.get_match_number(account_id) - 1)'''
     
     async def get_last_match(self, puuid: str) -> types.MatchDto:
-        return await self.get_nth_match_v5(puuid)
+        return await self.get_nth_match(puuid)
     
     async def __get_league_type(self, summoner_id: str, league_type: str) -> Union[
         types.LeagueEntryDTO, types.RiotApiError]:
