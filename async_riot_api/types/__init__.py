@@ -3,9 +3,8 @@ from typing import List, Optional
 
 # SUPER-CLASS
 class RiotApiResponse:
-    def __init__(self, succeed: bool = True):
-        self.success = succeed
-        self.error = not succeed
+    def __init__(self, __success: bool = True):
+        self.__success = __success
     
     def __str__(self):
         return self.__str()
@@ -35,6 +34,9 @@ class RiotApiResponse:
     
     def __repr__(self):
         return str(self)
+    
+    def __bool__(self):
+        return self.__success
 
 
 # ERROR
