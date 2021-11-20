@@ -19,14 +19,14 @@ class LoLAPI:
         for queue in loads(requests.get('https://static.developer.riotgames.com/docs/lol/queues.json').text)
     }
     
-    # correct champion name -> short champion
-    __CHAMPS: Dict[str, Dict[str, Any]] = loads(
+    # correct_champion_name -> ShortChampionDD
+    __CHAMPS: Dict[str, types.ShortChampionDD] = {name: types.ShortChampionDD(**value) for name, value in loads(
         requests.get(f'https://ddragon.leagueoflegends.com/cdn/{__VERSION}/data/en_US/champion.json').text
-    )['data']
+    )['data'].items()}
     
     # integer champion ID -> correct champion name
     __CHAMP_ID_TO_CORRECT_NAME: Dict[int, str] = {
-        int(info['key']): champ for champ, info in __CHAMPS.items()
+        info.int_id: champ for champ, info in __CHAMPS.items()
     }
     __LANGUAGES: List[str] = loads(requests.get('https://ddragon.leagueoflegends.com/cdn/languages.json').text)
     __LANG_SHORT_TO_LONG: Dict[str, str] = {
@@ -502,7 +502,7 @@ class LoLAPI:
         return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
     
     @staticmethod
-    def compute_champion_from_similar_name(search_name: str) -> Dict[str, Any]:
+    def compute_champion_from_similar_name(search_name: str) -> types.ShortChampionDD:
         max_ratio = 0
         matched_champ = None
         for champ_name in LoLAPI.__CHAMPS:
@@ -532,11 +532,11 @@ class LoLAPI:
         return LoLAPI.__QUEUES.get(queue_id, LoLAPI.__QUEUES[0])
     
     @staticmethod
-    def get_champion_from_correct_name(name: str) -> Dict[str, Any]:
+    def get_champion_from_correct_name(name: str) -> types.ShortChampionDD:
         return LoLAPI.__CHAMPS.get(name)
     
     @staticmethod
-    def get_champion_from_id(champ_id: int) -> Dict[str, Any]:
+    def get_champion_from_id(champ_id: int) -> types.ShortChampionDD:
         """
         :param champ_id: integer champion ID
         :return: short champion
@@ -544,13 +544,15 @@ class LoLAPI:
         return LoLAPI.get_champion_from_correct_name(LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id))
     
     @staticmethod
-    async def get_full_champion_from_correct_name(name: str, language: str):
+    async def get_full_champion_from_correct_name(name: str, language: str) -> types.ChampionDD:
         if language not in LoLAPI.__LANGUAGES:
             language = LoLAPI.compute_language(language)
-        return (await LoLAPI.__make_request(
-            'GET',
-            f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
-        ))[1]['data'][name]
+        return types.ChampionDD(
+            **((await LoLAPI.__make_request(
+                'GET',
+                f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
+            ))[1]['data'][name])
+        )
     
     @staticmethod
     def get_map_icon_url(map_id: int):

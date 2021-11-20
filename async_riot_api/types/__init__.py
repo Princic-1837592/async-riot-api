@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 
 # SUPER-CLASS
@@ -7,26 +7,27 @@ class RiotApiResponse:
         self.__success = __success
     
     def __str__(self):
-        return self.__str()
+        return self.to_str()
     
-    def __str(self, level: int = 0, sep = '    '):
+    def to_str(self, *, level: int = 0, sep = '    '):
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
-                return obj.__str(level + 1, sep)
+                return obj.to_str(level = level + 1, sep = sep)
             if isinstance(obj, list):
                 return f'[\n{sep * (level + 2)}' + (
                     f',\n{sep * (level + 2)}'.join(
                         map(lambda x: recursion(x, level + 1, sep), obj)
                     )) + f'\n{sep * (level + 1)}]'
-            return obj
+            return str(obj)
         
+        to_skip = ['success', 'error', '_RiotApiResponse__success', '_RiotApiResponse__error']
         return '{}(\n{}{}\n{})'.format(
             type(self).__name__,
             sep * (level + 1),
             f',\n{sep * (level + 1)}'.join(
                 '{} = {}'.format(*item) for item in map(
                     lambda x: (x[0], recursion(x[1])),
-                    filter(lambda x: x[0] not in ['success', 'error'], vars(self).items())
+                    filter(lambda x: x[0] not in to_skip, vars(self).items())
                 )
             ),
             sep * level,
@@ -45,6 +46,180 @@ class RiotApiError(RiotApiResponse):
         super().__init__(False)
         self.message = message
         self.status_code = status_code
+
+
+class ShortChampionDD(RiotApiResponse):
+    def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
+                 tags: List[str], title: str, version: str):
+        super().__init__()
+        self.blurb = blurb
+        self.id = id
+        self.image: ChampionImageDD = ChampionImageDD(**image)
+        self.info: ChampionInfoDD = ChampionInfoDD(**info)
+        self.key = key
+        self.int_id: int = int(key)
+        self.name = name
+        self.partype = partype
+        self.stats: ChampionStatsDD = ChampionStatsDD(**stats)
+        self.tags: List[str] = tags
+        self.title = title
+        self.version = version
+
+
+class ChampionDD(RiotApiResponse):
+    def __init__(self, id: str, key: str, name: str, title: str, image: dict, skins: List[dict], lore: str, blurb: str,
+                 allytips: List[str], enemytips: List[str], tags: List[str], partype: str, info: dict, stats: dict,
+                 spells: List[dict], passive: dict, recommended: list):
+        super().__init__()
+        self.id = id
+        self.key = key
+        self.int_id: int = int(key)
+        self.name = name
+        self.title = title
+        self.image: ChampionImageDD = ChampionImageDD(**image)
+        self.skins: List[ChampionSkinsDD] = list(map(lambda x: ChampionSkinsDD(**x), skins))
+        self.lore = lore
+        self.blurb = blurb
+        self.allytips: List[str] = allytips
+        self.enemytips: List[str] = enemytips
+        self.tags: List[str] = tags
+        self.partype = partype
+        self.info: ChampionInfoDD = ChampionInfoDD(**info)
+        self.stats: ChampionStatsDD = ChampionStatsDD(**stats)
+        self.spells: List[ChampionSpellsDD] = list(map(lambda x: ChampionSpellsDD(**x), spells))
+        self.passive: ChampionPassiveDD = ChampionPassiveDD(**passive)
+        self.recommended: list = recommended
+
+
+class ChampionImageDD(RiotApiResponse):
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
+        super().__init__()
+        self.full = full
+        self.sprite = sprite
+        self.group = group
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+
+class ChampionSkinsDD(RiotApiResponse):
+    def __init__(self, id: str, num: int, name: str, chromas: bool):
+        super().__init__()
+        self.id = id
+        self.num = num
+        self.name = name
+        self.chromas = chromas
+
+
+class ChampionInfoDD(RiotApiResponse):
+    def __init__(self, attack: int, defense: int, magic: int, difficulty: int):
+        super().__init__()
+        self.attack = attack
+        self.defense = defense
+        self.magic = magic
+        self.difficulty = difficulty
+
+
+class ChampionStatsDD(RiotApiResponse):
+    def __init__(self, hp: int, hpperlevel: int, mp: int, mpperlevel: int, movespeed: int, armor: int,
+                 armorperlevel: float, spellblock: int, spellblockperlevel: float, attackrange: int, hpregen: int,
+                 hpregenperlevel: int, mpregen: int, mpregenperlevel: int, crit: int, critperlevel: int,
+                 attackdamage: int, attackdamageperlevel: int, attackspeedperlevel: float, attackspeed: float):
+        super().__init__()
+        self.hp = hp
+        self.hpperlevel = hpperlevel
+        self.mp = mp
+        self.mpperlevel = mpperlevel
+        self.movespeed = movespeed
+        self.armor = armor
+        self.armorperlevel = armorperlevel
+        self.spellblock = spellblock
+        self.spellblockperlevel = spellblockperlevel
+        self.attackrange = attackrange
+        self.hpregen = hpregen
+        self.hpregenperlevel = hpregenperlevel
+        self.mpregen = mpregen
+        self.mpregenperlevel = mpregenperlevel
+        self.crit = crit
+        self.critperlevel = critperlevel
+        self.attackdamage = attackdamage
+        self.attackdamageperlevel = attackdamageperlevel
+        self.attackspeedperlevel = attackspeedperlevel
+        self.attackspeed = attackspeed
+
+
+class ChampionSpellsDD(RiotApiResponse):
+    def __init__(self, id: str, name: str, description: str, tooltip: str, leveltip: dict, maxrank: int,
+                 cooldown: List[int], cooldownBurn: str, cost: List[int], costBurn: str, datavalues: dict,
+                 effect: List[Any], effectBurn: List[Any], vars: List[Any], costType: str, maxammo: str,
+                 range: List[int], rangeBurn: str, image: dict, resource: str):
+        super().__init__()
+        self.id = id
+        self.name = name
+        self.description = description
+        self.tooltip = tooltip
+        self.leveltip: ChampionSpellLeveltipDD = ChampionSpellLeveltipDD(**leveltip)
+        self.maxrank = maxrank
+        self.cooldown: List[int] = cooldown
+        self.cooldownBurn = cooldownBurn
+        self.cost: List[int] = cost
+        self.costBurn = costBurn
+        self.datavalues: ChampionSpellDatavaluesDD = ChampionSpellDatavaluesDD(**datavalues)
+        self.effect = effect
+        self.effectBurn = effectBurn
+        self.vars: List[Any] = vars
+        self.costType = costType
+        self.maxammo = maxammo
+        self.range: List[int] = range
+        self.rangeBurn = rangeBurn
+        self.image: ChampionSpellImageDD = ChampionSpellImageDD(**image)
+        self.resource = resource
+
+
+class ChampionSpellLeveltipDD(RiotApiResponse):
+    def __init__(self, label: List[str], effect: List[str]):
+        super().__init__()
+        self.label: List[str] = label
+        self.effect: List[str] = effect
+
+
+class ChampionSpellDatavaluesDD(RiotApiResponse):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.__dict__.update(kwargs)
+
+
+class ChampionSpellImageDD(RiotApiResponse):
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
+        super().__init__()
+        self.full = full
+        self.sprite = sprite
+        self.group = group
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+
+class ChampionPassiveDD(RiotApiResponse):
+    def __init__(self, name: str, description: str, image: dict):
+        super().__init__()
+        self.name = name
+        self.description = description
+        self.image: ChampionPassiveImageDD = ChampionPassiveImageDD(**image)
+
+
+class ChampionPassiveImageDD(RiotApiResponse):
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
+        super().__init__()
+        self.full = full
+        self.sprite = sprite
+        self.group = group
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
 
 
 # ACCOUNT-V1
