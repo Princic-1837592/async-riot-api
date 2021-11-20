@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name = 'async-riot-api',
-    version = '0.0.23',
+    version = '0.0.24',
     author = 'Andrea Princic',
     author_email = 'princic.1837592@studenti.uniroma1.it',
     description = 'Async wrapper for the Riot Games API for League of Legends',

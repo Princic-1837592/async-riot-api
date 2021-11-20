@@ -499,7 +499,7 @@ class LoLAPI:
     
     @staticmethod
     def get_champion_icon_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
-        return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id)}_{skin}.jpg'
+        return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
     
     @staticmethod
     def compute_champion_from_similar_name(search_name: str) -> Dict[str, Any]:
@@ -551,3 +551,7 @@ class LoLAPI:
             'GET',
             f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
         ))[1]['data'][name]
+    
+    @staticmethod
+    def get_map_icon_url(map_id: int):
+        return f'https://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map{map_id}.png'
