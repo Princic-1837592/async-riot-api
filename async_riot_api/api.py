@@ -20,7 +20,7 @@ class LoLAPI:
             print(f'The request raised an error with status code {summoner.status_code}: {summoner.message}')
         else:
             print(summoner.to_string(sep = '|   '))
-    
+
     Parameters:
         api_key (``str``): your API token
         
