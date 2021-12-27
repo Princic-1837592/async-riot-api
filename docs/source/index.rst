@@ -27,8 +27,7 @@ API reference
     :hidden:
     :caption: First of all
 
-    start/auth
-    start/interaction
+    start/
 
 .. toctree::
     :hidden:
