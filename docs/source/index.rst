@@ -27,14 +27,16 @@ API reference
     :hidden:
     :caption: First of all
 
-    start/
+    start/auth
+    start/interaction
+    start/quickstart
 
 .. toctree::
     :hidden:
     :caption: Methods and types
 
     api/lolapi
-    api/types
+    api/types/index
 
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
