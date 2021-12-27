@@ -25,6 +25,13 @@ API reference
 
 .. toctree::
     :hidden:
+    :caption: First of all
+
+    start/auth
+    start/interaction
+
+.. toctree::
+    :hidden:
     :caption: Methods and types
 
     api/lolapi
