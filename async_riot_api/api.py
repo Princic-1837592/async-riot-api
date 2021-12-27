@@ -14,6 +14,7 @@ class LoLAPI:
     but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as `types.RiotApiError`,
     containing information about the error.
     To distinguish between a successful response and an error, you can easily use the object as a boolean expression:
+    .. highlight:: python
     .. code-block:: python
         summoner = await api.get_account_by_puuid(puuid)
         if not summoner:
@@ -26,7 +27,7 @@ class LoLAPI:
         
         region (``str``): region you want to use
         
-        routing_value (``str``): one among america, asia or europe. Needed for some API calls, depends on region
+        routing_value (``str``): one among 'america', 'asia' or 'europe'. Needed for some API calls, depends on region
         
         debug (``bool``): if you want the LoLAPI object to print the url of every request made
     """
