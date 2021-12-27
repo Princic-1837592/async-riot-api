@@ -36,7 +36,7 @@ API reference
     :caption: Methods and types
 
     api/lolapi
-    api/types/index
+    api/types
 
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
