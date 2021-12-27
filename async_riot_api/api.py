@@ -95,7 +95,8 @@ class LoLAPI:
     # ACCOUNT-V1
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
         """
-        To get an account given its puuid
+        To get an account given its puuid.
+        Original method: `/riot/account/v1/accounts/by-puuid/{puuid}`_
         
         Parameters:
             puuid (``str``):
