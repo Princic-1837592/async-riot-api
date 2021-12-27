@@ -24,25 +24,10 @@ API reference
     - :doc:`Types <api/types/index>`: List of the implemented types.
 
 .. toctree::
-    :hidden:
-    :caption: Introduction
-
-    intro/quickstart
-    intro/install
+   async_riot_api.types
 
 .. toctree::
-    :hidden:
-    :caption: Getting started
-
-    start/auth
-    start/interaction
-
-.. toctree::
-    :hidden:
-    :caption: API interaction
-
-    api/lolapi
-    api/types/index
+   async_riot_api
 
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
