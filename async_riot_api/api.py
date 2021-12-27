@@ -11,8 +11,13 @@ class LoLAPI:
     """Main class to interact with the API. Offers async methods corresponding to API methods and more.
     
     Parameters:
-        api_key (``str``):
-            your API token
+        api_key (``str``): your API token
+        
+        region (``str``): region you want to use
+        
+        routing_value (``str``): one among america, asia or europe. Needed for some API calls, depends on region
+        
+        debug (``bool``): if you want the LoLAPI object to print the url of every request made
     """
     
     __BASE_URL: str = 'https://{}.api.riotgames.com{}'
