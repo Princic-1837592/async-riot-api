@@ -89,7 +89,8 @@ class LoLAPI:
                 puuid of the account you are looking for
                 
         Returns:
-            ``types.AccountDto``: on success, an object of type ``types.AccountDto`` is returned
+            :obj:`~async_riot_api.types.AccountDto`: on success. *IMPORTANT*: this is not about a summoner account il LoL,
+            this is about Riot Games accounts
         """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
