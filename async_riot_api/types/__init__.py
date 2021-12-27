@@ -11,11 +11,8 @@ class RiotApiResponse:
     def __init__(self, success: bool = True):
         self.__success = success
     
-    def __str__(self):
-        return self.to_str()
-    
-    def to_str(self, *, level: int = 0, sep = '    '):
-        """Returns an indented string representation of the object
+    def to_string(self, *, level: int = 0, sep = '    '):
+        """Returns a prettified string representation of the object
         
         Parameters:
             level (``int``, *optional*): starting level of indentation. Default: 0
@@ -24,7 +21,7 @@ class RiotApiResponse:
         """
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
-                return obj.to_str(level = level + 1, sep = sep)
+                return obj.to_string(level = level + 1, sep = sep)
             if isinstance(obj, list):
                 return f'[\n{sep * (level + 2)}' + (
                     f',\n{sep * (level + 2)}'.join(
@@ -45,15 +42,19 @@ class RiotApiResponse:
             sep * level,
         )
     
-    def __repr__(self):
-        return str(self)
-    
     def __bool__(self):
         return self.__success
 
 
 # ERROR
 class RiotApiError(RiotApiResponse):
+    """General API response error
+    
+    Parameters:
+        message (``str``): message contained in the response
+        
+        status_code (``int``): error code from the response
+    """
     def __init__(self, message: str = 'Bad Request', status_code: int = 400):
         super().__init__(False)
         self.message = message
@@ -61,6 +62,11 @@ class RiotApiError(RiotApiResponse):
 
 
 class ShortChampionDD(RiotApiResponse):
+    """Type representing a short informations about a champion
+    
+    Parameters:
+        blurb (``str``): TODO
+    """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
         super().__init__()

@@ -10,7 +10,7 @@ Get started
 .. hlist::
     :columns: 2
 
-    - :doc:`Quick Start <intro/quickstart>`: To get started quickly.
+    - :doc:`Quick Start <start/quickstart>`: To get started quickly.
     - :doc:`API Access <start/auth>`: To get an API token.
     - :doc:`API Interaction <start/interaction>`: To interact with the API.
 
@@ -21,13 +21,7 @@ API reference
     :columns: 2
 
     - :doc:`LoLAPI class <api/lolapi>`: Details about the main class for interacting with the API.
-    - :doc:`Types <api/types/index>`: List of the implemented types.
-
-.. toctree::
-   async_riot_api.types
-
-.. toctree::
-   async_riot_api
+    - :doc:`Types <api/types>`: List of the implemented types.
 
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
