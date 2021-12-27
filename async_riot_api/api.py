@@ -8,8 +8,11 @@ from . import types
 
 
 class LoLAPI:
-    """
-    https://developer.riotgames.com/apis
+    """Main class to interact with the API. Offers async methods corresponding to API methods and more.
+    
+    Parameters:
+        api_key (``str``):
+            your API token
     """
     
     __BASE_URL: str = 'https://{}.api.riotgames.com{}'
@@ -58,7 +61,7 @@ class LoLAPI:
         )
     
     @staticmethod
-    async def create_object(response: Tuple[int, Any], object_class = None) -> Any:
+    async def __create_object(response: Tuple[int, Any], object_class = None) -> Any:
         status, json_response = response
         if 200 <= status < 300:
             t = type(json_response)
@@ -73,7 +76,17 @@ class LoLAPI:
     
     # ACCOUNT-V1
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
-        return await LoLAPI.create_object(
+        """
+        To get an account given its puuid
+        
+        Parameters:
+            puuid (``str``):
+                puuid of the account you are looking for
+                
+        Returns:
+            ``types.AccountDto``: on success, an object of type ``types.AccountDto`` is returned
+        """
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
@@ -87,7 +100,7 @@ class LoLAPI:
         )
     
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
@@ -101,7 +114,7 @@ class LoLAPI:
         )
     
     async def get_active_shards(self, game: str, puuid: str) -> types.ActiveShardDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
@@ -122,7 +135,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(
                 f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}'
             ),
@@ -137,7 +150,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(
                 f'/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}/by-champion/{champion_id}'
             ), types.ChampionMasteryDto
@@ -150,7 +163,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/champion-mastery/v4/scores/by-summoner/{summoner_id}')
         )
     
@@ -161,45 +174,45 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request('/lol/platform/v3/champion-rotations'),
             types.ChampionInfo
         )
     
     # CLASH-V1
     async def get_clash_players_by_summoner_id(self, summoner_id: str) -> List[types.PlayerDto]:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/players/by-summoner/{summoner_id}'),
             types.PlayerDto
         )
     
     async def get_clash_team_by_id(self, team_id: str) -> types.TeamDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/teams/{team_id}'),
             types.TeamDto
         )
     
     async def get_clash_tournaments(self) -> List[types.TournamentDto]:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments'),
             types.TournamentDto
         )
     
     async def get_clash_tournament_by_team_id(self, team_id: str) -> types.TournamentDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/by-team/{team_id}'),
             types.TournamentDto
         )
     
     async def get_clash_tournament_by_id(self, tournament_id: int) -> types.TournamentDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/{tournament_id}'),
             types.TournamentDto
         )
     
     # LEAGUE-V4
     async def get_challenger_leagues(self, queue: str) -> types.LeagueListDTO:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/challengerleagues/by-queue/{queue}'),
             types.LeagueListDTO
         )
@@ -212,7 +225,7 @@ class LoLAPI:
         """
         
         return set(
-            await LoLAPI.create_object(
+            await LoLAPI.__create_object(
                 await self.__make_api_request(f'/lol/league/v4/entries/by-summoner/{summoner_id}'),
                 types.LeagueEntryDTO
             )
@@ -221,26 +234,26 @@ class LoLAPI:
     async def get_summoners_by_league(self, queue: str, tier: str, division: str, page: int = 1) -> Set[
         types.LeagueEntryDTO]:
         return set(
-            await LoLAPI.create_object(
+            await LoLAPI.__create_object(
                 await self.__make_api_request(f'/lol/league/v4/entries/{queue}/{tier}/{division}?page={page}'),
                 types.LeagueEntryDTO
             )
         )
     
     async def get_grand_master_leagues(self, queue: str) -> types.LeagueListDTO:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/grandmasterleagues/by-queue/{queue}'),
             types.LeagueListDTO
         )
     
     async def get_leagues(self, league_id: str) -> types.LeagueListDTO:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/leagues/{league_id}'),
             types.LeagueListDTO
         )
     
     async def get_master_leagues(self, queue: str) -> types.LeagueListDTO:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/masterleagues/by-queue/{queue}'),
             types.LeagueListDTO
         )
@@ -252,7 +265,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(await self.__make_api_request('/lol/status/v3/shard-data'), types.ShardStatus)
+        return await LoLAPI.__create_object(await self.__make_api_request('/lol/status/v3/shard-data'), types.ShardStatus)
     
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
@@ -261,14 +274,14 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request('/lol/status/v4/platform-data'),
             types.PlatformDataDto
         )
     
     # LOR-MATCH-V1
     async def get_lor_matches(self, puuid: str) -> List[str]:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/match/v1/matches/by-puuid/{puuid}/ids'),
@@ -278,7 +291,7 @@ class LoLAPI:
         )
     
     async def get_lor_match(self, match_id: str) -> types.LorMatchDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/match/v1/matches/{match_id}'),
@@ -290,7 +303,7 @@ class LoLAPI:
     
     # LOR-RANKED-V1
     async def get_lor_leaderboards(self) -> types.LorLeaderboardDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/ranked/v1/leaderboards'),
@@ -302,7 +315,7 @@ class LoLAPI:
     
     # LOR-STATUS-V1
     async def get_lor_status(self) -> types.PlatformDataDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(self.routing_value, f'/lor/status/v1/platform-data'),
@@ -337,7 +350,7 @@ class LoLAPI:
             url += f'&queue={queue}'
         if type:
             url += f'&type={type}'
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(self.routing_value, url),
@@ -353,7 +366,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
@@ -367,7 +380,7 @@ class LoLAPI:
         )
     
     async def get_timeline(self, match_id: str) -> types.MatchTimelineDto:
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
                 LoLAPI.__BASE_URL.format(
@@ -388,7 +401,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/spectator/v4/active-games/by-summoner/{summoner_id}'),
             types.CurrentGameInfo
         )
@@ -399,7 +412,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request('/lol/spectator/v4/featured-games'),
             types.FeaturedGames
         )
@@ -412,7 +425,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/summoner/v4/summoners/by-account/{account_id}'),
             types.SummonerDTO
         )
@@ -424,7 +437,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/summoner/v4/summoners/by-name/{quote_plus(summoner_name)}'),
             types.SummonerDTO
         )
@@ -436,7 +449,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/summoner/v4/summoners/by-puuid/{puuid}'),
             types.SummonerDTO
         )
@@ -448,7 +461,7 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.create_object(
+        return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/summoner/v4/summoners/{summoner_id}'),
             types.SummonerDTO
         )

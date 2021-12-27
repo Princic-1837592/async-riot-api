@@ -3,13 +3,25 @@ from typing import Any, List, Optional
 
 # SUPER-CLASS
 class RiotApiResponse:
-    def __init__(self, __success: bool = True):
-        self.__success = __success
+    """Superclass of all API responses
+    
+    Parameters:
+        success (``bool``): wether the response was successful. Useful to spot errors
+    """
+    def __init__(self, success: bool = True):
+        self.__success = success
     
     def __str__(self):
         return self.to_str()
     
     def to_str(self, *, level: int = 0, sep = '    '):
+        """Returns an indented string representation of the object
+        
+        Parameters:
+            level (``int``, *optional*): starting level of indentation. Default: 0
+            
+            sep (``str``, *optional*): character sequence for indentation. Default: 4 spaces
+        """
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
                 return obj.to_str(level = level + 1, sep = sep)
