@@ -9,6 +9,7 @@ It is important to notice that this implementation is exception-free, not meanin
 but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as `types.RiotApiError`,
 containing information about the error.
 To distinguish between a successful response and an error, you can easily use the object as a boolean expression:
+
 .. code-block:: python
     summoner = await api.get_account_by_puuid(puuid)
     if not summoner:
