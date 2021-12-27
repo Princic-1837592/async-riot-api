@@ -2,3 +2,8 @@ aiohttp
 requests
 fuzzywuzzy
 python-Levenshtein
+sphinx
+sphinx_rtd_theme
+sphinx_copybutton
+pypandoc
+sphinx-autobuild
