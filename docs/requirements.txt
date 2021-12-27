@@ -1,0 +1,4 @@
+aiohttp
+requests
+fuzzywuzzy
+python-Levenshtein
