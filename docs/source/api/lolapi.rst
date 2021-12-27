@@ -1,5 +1,5 @@
 LoLAPI Client
-===============
+=============
 
 On this page you will find the list of methods available for the LoLAPI class.
 The mahority of methods are a direct implementation of Riot Games' API methods, others are extras made to simplify your life.
