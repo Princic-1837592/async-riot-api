@@ -23,6 +23,13 @@ API reference
     - :doc:`LoLAPI class <api/lolapi>`: Details about the main class for interacting with the API.
     - :doc:`Types <api/types>`: List of the implemented types.
 
+.. toctree::
+    :hidden:
+    :caption: Methods and types
+
+    api/lolapi
+    api/types
+
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
 .. _Riot Games APIs: https://developer.riotgames.com/
