@@ -94,7 +94,7 @@ class ShortChampionDD(RiotApiResponse):
     :param version: valid version for this object
     :type version: str
     
-    Other attributes:
+    Attributes:
         int_id (``int``):
             integer representation of param ``key``. Not present in the original data type,
             useful for some methods and, more importantly, coherent with the represented value
