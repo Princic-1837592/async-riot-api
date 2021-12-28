@@ -29,6 +29,7 @@ API reference
 
     start/quickstart
     start/auth
+    start/install
     start/interaction
 
 .. toctree::
