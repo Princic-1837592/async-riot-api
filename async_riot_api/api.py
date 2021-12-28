@@ -331,7 +331,7 @@ class LoLAPI:
         :meth:`~async_riot_api.LoLAPI.get_summoners_by_league`,
         but it also supports the apex tiers (Challenger, Grandmaster, and Master).
         
-        `Original method </lol/league-exp/v4/entries/{queue}/{tier}/{division}>`_.
+        `Original method <https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries>`_..
         
         :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_TFT', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
         :type queue: str
