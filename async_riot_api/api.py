@@ -96,7 +96,7 @@ class LoLAPI:
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
         """To get an account given its puuid.
         
-        Original method: /riot/account/v1/accounts/by-puuid/{puuid}
+        Original method: */riot/account/v1/accounts/by-puuid/{puuid}*
         
         Parameters:
             puuid (``str``): puuid of the account you are looking for
@@ -121,14 +121,14 @@ class LoLAPI:
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
         """To get an account given its name and tag line.
         
-        Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+        Original method: */riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}*
         
         :param game_name: in-game name of the account you are looking for
         :type game_name: str
         :param tag_line: no documentation found
         :type tag_line: str
         :return: account data
-        :rtype: class:`types.AccountDto`
+        :rtype: :class:`types.AccountDto`
         """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
