@@ -105,6 +105,7 @@ class LoLAPI:
         :return: account data
         :rtype: :class:`~types.AccountDto`
         """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -131,6 +132,7 @@ class LoLAPI:
         :return: account data
         :rtype: :class:`~types.AccountDto`
         """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -157,6 +159,7 @@ class LoLAPI:
         :return: shard data
         :rtype: :class:`~types.ActiveShardDto`
         """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -256,6 +259,7 @@ class LoLAPI:
         :return: list of players
         :rtype: List[:class:`~types.PlayerDto`]
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/players/by-summoner/{summoner_id}'),
             types.PlayerDto
@@ -272,6 +276,7 @@ class LoLAPI:
         :return: information about the team
         :rtype: :class:`~types.TeamDto`
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/teams/{team_id}'),
             types.TeamDto
@@ -286,6 +291,7 @@ class LoLAPI:
         :return: list of tournaments
         :rtype: List[:class:`~types.TournamentDto`]
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments'),
             types.TournamentDto
@@ -302,6 +308,7 @@ class LoLAPI:
         :return: information about tournament
         :rtype: :class:`~types.TournamentDto`
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/by-team/{team_id}'),
             types.TournamentDto
@@ -318,6 +325,7 @@ class LoLAPI:
         :return: information about the tournament
         :rtype: :class:`~types.TournamentDto`
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/{tournament_id}'),
             types.TournamentDto
@@ -338,11 +346,13 @@ class LoLAPI:
         :param tier: rank tier, between 'IRON' and 'CHALLENGER'
         :type tier: str
         :param division: rank division, between 'I' and 'IV' (in roman numbers)
+        :type division: str
         :param page: page to select, starting from 1. Limited based on the number of entries, it's suggested to iter until results are found
         :type page: int
         :return: set of summoners for the requested queue, tier and division
-        :rtype: :class:`~types.LeagueEntryDTO`
+        :rtype: Set[:class:`~types.LeagueEntryDTO`]
         """
+        
         return set(
             await LoLAPI.__create_object(
                 await self.__make_api_request(f'/lol/league-exp/v4/entries/{queue}/{tier}/{division}?page={page}'),
@@ -353,11 +363,16 @@ class LoLAPI:
     # LEAGUE-V4
     async def get_challenger_leagues(self, queue: str) -> types.LeagueListDTO:
         """
-        Get information about challenger leagues
+        Get the list of challengers.
         
-        :param queue:
-        :return:
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getChallengerLeague>`_.
+        
+        :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
+        :type queue: str
+        :return: set of challengers
+        :rtype: :class:`~types.LeagueListDTO`
         """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/challengerleagues/by-queue/{queue}'),
             types.LeagueListDTO
@@ -365,9 +380,14 @@ class LoLAPI:
     
     async def get_league(self, summoner_id: str) -> Set[types.LeagueEntryDTO]:
         """
-        /lol/league/v4/entries/by-summoner/{encryptedSummonerId}
+        Get the set of league entries for a given summoner.
+        
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner>`_.
+        
         :param summoner_id:
-        :return:
+        :type summoner_id: str
+        :return: information about their ranks in every queue
+        :rtype: Set[:class:`~types.LeagueEntryDTO`]
         """
         
         return set(
@@ -379,6 +399,24 @@ class LoLAPI:
     
     async def get_summoners_by_league(self, queue: str, tier: str, division: str, page: int = 1) -> Set[
         types.LeagueEntryDTO]:
+        """
+        Get the list of summoners that are currently in the given rank of the given queue. Only supports non-apex tiers.
+        To get information about apex tiers, look at :meth:`~async_riot_api.LoLAPI.get_summoners_by_league_exp`.
+        
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntries>`_.
+        
+        :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
+        :type queue: str
+        :param tier: rank tier, between 'IRON' and 'CHALLENGER'
+        :type tier: str
+        :param division: rank division, between 'I' and 'IV' (in roman numbers)
+        :type division: str
+        :param page: page to select, starting from 1. Limited based on the number of entries, it's suggested to iter until results are found
+        :type page: int
+        :return: set of summoners for the requested queue, tier and division
+        :rtype: Set[:class:`~types.LeagueEntryDTO`]
+        """
+        
         return set(
             await LoLAPI.__create_object(
                 await self.__make_api_request(f'/lol/league/v4/entries/{queue}/{tier}/{division}?page={page}'),
@@ -387,18 +425,41 @@ class LoLAPI:
         )
     
     async def get_grand_master_leagues(self, queue: str) -> types.LeagueListDTO:
+        """
+        Same as :meth:`~async_riot_api.LoLAPI.get_challenger_leagues`, but for grand masters.
+        
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getGrandmasterLeague>`_.
+        """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/grandmasterleagues/by-queue/{queue}'),
             types.LeagueListDTO
         )
     
     async def get_leagues(self, league_id: str) -> types.LeagueListDTO:
+        """
+        Get the list of summoners in the given league by its ID.
+        
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueById>`_.
+        
+        :param league_id:
+        :type league_id: str
+        :return: list of summoners currently in the given league
+        :rtype: :class:`~types.LeagueListDTO`
+        """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/leagues/{league_id}'),
             types.LeagueListDTO
         )
     
     async def get_master_leagues(self, queue: str) -> types.LeagueListDTO:
+        """
+        Same as :meth:`~async_riot_api.LoLAPI.get_challenger_leagues`, but for masters.
+        
+        `Original method <https://developer.riotgames.com/apis#league-v4/GET_getGrandmasterLeague>`_.
+        """
+        
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/masterleagues/by-queue/{queue}'),
             types.LeagueListDTO
