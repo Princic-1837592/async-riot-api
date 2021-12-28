@@ -10,4 +10,4 @@ Those that return the result of an API method always return an instance of a sub
 .. autoclass:: async_riot_api.LoLAPI()
     :members:
     :member-order: bysource
-    :autodoc_typehints: none
+    :automodule_typehints: none
