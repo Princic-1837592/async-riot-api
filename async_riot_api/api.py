@@ -468,7 +468,7 @@ class LoLAPI:
     # LOL-STATUS-V3
     async def get_platform_data_v3(self) -> types.ShardStatus:
         """
-        /lol/status/v4/platform-data
+        
         :return:
         """
         
