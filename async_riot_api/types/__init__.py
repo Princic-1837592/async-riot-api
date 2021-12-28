@@ -65,6 +65,21 @@ class RiotApiError(RiotApiResponse):
 
 
 class ShortChampionDD(RiotApiResponse):
+    """
+    Type representing short information about a champion
+    
+    :param blurb: short description
+    :type blurb: str
+    :param id: name of the champion without non-alphabetic characters
+    :type id: str
+    :param image: information about the images of a champion
+    :type image: :class:`ChampionImageDD`
+    :param info: schematic information about the champion
+    :type info: :class:`ChampionInfoDD`
+    :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
+    :type key: str
+    :param int_id: integer representation of param ``key``. Non present in the original data type
+    """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
         """
@@ -74,8 +89,13 @@ class ShortChampionDD(RiotApiResponse):
         :type blurb: str
         :param id: name of the champion without non-alphabetic characters
         :type id: str
-        :param image: data about the image of a champion
+        :param image: information about the images of a champion
         :type image: :class:`ChampionImageDD`
+        :param info: schematic information about the champion
+        :type info: :class:`ChampionInfoDD`
+        :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
+        :type key: str
+        :param int_id: integer representation of param ``key``. Non present in the original data type
         """
         super().__init__()
         self.blurb = blurb
