@@ -101,7 +101,7 @@ class LoLAPI:
         :param puuid: puuid of the account
         :type puuid: str
         :return: account data
-        :rtype: :class:`types.AccountDto`
+        :rtype: :class:`~types.AccountDto`
         """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
