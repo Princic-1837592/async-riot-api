@@ -11,7 +11,7 @@ class LoLAPI:
     """Main class to interact with the API. Offers async methods corresponding to API methods and more.
     
     It is important to notice that this implementation is exception-free, not meaning that it's impossible to make mistake,
-    but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as :obj:`~async_riot_api.types.RiotApiError`,
+    but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as :class:`~types.RiotApiError`,
     containing information about the error.
     To distinguish between a successful response and an error, you can easily use the object as a boolean expression:
     
@@ -126,7 +126,7 @@ class LoLAPI:
         :param tag_line: no documentation found
         :type tag_line: str
         :return: account data
-        :rtype: :class:`types.AccountDto`
+        :rtype: :class:`~types.AccountDto`
         """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
@@ -151,7 +151,7 @@ class LoLAPI:
         :param puuid: puuid of the account
         :type puuid: str
         :return: shard data
-        :rtype: :class:`types.ActiveShardDto`"""
+        :rtype: :class:`~types.ActiveShardDto`"""
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
