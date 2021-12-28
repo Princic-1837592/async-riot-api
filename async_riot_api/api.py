@@ -28,7 +28,7 @@ class LoLAPI:
     :type api_key: str
     :param region: region you want to use
     :type region: str
-    :param routing_value: one among 'america', 'asia', 'esports' or 'europe'. Needed for some API calls, depends on region
+    :param routing_value: one among 'AMERICA', 'ASIA', 'ESPORTS', 'EUROPE' or 'SEA. Needed for some API calls, depends on region
     :type routing_value: str
     :param debug: if you want the LoLAPI object to print the url of every request made
     :type debug: bool
@@ -468,7 +468,7 @@ class LoLAPI:
     # LOL-STATUS-V3
     async def get_platform_data_v3(self) -> types.ShardStatus:
         """
-        ``DEPRECATED`` Get information about the server status.
+        ``DEPRECATED`` Get information about LoL server status.
         
         `Original method <https://developer.riotgames.com/apis#lol-status-v3/GET_getShardData>`_.
         
@@ -484,11 +484,11 @@ class LoLAPI:
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
         """
-        Get information about the server status.
+        Get information about LoL server status.
         
         `Original method <https://developer.riotgames.com/apis#lol-status-v4/GET_getPlatformData>`_.
         
-        :return: the current server status
+        :return: the current LoL server status
         :rtype: :class:`types.PlatformDataDto`
         """
         
@@ -526,7 +526,9 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatch>`_.
         
         :param match_id:
-        :return:
+        :type match_id: str
+        :return: useful information about the given LoR match
+        :rtype: :class:`types.LorMatchDto`
         """
         
         return await LoLAPI.__create_object(
@@ -541,6 +543,15 @@ class LoLAPI:
     
     # LOR-RANKED-V1
     async def get_lor_leaderboards(self) -> types.LorLeaderboardDto:
+        """
+        Get the list of players in Master tier.
+        
+        `Original method <https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards>`_.
+        
+        :return: players in LoR Master tier
+        :rtype: :class:`types.LorLeaderboardDto`
+        """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -553,6 +564,15 @@ class LoLAPI:
     
     # LOR-STATUS-V1
     async def get_lor_status(self) -> types.PlatformDataDto:
+        """
+        Get information about LoR servers status.
+        
+        `Original method <https://developer.riotgames.com/apis#lor-status-v1/GET_getPlatformData>`_.
+        
+        :return: the current LoR server status
+        :rtype: :class:`types.PlatformDataDto`
+        """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
