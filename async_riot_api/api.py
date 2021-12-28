@@ -177,7 +177,7 @@ class LoLAPI:
         
         `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries>`_
         
-        :param summoner_id: summoner id
+        :param summoner_id: summoner ID
         :type summoner_id: str
         :return: list of masteries for the given summoner
         :rtype: [:class:`~types.ChampionMasteryDto`]
@@ -229,8 +229,12 @@ class LoLAPI:
     # CHAMPION-V3
     async def get_champion_rotation(self) -> types.ChampionInfo:
         """
-        /lol/platform/v3/champion-rotations
-        :return:
+        Get champion rotations, including free-to-play and low-level free-to-play rotations
+        
+        `Original method <https://developer.riotgames.com/apis#champion-v3/GET_getChampionInfo>`_
+        
+        :return: information about champion rotations
+        :rtype: :class:`~types.ChampionInfo`
         """
         
         return await LoLAPI.__create_object(
@@ -240,12 +244,34 @@ class LoLAPI:
     
     # CLASH-V1
     async def get_clash_players_by_summoner_id(self, summoner_id: str) -> List[types.PlayerDto]:
+        """
+        Get a list of active Clash players for a given summoner ID.
+        If a summoner registers for multiple tournaments at the same time (e.g., Saturday and Sunday)
+        then both registrations would appear in this list
+        
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getPlayersBySummoner>`_
+        
+        :param summoner_id:
+        :type summoner_id: str
+        :return: list of players
+        :rtype: [:class:`~types.PlayerDto`]
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/players/by-summoner/{summoner_id}'),
             types.PlayerDto
         )
     
     async def get_clash_team_by_id(self, team_id: str) -> types.TeamDto:
+        """
+        Get a clash team by its ID
+        
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTeamById>`_
+        
+        :param team_id:
+        :type team_id: str
+        :return: information about the team
+        :rtype: :class:`~types.TeamDto`
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/teams/{team_id}'),
             types.TeamDto
