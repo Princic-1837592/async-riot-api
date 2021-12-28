@@ -38,14 +38,6 @@ API reference
     api/lolapi
     api/types
 
-.. toctree::
-
-    .. autosummary::
-       :toctree: _autosummary
-       :recursive:
-
-       async_riot_api
-
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
 .. _Riot Games APIs: https://developer.riotgames.com/
