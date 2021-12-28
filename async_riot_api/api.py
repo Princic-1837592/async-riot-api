@@ -8,7 +8,8 @@ from . import types
 
 
 class LoLAPI:
-    """Main class to interact with the API. Offers async methods corresponding to API methods and more.
+    """
+    Main class to interact with the API. Offers async methods corresponding to API methods and more.
     
     It is important to notice that this implementation is exception-free, not meaning that it's impossible to make mistake,
     but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as :class:`~types.RiotApiError`,
@@ -94,7 +95,8 @@ class LoLAPI:
     
     # ACCOUNT-V1
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
-        """To get an account given its puuid.
+        """
+        To get an account given its puuid.
         
         Original method: /riot/account/v1/accounts/by-puuid/{puuid}
         
@@ -117,7 +119,8 @@ class LoLAPI:
         )
     
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
-        """To get an account given its name and tag line.
+        """
+        To get an account given its name and tag line.
         
         Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
         
@@ -151,7 +154,8 @@ class LoLAPI:
         :param puuid: puuid of the account
         :type puuid: str
         :return: shard data
-        :rtype: :class:`~types.ActiveShardDto`"""
+        :rtype: :class:`~types.ActiveShardDto`
+        """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -168,9 +172,7 @@ class LoLAPI:
     # CHAMPION-MASTERY-V4
     async def get_masteries(self, summoner_id: str) -> List[types.ChampionMasteryDto]:
         """
-        /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}
-        :param summoner_id:
-        :return:
+        
         """
         
         return await LoLAPI.__create_object(
