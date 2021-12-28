@@ -180,7 +180,7 @@ class LoLAPI:
         :param summoner_id: summoner ID
         :type summoner_id: str
         :return: list of masteries for the given summoner
-        :rtype: [:class:`~types.ChampionMasteryDto`]
+        :rtype: List[:class:`~types.ChampionMasteryDto`]
         """
         
         return await LoLAPI.__create_object(
@@ -254,7 +254,7 @@ class LoLAPI:
         :param summoner_id:
         :type summoner_id: str
         :return: list of players
-        :rtype: [:class:`~types.PlayerDto`]
+        :rtype: List[:class:`~types.PlayerDto`]
         """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/players/by-summoner/{summoner_id}'),
@@ -278,18 +278,46 @@ class LoLAPI:
         )
     
     async def get_clash_tournaments(self) -> List[types.TournamentDto]:
+        """
+        Get all active or upcoming tournaments
+        
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournaments>`_
+        
+        :return: list of tournaments
+        :rtype: List[:class:`~types.TournamentDto`]
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments'),
             types.TournamentDto
         )
     
     async def get_clash_tournament_by_team_id(self, team_id: str) -> types.TournamentDto:
+        """
+        Get tournament by team ID
+        
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentByTeam>`_
+        
+        :param team_id:
+        :type team_id: str
+        :return: information about tournament
+        :rtype: :class:`~types.TournamentDto`
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/by-team/{team_id}'),
             types.TournamentDto
         )
     
     async def get_clash_tournament_by_id(self, tournament_id: int) -> types.TournamentDto:
+        """
+        Get info about a clash tournament by its ID
+        
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentById>`_
+        
+        :param tournament_id:
+        :type tournament_id: int
+        :return: information about the tournament
+        :rtype: :class:`~types.TournamentDto`
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/tournaments/{tournament_id}'),
             types.TournamentDto
