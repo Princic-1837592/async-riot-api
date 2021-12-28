@@ -5,3 +5,4 @@ Implemented types
     :members:
     :show-inheritance:
     :member-order: bysource
+    :autodoc_typehints: none

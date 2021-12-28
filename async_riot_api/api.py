@@ -407,7 +407,7 @@ class LoLAPI:
         
         :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
         :type queue: str
-        :param tier: rank tier, between 'IRON' and 'CHALLENGER'
+        :param tier: rank tier, between 'IRON' and 'DIAMOND'
         :type tier: str
         :param division: rank division, between 'I' and 'IV' (in roman numbers)
         :type division: str
