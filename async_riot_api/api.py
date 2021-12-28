@@ -98,7 +98,7 @@ class LoLAPI:
         """
         To get an account given its puuid.
         
-        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByPuuid>`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByPuuid>`_.
         
         :param puuid: puuid of the account
         :type puuid: str
@@ -122,7 +122,7 @@ class LoLAPI:
         """
         To get an account given its name and tag line.
         
-        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByRiotId>`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByRiotId>`_.
         
         :param game_name: in-game name of the account
         :type game_name: str
@@ -148,7 +148,7 @@ class LoLAPI:
         """
         No documentation found.
         
-        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getActiveShard>`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getActiveShard>`_.
         
         :param game: one of 'val' or 'lol'
         :type game: str
@@ -173,9 +173,9 @@ class LoLAPI:
     # CHAMPION-MASTERY-V4
     async def get_masteries(self, summoner_id: str) -> List[types.ChampionMasteryDto]:
         """
-        Get the list of masteries for a summoner
+        Get the list of masteries for a summoner.
         
-        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries>`_
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries>`_.
         
         :param summoner_id: summoner ID
         :type summoner_id: str
@@ -192,9 +192,9 @@ class LoLAPI:
     
     async def get_champion_mastery(self, summoner_id: str, champion_id: int) -> types.ChampionMasteryDto:
         """
-        Get a specific champion mastery for the given summoner
+        Get a specific champion mastery for the given summoner.
         
-        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery>`_
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery>`_.
         
         :param summoner_id:
         :type summoner_id: str
@@ -212,9 +212,9 @@ class LoLAPI:
     
     async def get_mastery_score(self, summoner_id: str) -> int:
         """
-        Get the total mastery score of a summoner. Mastery score is given by the sum of individual champion mastery levels
+        Get the total mastery score of a summoner. Mastery score is given by the sum of individual champion mastery levels.
         
-        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore>`_
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore>`_.
         
         :param summoner_id:
         :type summoner_id: str
@@ -229,9 +229,9 @@ class LoLAPI:
     # CHAMPION-V3
     async def get_champion_rotation(self) -> types.ChampionInfo:
         """
-        Get champion rotations, including free-to-play and low-level free-to-play rotations
+        Get champion rotations, including free-to-play and low-level free-to-play rotations.
         
-        `Original method <https://developer.riotgames.com/apis#champion-v3/GET_getChampionInfo>`_
+        `Original method <https://developer.riotgames.com/apis#champion-v3/GET_getChampionInfo>`_.
         
         :return: information about champion rotations
         :rtype: :class:`~types.ChampionInfo`
@@ -247,9 +247,9 @@ class LoLAPI:
         """
         Get a list of active Clash players for a given summoner ID.
         If a summoner registers for multiple tournaments at the same time (e.g., Saturday and Sunday)
-        then both registrations would appear in this list
+        then both registrations would appear in this list.
         
-        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getPlayersBySummoner>`_
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getPlayersBySummoner>`_.
         
         :param summoner_id:
         :type summoner_id: str
@@ -263,9 +263,9 @@ class LoLAPI:
     
     async def get_clash_team_by_id(self, team_id: str) -> types.TeamDto:
         """
-        Get a clash team by its ID
+        Get a clash team by its ID.
         
-        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTeamById>`_
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTeamById>`_.
         
         :param team_id:
         :type team_id: str
@@ -279,9 +279,9 @@ class LoLAPI:
     
     async def get_clash_tournaments(self) -> List[types.TournamentDto]:
         """
-        Get all active or upcoming tournaments
+        Get all active or upcoming tournaments.
         
-        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournaments>`_
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournaments>`_.
         
         :return: list of tournaments
         :rtype: List[:class:`~types.TournamentDto`]
@@ -293,9 +293,9 @@ class LoLAPI:
     
     async def get_clash_tournament_by_team_id(self, team_id: str) -> types.TournamentDto:
         """
-        Get tournament by team ID
+        Get tournament by team ID.
         
-        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentByTeam>`_
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentByTeam>`_.
         
         :param team_id:
         :type team_id: str
@@ -309,9 +309,9 @@ class LoLAPI:
     
     async def get_clash_tournament_by_id(self, tournament_id: int) -> types.TournamentDto:
         """
-        Get info about a clash tournament by its ID
+        Get info about a clash tournament by its ID.
         
-        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentById>`_
+        `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentById>`_.
         
         :param tournament_id:
         :type tournament_id: int
@@ -629,13 +629,19 @@ class LoLAPI:
     @staticmethod
     def get_champion_image_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
         """
-        Returns the url of the image for the given champion, skin and type
+        Returns the url to the image for the given champion, skin and type.
+        
+        IMPORTANT: no check will be made about data existence, meaning that passing a wrong champ_id, skin or type will simply result
+        in a broken url. No error will be raised.
         
         :param champ_id: champion ID, corresponding to :attr:`types.ShortChampionDD.int_id`
         :type champ_id: int
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
         :type skin: int
         :param type: type of image. Can be 'splash' or 'loading'. Default 'splash'
+        :type type: str
+        :return: url for the image
+        :rtype: str
         """
         return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
     
