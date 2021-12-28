@@ -328,16 +328,27 @@ class LoLAPI:
         types.LeagueEntryDTO]:
         """
         This is an experimental (and personally untested) endpoint added as a duplicate of
-        :meth:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+        :meth:`~async_riot_api.LoLAPI.get_summoners_by_league`,
+        but it also supports the apex tiers (Challenger, Grandmaster, and Master).
         
-        `Original method </lol/league-exp/v4/entries/{queue}/{tier}/{division}>`_
+        `Original method </lol/league-exp/v4/entries/{queue}/{tier}/{division}>`_.
         
-        :param queue:
-        :param tier:
-        :param division:
-        :param page:
-        :return:
+        :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_TFT', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
+        :type queue: str
+        :param tier: rank tier, between 'IRON' and 'CHALLENGER'
+        :type tier: str
+        :param division: rank division, between 'I' and 'IV' (in roman numbers)
+        :param page: page to select, starting from 1. Limited based on the number of entries, it's suggested to iter until results are found
+        :type page: int
+        :return: set of summoners for the requested queue, tier and division
+        :rtype: :class:`~types.LeagueEntryDTO`
         """
+        return set(
+            await LoLAPI.__create_object(
+                await self.__make_api_request(f'/lol/league-exp/v4/entries/{queue}/{tier}/{division}?page={page}'),
+                types.LeagueEntryDTO
+            )
+        )
     
     # LEAGUE-V4
     async def get_challenger_leagues(self, queue: str) -> types.LeagueListDTO:
@@ -656,7 +667,7 @@ class LoLAPI:
         IMPORTANT: no check will be made about data existence, meaning that passing a wrong champ_id, skin or type will simply result
         in a broken url. No error will be raised.
         
-        :param champ_id: champion ID, corresponding to :attr:`~async_riot_api.types.ShortChampionDD.int_id`
+        :param champ_id: champion ID, corresponding to ``ShortChampionDD.int_id``
         :type champ_id: int
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
         :type skin: int

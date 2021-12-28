@@ -96,7 +96,7 @@ class ShortChampionDD(RiotApiResponse):
     
     Other attributes:
         int_id (``int``):
-            integer representation of param :attr:`~async_riot_api.types.ShortChampionDD.key`. Not present in the original data type,
+            integer representation of param ``ShortChampionDD.key``. Not present in the original data type,
             useful for some methods and, more importantly, coherent with the represented value
     """
     
