@@ -98,7 +98,7 @@ class LoLAPI:
         """
         To get an account given its puuid.
         
-        `Original method https://developer.riotgames.com/apis#account-v1/GET_getByPuuid`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByPuuid>`_
         
         :param puuid: puuid of the account
         :type puuid: str
@@ -122,7 +122,7 @@ class LoLAPI:
         """
         To get an account given its name and tag line.
         
-        `Original method https://developer.riotgames.com/apis#account-v1/GET_getByRiotId`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByRiotId>`_
         
         :param game_name: in-game name of the account
         :type game_name: str
@@ -148,7 +148,7 @@ class LoLAPI:
         """
         No documentation found.
         
-        `Original method https://developer.riotgames.com/apis#account-v1/GET_getActiveShard`_
+        `Original method <https://developer.riotgames.com/apis#account-v1/GET_getActiveShard>`_
         
         :param game: one of 'val' or 'lol'
         :type game: str
@@ -175,7 +175,7 @@ class LoLAPI:
         """
         Get the list of masteries for a summoner
         
-        `Original method https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries`_
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries>`_
         
         :param summoner_id: summoner id
         :type summoner_id: str
@@ -194,7 +194,7 @@ class LoLAPI:
         """
         Get a specific champion mastery for the given summoner
         
-        `Original method https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery`_
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery>`_
         
         :param summoner_id:
         :type summoner_id: str
