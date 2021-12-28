@@ -20,9 +20,3 @@ This is a very intuitive and simple to use library. Follow these steps to get st
 
     - Replace values that need to be replaced
     - Start using the API!
-
-For the complete list of methods look at `this page </api/lolapi>`_.
-
-For the complete list of types look at `this page </api/types>`_.
-
-To create a token look at `this page <auth>`_.
