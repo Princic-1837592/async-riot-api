@@ -11,7 +11,7 @@ class LoLAPI:
     """Main class to interact with the API. Offers async methods corresponding to API methods and more.
     
     It is important to notice that this implementation is exception-free, not meaning that it's impossible to make mistake,
-    but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as `types.RiotApiError`,
+    but meaning that errors returned by the API are not raised as exceptions. Instead, they are returned as :obj:`~async_riot_api.types.RiotApiError`,
     containing information about the error.
     To distinguish between a successful response and an error, you can easily use the object as a boolean expression:
     
@@ -94,16 +94,14 @@ class LoLAPI:
     
     # ACCOUNT-V1
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
-        """
-        To get an account given its puuid.
-        `Original method /riot/account/v1/accounts/by-puuid/{puuid}`_
+        """To get an account given its puuid.
+        Original method: /riot/account/v1/accounts/by-puuid/{puuid}
         
         Parameters:
-            puuid (``str``):
-                puuid of the account you are looking for
-                
+            puuid (``str``): puuid of the account you are looking for
+            
         Returns:
-            :obj:`~async_riot_api.types.AccountDto`: on success. *IMPORTANT*: this is not about a summoner account il LoL,
+            :obj:`~async_riot_api.types.AccountDto`: on success. *IMPORTANT*: this is not about a summoner account in LoL,
             this is about Riot Games accounts
         """
         return await LoLAPI.__create_object(
@@ -120,6 +118,13 @@ class LoLAPI:
         )
     
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
+        """To get an account given its name and tag line.
+        Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+        
+        :param game_name: in-game name of the account you are looking for
+        :param tag_line: no documentation found
+        :return: class:`types.AccountDto`
+        """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
