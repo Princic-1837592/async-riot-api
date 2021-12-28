@@ -94,7 +94,7 @@ class ShortChampionDD(RiotApiResponse):
     :param version: valid version for this object
     :type version: str
     
-    Attributes:
+    Other attributes:
         int_id (``int``):
             integer representation of param ``key``. Not present in the original data type,
             useful for some methods and, more importantly, coherent with the represented value
@@ -118,29 +118,29 @@ class ShortChampionDD(RiotApiResponse):
 
 
 class ChampionDD(ShortChampionDD):
+    """
+    Complete information about a champion
+    
+    Look at :class:`ShortChampionDD` for the complete list of parameters
+    
+    :param skins: list of skins
+    :type skins: List[:class:`ChampionSkinsDD`]
+    :param lore: lore of the champion
+    :type lore: str
+    :param allytips: list of tips for summoners playing the champion
+    :type allytips: List[str]
+    :param enemytips: list of tipo for summoners playing against the champion
+    :type enemytips: List[str]
+    :param spells: list of information about this champion's spells
+    :type spells: List[:class:`ChampionSpellsDD`]
+    :param passive: information about this champion's passive ability
+    :type passive: :class:`ChampionPassiveDD`
+    :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
+    :type recommended: List[unknown]
+    """
     def __init__(self, id: str, key: str, name: str, title: str, image: dict, skins: List[dict], lore: str, blurb: str,
                  allytips: List[str], enemytips: List[str], tags: List[str], partype: str, info: dict, stats: dict,
                  spells: List[dict], passive: dict, recommended: list, version: str):
-        """
-        Complete information about a champion
-        
-        Look at :class:`ShortChampionDD` for the complete list of parameters
-        
-        :param skins: list of skins
-        :type skins: List[:class:`ChampionSkinsDD`]
-        :param lore: lore of the champion
-        :type lore: str
-        :param allytips: list of tips for summoners playing the champion
-        :type allytips: List[str]
-        :param enemytips: list of tipo for summoners playing against the champion
-        :type enemytips: List[str]
-        :param spells: list of information about this champion's spells
-        :type spells: List[:class:`ChampionSpellsDD`]
-        :param passive: information about this champion's passive ability
-        :type passive: :class:`ChampionPassiveDD`
-        :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
-        :type recommended: List[unknown]
-        """
         super().__init__(
             blurb = blurb,
             id = id,
