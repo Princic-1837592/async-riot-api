@@ -631,7 +631,7 @@ class LoLAPI:
         """
         Returns the url of the image for the given champion, skin and type
         
-        :param champ_id: champion ID, corresponding to :attr:``types.ShortChampionDD.int_id``
+        :param champ_id: champion ID, corresponding to :attr:`types.ShortChampionDD.int_id`
         :type champ_id: int
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
         :type skin: int
