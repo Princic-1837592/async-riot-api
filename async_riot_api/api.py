@@ -212,9 +212,14 @@ class LoLAPI:
     
     async def get_mastery_score(self, summoner_id: str) -> int:
         """
-        /lol/champion-mastery/v4/scores/by-summoner/{encryptedSummonerId}
+        Get the total mastery score of a summoner. Mastery score is given by the sum of individual champion mastery levels
+        
+        `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore>`_
+        
         :param summoner_id:
-        :return:
+        :type summoner_id: str
+        :return: mastery score of the given summoner
+        :rtype: int
         """
         
         return await LoLAPI.__create_object(
