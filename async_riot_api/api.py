@@ -28,7 +28,7 @@ class LoLAPI:
         
         region (``str``): region you want to use
         
-        routing_value (``str``): one among 'america', 'asia' or 'europe'. Needed for some API calls, depends on region
+        routing_value (``str``): one among 'america', 'asia', 'esports' or 'europe'. Needed for some API calls, depends on region
         
         debug (``bool``): if you want the LoLAPI object to print the url of every request made
     """
@@ -96,7 +96,7 @@ class LoLAPI:
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
         """To get an account given its puuid.
         
-        Original method: */riot/account/v1/accounts/by-puuid/{puuid}*
+        Original method: :underline:`/riot/account/v1/accounts/by-puuid/{puuid}`
         
         Parameters:
             puuid (``str``): puuid of the account you are looking for
@@ -121,7 +121,7 @@ class LoLAPI:
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
         """To get an account given its name and tag line.
         
-        Original method: */riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}*
+        Original method: :underline:`/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}`
         
         :param game_name: in-game name of the account you are looking for
         :type game_name: str
@@ -144,6 +144,16 @@ class LoLAPI:
         )
     
     async def get_active_shards(self, game: str, puuid: str) -> types.ActiveShardDto:
+        """No documentation found.
+        
+        Original method: :underline:`/riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}`
+        
+        :param game: one of 'val' or 'lol'
+        :type game: str
+        :param puuid: puuid of the account you are looking for
+        :type puuid: str
+        :return: shard data
+        :rtype: :class:`types.ActiveShardDto`"""
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -295,7 +305,10 @@ class LoLAPI:
         :return:
         """
         
-        return await LoLAPI.__create_object(await self.__make_api_request('/lol/status/v3/shard-data'), types.ShardStatus)
+        return await LoLAPI.__create_object(
+            await self.__make_api_request('/lol/status/v3/shard-data'),
+            types.ShardStatus
+            )
     
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
