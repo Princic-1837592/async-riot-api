@@ -1,7 +1,7 @@
 Quickstart with this library
 ============================
 
-This is a very intuitive and simple to use library. Follow these steps to get started:
+async-riot-api is a very intuitive and simple to use library. Follow these steps to get started:
     - Get your API token following :doc:`this guide <auth>`
     - Install the library in your (virtual) environment
     - Open your favourite text editor and paste the following code:

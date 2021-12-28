@@ -5,8 +5,11 @@
 import os
 import sys
 from datetime import datetime
+import async_riot_api
 
 sys.path.insert(0, os.path.abspath("../.."))
+
+version = async_riot_api.__version__
 
 project = 'async-riot-api'
 copyright = f'2017-{datetime.now().year}, Princic-1837592'
