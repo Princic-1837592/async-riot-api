@@ -145,7 +145,8 @@ class LoLAPI:
         )
     
     async def get_active_shards(self, game: str, puuid: str) -> types.ActiveShardDto:
-        """No documentation found.
+        """
+        No documentation found.
         
         Original method: /riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}
         

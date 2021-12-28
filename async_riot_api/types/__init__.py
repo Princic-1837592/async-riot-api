@@ -3,7 +3,8 @@ from typing import Any, List, Optional
 
 # SUPER-CLASS
 class RiotApiResponse:
-    """Superclass of all API responses
+    """
+    Superclass of all API responses
     
     :param success: wether the response was successful. Useful to spot errors
     :type success: bool
@@ -12,7 +13,8 @@ class RiotApiResponse:
         self.__success = success
     
     def to_string(self, *, level: int = 0, sep = '    '):
-        """Returns a prettified string representation of the object
+        """
+        Returns a prettified string representation of the object
         
         :param level: starting level of indentation. Default: 0
         :type level: int
@@ -48,7 +50,8 @@ class RiotApiResponse:
 
 # ERROR
 class RiotApiError(RiotApiResponse):
-    """General API response error
+    """
+    General API response error
     
     :param message: message contained in the response. Default 'Bad Request'
     :type message: str
@@ -62,13 +65,14 @@ class RiotApiError(RiotApiResponse):
 
 
 class ShortChampionDD(RiotApiResponse):
-    """Type representing a short informations about a champion
-    
-    :param blurb: unknown
-    :type blurb: str
-    """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
+        """
+        Type representing a short informations about a champion
+        
+        :param blurb: unknown
+        :type blurb: str
+        """
         super().__init__()
         self.blurb = blurb
         self.id = id
