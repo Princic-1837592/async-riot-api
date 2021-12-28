@@ -69,7 +69,7 @@ class RiotApiError(RiotApiResponse):
 
 class ShortChampionDD(RiotApiResponse):
     """
-    Type representing short information about a champion
+    Short information about a champion
     
     :param blurb: short description
     :type blurb: str
@@ -117,26 +117,47 @@ class ShortChampionDD(RiotApiResponse):
         self.version = version
 
 
-class ChampionDD(RiotApiResponse):
+class ChampionDD(ShortChampionDD):
     def __init__(self, id: str, key: str, name: str, title: str, image: dict, skins: List[dict], lore: str, blurb: str,
                  allytips: List[str], enemytips: List[str], tags: List[str], partype: str, info: dict, stats: dict,
-                 spells: List[dict], passive: dict, recommended: list):
-        super().__init__()
-        self.id = id
-        self.key = key
-        self.int_id: int = int(key)
-        self.name = name
-        self.title = title
-        self.image: ChampionImageDD = ChampionImageDD(**image)
+                 spells: List[dict], passive: dict, recommended: list, version: str):
+        """
+        Complete information about a champion
+        
+        Look at :class:`ShortChampionDD` for the complete list of parameters
+        
+        :param skins: list of skins
+        :type skins: List[:class:`ChampionSkinsDD`]
+        :param lore: lore of the champion
+        :type lore: str
+        :param allytips: list of tips for summoners playing the champion
+        :type allytips: List[str]
+        :param enemytips: list of tipo for summoners playing against the champion
+        :type enemytips: List[str]
+        :param spells: list of information about this champion's spells
+        :type spells: List[:class:`ChampionSpellsDD`]
+        :param passive: information about this champion's passive ability
+        :type passive: :class:`ChampionPassiveDD`
+        :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
+        :type recommended: List[unknown]
+        """
+        super().__init__(
+            blurb = blurb,
+            id = id,
+            image = image,
+            info = info,
+            key = key,
+            name = name,
+            partype = partype,
+            stats = stats,
+            tags = tags,
+            title = title,
+            version = version
+        )
         self.skins: List[ChampionSkinsDD] = list(map(lambda x: ChampionSkinsDD(**x), skins))
         self.lore = lore
-        self.blurb = blurb
         self.allytips: List[str] = allytips
         self.enemytips: List[str] = enemytips
-        self.tags: List[str] = tags
-        self.partype = partype
-        self.info: ChampionInfoDD = ChampionInfoDD(**info)
-        self.stats: ChampionStatsDD = ChampionStatsDD(**stats)
         self.spells: List[ChampionSpellsDD] = list(map(lambda x: ChampionSpellsDD(**x), spells))
         self.passive: ChampionPassiveDD = ChampionPassiveDD(**passive)
         self.recommended: list = recommended

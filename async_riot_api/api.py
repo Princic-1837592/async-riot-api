@@ -673,14 +673,16 @@ class LoLAPI:
         return LoLAPI.get_champion_from_correct_name(LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id))
     
     @staticmethod
-    async def get_full_champion_from_correct_name(name: str, language: str) -> types.ChampionDD:
+    async def get_full_champion_from_correct_name(name: str, language: str = 'en') -> types.ChampionDD:
         if language not in LoLAPI.__LANGUAGES:
             language = LoLAPI.compute_language(language)
+        response = (await LoLAPI.__make_request(
+            'GET',
+            f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
+        ))[1]
         return types.ChampionDD(
-            **((await LoLAPI.__make_request(
-                'GET',
-                f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/data/{language}/champion/{name}.json'
-            ))[1]['data'][name])
+            **(response['data'][name]),
+            version = response['version']
         )
     
     @staticmethod
