@@ -19,6 +19,6 @@ supports asyncio and the required libraries. Anyway, it's recommended to use the
 
     - Verify your installation
 
-    .. parsed-literal::
+    .. code-block:: python
 
-        >>> from async_riot_api import LoLAPI
+        from async_riot_api import LoLAPI
