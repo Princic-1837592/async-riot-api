@@ -98,7 +98,7 @@ class LoLAPI:
         """
         To get an account given its puuid.
         
-        Original method: /riot/account/v1/accounts/by-puuid/{puuid}
+        `Original method https://developer.riotgames.com/apis#account-v1/GET_getByPuuid`_
         
         :param puuid: puuid of the account
         :type puuid: str
@@ -122,7 +122,7 @@ class LoLAPI:
         """
         To get an account given its name and tag line.
         
-        Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+        `Original method https://developer.riotgames.com/apis#account-v1/GET_getByRiotId`_
         
         :param game_name: in-game name of the account
         :type game_name: str
@@ -148,7 +148,7 @@ class LoLAPI:
         """
         No documentation found.
         
-        Original method: /riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}
+        `Original method https://developer.riotgames.com/apis#account-v1/GET_getActiveShard`_
         
         :param game: one of 'val' or 'lol'
         :type game: str
@@ -175,7 +175,7 @@ class LoLAPI:
         """
         Get the list of masteries for a summoner
         
-        Original method: /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}
+        `Original method https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries`_
         
         :param summoner_id: summoner id
         :type summoner_id: str
@@ -192,10 +192,16 @@ class LoLAPI:
     
     async def get_champion_mastery(self, summoner_id: str, champion_id: int) -> types.ChampionMasteryDto:
         """
-        /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}/by-champion/{championId}
+        Get a specific champion mastery for the given summoner
+        
+        `Original method https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery`_
+        
         :param summoner_id:
+        :type summoner_id: str
         :param champion_id:
-        :return:
+        :type champion_id: int
+        :return: champion mastery for given summoner and champion
+        :rtype: :class:`~types.ChampionMasteryDto`
         """
         
         return await LoLAPI.__create_object(
