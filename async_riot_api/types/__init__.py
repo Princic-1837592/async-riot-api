@@ -165,12 +165,26 @@ class ChampionDD(ShortChampionDD):
 
 
 class ChampionImageDD(RiotApiResponse):
+    """
+    Details about the champion's image
+    
+    :param full: file name of the image.
+    The complete url can be obtained from :func:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+    :type full: str
+    :param sprite:
+    :param group:
+    :param x:
+    :param y:
+    :param w:
+    :param h:
+    """
     def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
         """
         Details about the champion's image
         
         :param full: file name of the image.
         The complete url can be obtained from :func:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+        :type full: str
         :param sprite:
         :param group:
         :param x:
