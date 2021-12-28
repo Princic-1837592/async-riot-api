@@ -65,14 +65,18 @@ class RiotApiError(RiotApiResponse):
 
 
 class ShortChampionDD(RiotApiResponse):
-    """
-    Type representing a short informations about a champion
-    
-    :param blurb: unknown
-    :type blurb: str
-    """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
+        """
+        Type representing short information about a champion
+        
+        :param blurb: short description
+        :type blurb: str
+        :param id: name of the champion without non-alphabetic characters
+        :type id: str
+        :param image: data about the image of a champion
+        :type image: :class:`ChampionImageDD`
+        """
         super().__init__()
         self.blurb = blurb
         self.id = id
