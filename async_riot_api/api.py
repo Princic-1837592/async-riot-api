@@ -323,8 +323,30 @@ class LoLAPI:
             types.TournamentDto
         )
     
+    # LEAGUE-EXP-V4
+    async def get_summoners_by_league_exp(self, queue: str, tier: str, division: str, page: int = 1) -> Set[
+        types.LeagueEntryDTO]:
+        """
+        This is an experimental (and personally untested) endpoint added as a duplicate of
+        :meth:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+        
+        `Original method </lol/league-exp/v4/entries/{queue}/{tier}/{division}>`_
+        
+        :param queue:
+        :param tier:
+        :param division:
+        :param page:
+        :return:
+        """
+    
     # LEAGUE-V4
     async def get_challenger_leagues(self, queue: str) -> types.LeagueListDTO:
+        """
+        Get information about challenger leagues
+        
+        :param queue:
+        :return:
+        """
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/league/v4/challengerleagues/by-queue/{queue}'),
             types.LeagueListDTO
@@ -634,7 +656,7 @@ class LoLAPI:
         IMPORTANT: no check will be made about data existence, meaning that passing a wrong champ_id, skin or type will simply result
         in a broken url. No error will be raised.
         
-        :param champ_id: champion ID, corresponding to :attr:`types.ShortChampionDD.int_id`
+        :param champ_id: champion ID, corresponding to :attr:`~async_riot_api.types.ShortChampionDD.int_id`
         :type champ_id: int
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
         :type skin: int
