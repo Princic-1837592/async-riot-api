@@ -20,7 +20,7 @@ class LoLAPI:
     
         summoner = await api.get_account_by_puuid(puuid)
         if not summoner:
-            print(f'The request raised an error with status code {summoner.status_code}: {summoner.message}')
+            print(f'Error with status code {summoner.status_code}: {summoner.message}')
         else:
             print(summoner.to_string(sep = '|   '))
     
