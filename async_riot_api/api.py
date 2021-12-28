@@ -628,6 +628,15 @@ class LoLAPI:
     
     @staticmethod
     def get_champion_image_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
+        """
+        Returns the url of the image for the given champion, skin and type
+        
+        :param champ_id: champion ID, corresponding to :attr:``types.ShortChampionDD.int_id``
+        :type champ_id: int
+        :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
+        :type skin: int
+        :param type: type of image. Can be 'splash' or 'loading'. Default 'splash'
+        """
         return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
     
     @staticmethod

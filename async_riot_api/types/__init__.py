@@ -168,8 +168,8 @@ class ChampionImageDD(RiotApiResponse):
     """
     Details about the champion's image
     
-    :param full: file name of the image.
-        The complete url can be obtained from :func:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+    :param full: file name of the image. The complete url can be obtained from
+        :meth:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
     :type full: str
     :param sprite: don't really know what this is, some kind of image with more images inside.
         You can find more info `here <https://developer.riotgames.com/docs/lol>`_
