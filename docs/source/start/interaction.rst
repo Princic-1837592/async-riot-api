@@ -1,8 +1,8 @@
 Interacting with the API
 ========================
 
-All the interaction with the API is made using the `LoLAPI <../api/lolapi>`_ class.
-    - First you create an object of type `LoLAPI <../api/lolapi>`.
+All the interaction with the API is made using the :doc:`LoLAPI <../api/lolapi>`_ class.
+    - First you create an object of type :doc:`LoLAPI <../api/lolapi>`_.
     - Then you can start calling its methods, corresponding to api methods (or extra features like champion search)
 
 Methods are async, meaning that you need to be in an async context to be able to use this library. Async methods mean that you can use
