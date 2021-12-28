@@ -55,8 +55,8 @@ class RiotApiError(RiotApiResponse):
     
     :param message: message contained in the response. Default 'Bad Request'
     :type message: str
-    :param message: error code from the response. Default 400
-    :type message: int
+    :param status_code: error code from the response. Default 400
+    :type status_code: int
     """
     def __init__(self, message: str = 'Bad Request', status_code: int = 400):
         super().__init__(False)
@@ -65,14 +65,14 @@ class RiotApiError(RiotApiResponse):
 
 
 class ShortChampionDD(RiotApiResponse):
+    """
+    Type representing a short informations about a champion
+    
+    :param blurb: unknown
+    :type blurb: str
+    """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
-        """
-        Type representing a short informations about a champion
-        
-        :param blurb: unknown
-        :type blurb: str
-        """
         super().__init__()
         self.blurb = blurb
         self.id = id

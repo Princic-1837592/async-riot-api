@@ -121,7 +121,6 @@ class LoLAPI:
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
         """
         To get an account given its name and tag line.
-        
         Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
         
         :param game_name: in-game name of the account
@@ -173,7 +172,13 @@ class LoLAPI:
     # CHAMPION-MASTERY-V4
     async def get_masteries(self, summoner_id: str) -> List[types.ChampionMasteryDto]:
         """
+        Get the list of masteries for a summoner
+        Original method: /lol/champion-mastery/v4/champion-masteries/by-summoner/{encryptedSummonerId}
         
+        :param summoner_id: summoner id
+        :type summoner_id: str
+        :return: list of masteries for the given summoner
+        :rtype: list[:class:`~types.ChampionMasteryDto`]
         """
         
         return await LoLAPI.__create_object(
