@@ -472,7 +472,8 @@ class LoLAPI:
         
         `Original method <https://developer.riotgames.com/apis#lol-status-v3/GET_getShardData>`_.
         
-        :return:
+        :return: the current server status
+        :rtype: :class:`types.ShardStatus`
         """
         
         return await LoLAPI.__create_object(
@@ -483,8 +484,12 @@ class LoLAPI:
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
         """
-        /lol/status/v4/platform-data
-        :return:
+        Get information about the server status.
+        
+        `Original method <https://developer.riotgames.com/apis#lol-status-v4/GET_getPlatformData>`_.
+        
+        :return: the current server status
+        :rtype: :class:`types.PlatformDataDto`
         """
         
         return await LoLAPI.__create_object(
@@ -494,6 +499,17 @@ class LoLAPI:
     
     # LOR-MATCH-V1
     async def get_lor_matches(self, puuid: str) -> List[str]:
+        """
+        Get the list of matches played by the given summoner.
+        
+        `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatchIdsByPUUID>`_.
+        
+        :param puuid:
+        :type puuid: str
+        :return: list of match IDs sorted by recent
+        :rtype: List[str]
+        """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
