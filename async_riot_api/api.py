@@ -48,7 +48,7 @@ class LoLAPI:
     
     # integer champion ID -> correct champion name
     __CHAMP_ID_TO_CORRECT_NAME: Dict[int, str] = {
-        info.int_id: champ for champ, info in __CHAMPS.items()
+        info.int_id: info.id for info in __CHAMPS.values()
     }
     __LANGUAGES: List[str] = loads(requests.get('https://ddragon.leagueoflegends.com/cdn/languages.json').text)
     __LANG_SHORT_TO_LONG: Dict[str, str] = {
@@ -627,7 +627,7 @@ class LoLAPI:
         return f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/img/profileicon/{icon_id}.png'
     
     @staticmethod
-    def get_champion_icon_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
+    def get_champion_image_url_from_id(champ_id: int, skin: int = 0, type: str = 'splash') -> str:
         return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
     
     @staticmethod

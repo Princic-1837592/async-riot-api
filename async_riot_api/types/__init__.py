@@ -138,6 +138,7 @@ class ChampionDD(ShortChampionDD):
     :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
     :type recommended: List[unknown]
     """
+    
     def __init__(self, id: str, key: str, name: str, title: str, image: dict, skins: List[dict], lore: str, blurb: str,
                  allytips: List[str], enemytips: List[str], tags: List[str], partype: str, info: dict, stats: dict,
                  spells: List[dict], passive: dict, recommended: list, version: str):
@@ -165,6 +166,18 @@ class ChampionDD(ShortChampionDD):
 
 class ChampionImageDD(RiotApiResponse):
     def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
+        """
+        Details about the champion's image
+        
+        :param full: file name of the image.
+        The complete url can be obtained from :func:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+        :param sprite:
+        :param group:
+        :param x:
+        :param y:
+        :param w:
+        :param h:
+        """
         super().__init__()
         self.full = full
         self.sprite = sprite
