@@ -153,7 +153,7 @@ class LoLAPI:
         :param puuid: puuid of the account you are looking for
         :type puuid: str
         :return: shard data
-        :rtype: :class:`types.ActiveShardDto`"""
+        :rtype: :class:`ActiveShardDto`"""
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
