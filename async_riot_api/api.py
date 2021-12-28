@@ -500,7 +500,7 @@ class LoLAPI:
     # LOR-MATCH-V1
     async def get_lor_matches(self, puuid: str) -> List[str]:
         """
-        Get the list of matches played by the given summoner.
+        Get the list of LoR matches played by the given summoner. Often used before :meth:`~async_riot_api.LoLAPI.get_lor_match`.
         
         `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatchIdsByPUUID>`_.
         
@@ -520,6 +520,15 @@ class LoLAPI:
         )
     
     async def get_lor_match(self, match_id: str) -> types.LorMatchDto:
+        """
+        Get information about the given LoR match. Often used after :meth:`~async_riot_api.LoLAPI.get_lor_matches`.
+        
+        `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatch>`_.
+        
+        :param match_id:
+        :return:
+        """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',

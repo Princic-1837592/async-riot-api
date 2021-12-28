@@ -23,7 +23,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-    'sphinx_autodoc_typehints'
 ]
 autosummary_generate = True
 
