@@ -183,14 +183,21 @@ class ChampionImageDD(RiotApiResponse):
         Details about the champion's image
         
         :param full: file name of the image.
-        The complete url can be obtained from :func:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
+        The complete url can be obtained from :func:`~async_riot_api.LoLAPI().get_champion_image_url_from_id()`
         :type full: str
-        :param sprite:
-        :param group:
-        :param x:
-        :param y:
-        :param w:
-        :param h:
+        :param sprite: don't really know what this is, some kind of image with more images inside.
+        You can find more info `here <https://developer.riotgames.com/docs/lol>`_
+        :type sprite: str
+        :param group: sub-category in which you can find the sprite of this image, more info in the same link as above
+        :type group: str
+        :param x: x coordinate of the sprite in which you can find this image
+        :type x: int
+        :param y: y coordinate of the sprite in which you can find this image
+        :type y: int
+        :param w: width of the image in the sprite, starting from coordinates (x, y)
+        :type w: int
+        :param h: height of the image in the sprite, starting from coordinates (x, y)
+        :type h: int
         """
         super().__init__()
         self.full = full
