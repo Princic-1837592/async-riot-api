@@ -23,14 +23,14 @@ class LoLAPI:
         else:
             print(summoner.to_string(sep = '|   '))
     
-    Parameters:
-        api_key (``str``): your API token
-        
-        region (``str``): region you want to use
-        
-        routing_value (``str``): one among 'america', 'asia', 'esports' or 'europe'. Needed for some API calls, depends on region
-        
-        debug (``bool``): if you want the LoLAPI object to print the url of every request made
+    :param api_key: your API token
+    :type api_key: str
+    :param region: region you want to use
+    :type region: str
+    :param routing_value: one among 'america', 'asia', 'esports' or 'europe'. Needed for some API calls, depends on region
+    :type routing_value: str
+    :param debug: if you want the LoLAPI object to print the url of every request made
+    :type debug: bool
     """
     
     __BASE_URL: str = 'https://{}.api.riotgames.com{}'
@@ -96,14 +96,12 @@ class LoLAPI:
     async def get_account_by_puuid(self, puuid: str) -> types.AccountDto:
         """To get an account given its puuid.
         
-        Original method: :underline:`/riot/account/v1/accounts/by-puuid/{puuid}`
+        Original method: /riot/account/v1/accounts/by-puuid/{puuid}
         
-        Parameters:
-            puuid (``str``): puuid of the account you are looking for
-            
-        Returns:
-            :obj:`~async_riot_api.types.AccountDto`: on success. *IMPORTANT*: this is not about a summoner account in LoL,
-            this is about Riot Games accounts
+        :param puuid: puuid of the account
+        :type puuid: str
+        :return: account data
+        :rtype: :class:`types.AccountDto`
         """
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
@@ -121,9 +119,9 @@ class LoLAPI:
     async def get_account_by_game_name(self, game_name: str, tag_line: str) -> types.AccountDto:
         """To get an account given its name and tag line.
         
-        Original method: :underline:`/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}`
+        Original method: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
         
-        :param game_name: in-game name of the account you are looking for
+        :param game_name: in-game name of the account
         :type game_name: str
         :param tag_line: no documentation found
         :type tag_line: str
@@ -146,14 +144,14 @@ class LoLAPI:
     async def get_active_shards(self, game: str, puuid: str) -> types.ActiveShardDto:
         """No documentation found.
         
-        Original method: :underline:`/riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}`
+        Original method: /riot/account/v1/active-shards/by-game/{game}/by-puuid/{puuid}
         
         :param game: one of 'val' or 'lol'
         :type game: str
-        :param puuid: puuid of the account you are looking for
+        :param puuid: puuid of the account
         :type puuid: str
         :return: shard data
-        :rtype: :class:`ActiveShardDto`"""
+        :rtype: :class:`types.ActiveShardDto`"""
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -308,7 +306,7 @@ class LoLAPI:
         return await LoLAPI.__create_object(
             await self.__make_api_request('/lol/status/v3/shard-data'),
             types.ShardStatus
-            )
+        )
     
     # LOL-STATUS-V4
     async def get_platform_data(self) -> types.PlatformDataDto:
