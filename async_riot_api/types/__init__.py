@@ -94,9 +94,9 @@ class ShortChampionDD(RiotApiResponse):
     :param version: valid version for this object
     :type version: str
     
-    Extra attributes:
-        :param int_id: integer representation of param ``key``. Non-present in the original data type
-        :type int_id: int
+    Other attributes:
+        int_id (``int``): integer representation of param ``key``.
+        Not present in the original data type, useful for some methods and, more importantly, coherent with the represented type
     """
     
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
