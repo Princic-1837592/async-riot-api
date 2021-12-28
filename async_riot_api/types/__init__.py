@@ -5,8 +5,8 @@ from typing import Any, List, Optional
 class RiotApiResponse:
     """Superclass of all API responses
     
-    Parameters:
-        success (``bool``): wether the response was successful. Useful to spot errors
+    :param success: wether the response was successful. Useful to spot errors
+    :type success: bool
     """
     def __init__(self, success: bool = True):
         self.__success = success
@@ -14,10 +14,10 @@ class RiotApiResponse:
     def to_string(self, *, level: int = 0, sep = '    '):
         """Returns a prettified string representation of the object
         
-        Parameters:
-            level (``int``, *optional*): starting level of indentation. Default: 0
-            
-            sep (``str``, *optional*): character sequence for indentation. Default: 4 spaces
+        :param level: starting level of indentation. Default: 0
+        :type level: int
+        :param sep: character sequence for indentation. Default: 4 spaces
+        :type sep: str
         """
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
@@ -50,10 +50,10 @@ class RiotApiResponse:
 class RiotApiError(RiotApiResponse):
     """General API response error
     
-    Parameters:
-        message (``str``): message contained in the response
-        
-        status_code (``int``): error code from the response
+    :param message: message contained in the response. Default 'Bad Request'
+    :type message: str
+    :param message: error code from the response. Default 400
+    :type message: int
     """
     def __init__(self, message: str = 'Bad Request', status_code: int = 400):
         super().__init__(False)
@@ -64,8 +64,8 @@ class RiotApiError(RiotApiResponse):
 class ShortChampionDD(RiotApiResponse):
     """Type representing a short informations about a champion
     
-    Parameters:
-        blurb (``str``): TODO
+    :param blurb: unknown
+    :type blurb: str
     """
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
