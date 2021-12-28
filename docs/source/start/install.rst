@@ -21,6 +21,4 @@ supports asyncio and the required libraries. Anyway, it's recommended to use the
 
     .. parsed-literal::
 
-        >>> import async_riot_api
-        >>> async_riot_api.__version__
-        '|version|'
+        >>> from async_riot_api import LoLAPI
