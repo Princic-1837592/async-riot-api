@@ -23,12 +23,6 @@ API reference
     - :doc:`LoLAPI class <api/lolapi>`: Details about the main class for interacting with the API.
     - :doc:`Types <api/types>`: List of the implemented types.
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
-
-   async_riot_api
-
 .. toctree::
     :hidden:
     :caption: First of all
@@ -43,6 +37,14 @@ API reference
 
     api/lolapi
     api/types
+
+.. toctree::
+
+    .. autosummary::
+       :toctree: _autosummary
+       :recursive:
+
+       async_riot_api
 
 .. _Riot Games: https://www.riotgames.com/
 .. _League of Legends: https://www.leagueoflegends.com/
