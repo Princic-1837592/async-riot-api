@@ -95,7 +95,14 @@ class ShortChampionDD(RiotApiResponse):
         :type info: :class:`ChampionInfoDD`
         :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
         :type key: str
-        :param int_id: integer representation of param ``key``. Non present in the original data type
+        :param int_id: integer representation of param ``key``. Non-present in the original data type
+        :type int_id: int
+        :param name: complete name of the champion
+        :type name: str
+        :param partype: type of energy used by the champion. Usually 'Mana' but could be 'Energy' or others
+        :type partype: str
+        :param stats: statistics of the champion
+        :type stats:
         """
         super().__init__()
         self.blurb = blurb
