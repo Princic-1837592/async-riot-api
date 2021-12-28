@@ -9,6 +9,7 @@ class RiotApiResponse:
     :param success: wether the response was successful. Useful to spot errors
     :type success: bool
     """
+    
     def __init__(self, success: bool = True):
         self.__success = success
     
@@ -21,6 +22,7 @@ class RiotApiResponse:
         :param sep: character sequence for indentation. Default: 4 spaces
         :type sep: str
         """
+        
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
                 return obj.to_string(level = level + 1, sep = sep)
@@ -58,6 +60,7 @@ class RiotApiError(RiotApiResponse):
     :param status_code: error code from the response. Default 400
     :type status_code: int
     """
+    
     def __init__(self, message: str = 'Bad Request', status_code: int = 400):
         super().__init__(False)
         self.message = message
@@ -78,32 +81,24 @@ class ShortChampionDD(RiotApiResponse):
     :type info: :class:`ChampionInfoDD`
     :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
     :type key: str
-    :param int_id: integer representation of param ``key``. Non present in the original data type
+    :param int_id: integer representation of param ``key``. Non-present in the original data type
+    :type int_id: int
+    :param name: complete name of the champion
+    :type name: str
+    :param partype: type of energy used by the champion. Usually 'Mana' but could be 'Energy' or others
+    :type partype: str
+    :param stats: statistics of the champion
+    :type stats: :class:`ChampionStatsDD`
+    :param tags: tags about the champion, like 'Fighter', 'Mage'
+    :type tags: List[str]
+    :param title: short title of the champion
+    :type title: str
+    :param version: valid version for this object
+    :type version: str
     """
+    
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
                  tags: List[str], title: str, version: str):
-        """
-        Type representing short information about a champion
-        
-        :param blurb: short description
-        :type blurb: str
-        :param id: name of the champion without non-alphabetic characters
-        :type id: str
-        :param image: information about the images of a champion
-        :type image: :class:`ChampionImageDD`
-        :param info: schematic information about the champion
-        :type info: :class:`ChampionInfoDD`
-        :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
-        :type key: str
-        :param int_id: integer representation of param ``key``. Non-present in the original data type
-        :type int_id: int
-        :param name: complete name of the champion
-        :type name: str
-        :param partype: type of energy used by the champion. Usually 'Mana' but could be 'Energy' or others
-        :type partype: str
-        :param stats: statistics of the champion
-        :type stats:
-        """
         super().__init__()
         self.blurb = blurb
         self.id = id
