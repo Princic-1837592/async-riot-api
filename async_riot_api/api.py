@@ -1008,11 +1008,16 @@ class LoLAPI:
     @staticmethod
     async def get_full_champion_from_correct_name(name: str, language: str = 'en') -> types.ChampionDD:
         """
-        Get the complete information about a champion given its correct name. Usually
+        Get the complete information about a champion given its correct name, in any available language.
+        If the passed language is not present in `this list <https://ddragon.leagueoflegends.com/cdn/languages.json>`_,
+        :meth:`~async_riot_api.LoLAPI.compute_language` is called.
         
         :param name: correct name of a champion, same as ``ShortChampionDD.id``
-        :param language:
-        :return:
+        :param language: any available language. Default 'en'
+        :return: full information about a champion
+        :type name: str
+        :type language: str
+        :rtype: :class:`~types.ChampionDD`
         """
         
         if language not in LoLAPI.__LANGUAGES:
@@ -1027,5 +1032,18 @@ class LoLAPI:
         )
     
     @staticmethod
-    def get_map_icon_url(map_id: int):
+    def get_map_icon_url(map_id: int) -> str:
+        """
+        Returns the url to the image for the given map. Map ID can be found in :class:`~types.MatchDto`.
+        Complete list of map IDs `here <https://static.developer.riotgames.com/docs/lol/maps.json>`_.
+        
+        ``IMPORTANT``: no check will be made about data existence, meaning that passing a wrong map_id will simply result
+        in a broken url. No error will be raised.
+        
+        :param map_id: map ID
+        :return: url to the given map image
+        :type map_id: int
+        :rtype: str
+        """
+        
         return f'https://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map{map_id}.png'
