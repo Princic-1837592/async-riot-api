@@ -139,11 +139,11 @@ class ChampionDD(ShortChampionDD):
     :param spells: list of information about this champion's spells
     :param passive: information about this champion's passive ability
     :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
-    :type skins: List[:class:`ChampionSkinsDD`]
+    :type skins: List[:class:`ChampionSkinDD`]
     :type lore: str
     :type allytips: List[str]
     :type enemytips: List[str]
-    :type spells: List[:class:`ChampionSpellsDD`]
+    :type spells: List[:class:`ChampionSpellDD`]
     :type passive: :class:`ChampionPassiveDD`
     :type recommended: List[unknown]
     """
@@ -165,11 +165,11 @@ class ChampionDD(ShortChampionDD):
             version = version,
             **kwargs
         )
-        self.skins: List[ChampionSkinsDD] = list(map(lambda x: ChampionSkinsDD(**x), skins))
+        self.skins: List[ChampionSkinDD] = list(map(lambda x: ChampionSkinDD(**x), skins))
         self.lore = lore
         self.allytips: List[str] = allytips
         self.enemytips: List[str] = enemytips
-        self.spells: List[ChampionSpellsDD] = list(map(lambda x: ChampionSpellsDD(**x), spells))
+        self.spells: List[ChampionSpellDD] = list(map(lambda x: ChampionSpellDD(**x), spells))
         self.passive: ChampionPassiveDD = ChampionPassiveDD(**passive)
         self.recommended: list = recommended
 
@@ -207,7 +207,7 @@ class ChampionImageDD(RiotApiResponse):
         self.h = h
 
 
-class ChampionSkinsDD(RiotApiResponse):
+class ChampionSkinDD(RiotApiResponse):
     """
     Details about the champion's skins.
     
@@ -330,60 +330,65 @@ class ChampionStatsDD(RiotApiResponse):
         self.attackspeed = attackspeed
 
 
-class ChampionSpellsDD(RiotApiResponse):
-    def __init__(self, id: str, name: str, description: str, tooltip: str, leveltip: dict, maxrank: int,
+class ChampionSpellDD(RiotApiResponse):
+    """
+    Specific information about a champion spell (skill). Complete documentation about string placeholders and parsing is
+    `here <https://developer.riotgames.com/docs/lol>`_.
+    
+    :param id: spell's ID, including champion name and spell name
+    :param name: spell's name
+    :param description: spell's description
+    :param tooltip: similar to ``description``, but contains placeholders to build a string including data about damage per level, AP/AD scaling ecc.
+        Can be parsed to make the string look like the one in game
+    :param maxrank: maximum rank for this ability
+    :param cooldown: data about placeholders for cooldown
+    :param cooldownBurn: like ``cooldown``, but as string
+    :param cost: data about placeholders for cost
+    :param costBurn: like ``cost``, but as string
+    :param datavalues: no documentation found. No champion found with a non-empty dict of ``datavalues``
+    :param effect: like ``cost``, but when the spell costs health. The first element is always None for design reasons
+    :param effectBurn: like ``effect``, but as string
+    :param vars: no documentation found. No champion found with a non-empty list of ``vars``
+    :param costType: type of resources spent for using the ability
+    :param maxammo: in case the spell has ammos, like traps. '-1' if no ammos. For some reason this integer is represented as a string
+    :param range: data about placeholders for range
+    :param rangeBurn: like ``range``, but as string
+    :param image: details about the spell's image
+    :param leveltip: data about placeholders for levels
+    :param resource: placeholder for cost
+    :type id: str
+    :type name: str
+    :type description: str
+    :type tooltip: str
+    :type leveltip: :class:`ChampionSpellLeveltipDD`
+    :type maxrank: int
+    :type cooldown: List[int]
+    :type cooldownBurn: str
+    :type cost: List[int]
+    :type costBurn: str
+    :type datavalues: :class:`ChampionSpellDatavaluesDD`
+    :type effect: List[Optional[List[int]]]
+    :type effectBurn: List[Optional[str]]
+    :type vars: List[unknown]
+    :type costType: str
+    :type maxammo: str
+    :type range: List[int]
+    :type rangeBurn: str
+    :type image: :class:`ChampionSpellImageDD`
+    :type resource: Optional[str]
+    """
+    
+    def __init__(self, id: str, name: str, description: str, tooltip: str, maxrank: int,
                  cooldown: List[int], cooldownBurn: str, cost: List[int], costBurn: str, datavalues: dict,
-                 effect: List[Any], effectBurn: List[Any], vars: List[Any], costType: str, maxammo: str,
-                 range: List[int], rangeBurn: str, image: dict, resource: str, **kwargs):
-        """
-        
-        :param id: 
-        :param name: 
-        :param description: 
-        :param tooltip: 
-        :param leveltip: 
-        :param maxrank: 
-        :param cooldown: 
-        :param cooldownBurn: 
-        :param cost: 
-        :param costBurn: 
-        :param datavalues: 
-        :param effect: 
-        :param effectBurn: 
-        :param vars: 
-        :param costType: 
-        :param maxammo: 
-        :param range: 
-        :param rangeBurn: 
-        :param image: 
-        :param resource: 
-        :type id: 
-        :type name: 
-        :type description: 
-        :type tooltip: 
-        :type leveltip: 
-        :type maxrank: 
-        :type cooldown: 
-        :type cooldownBurn: 
-        :type cost: 
-        :type costBurn: 
-        :type datavalues: 
-        :type effect: 
-        :type effectBurn: 
-        :type vars: 
-        :type costType: 
-        :type maxammo: 
-        :type range: 
-        :type rangeBurn: 
-        :type image: 
-        :type resource: 
-        """
+                 effect: List[Optional[List[int]]], effectBurn: List[Optional[str]], vars: List[Any], costType: str,
+                 maxammo: str,
+                 range: List[int], rangeBurn: str, image: dict, leveltip: Optional[dict] = None,
+                 resource: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
         self.id = id
         self.name = name
         self.description = description
         self.tooltip = tooltip
-        self.leveltip: ChampionSpellLeveltipDD = ChampionSpellLeveltipDD(**leveltip)
         self.maxrank = maxrank
         self.cooldown: List[int] = cooldown
         self.cooldownBurn = cooldownBurn
@@ -398,6 +403,7 @@ class ChampionSpellsDD(RiotApiResponse):
         self.range: List[int] = range
         self.rangeBurn = rangeBurn
         self.image: ChampionSpellImageDD = ChampionSpellImageDD(**image)
+        self.leveltip: ChampionSpellLeveltipDD = None if leveltip is None else ChampionSpellLeveltipDD(**leveltip)
         self.resource = resource
 
 
@@ -411,7 +417,6 @@ class ChampionSpellLeveltipDD(RiotApiResponse):
 class ChampionSpellDatavaluesDD(RiotApiResponse):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.__dict__.update(kwargs)
 
 
 class ChampionSpellImageDD(RiotApiResponse):
