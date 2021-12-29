@@ -10,41 +10,50 @@ class RiotApiResponse:
     :type success: bool
     """
     
-    def __init__(self, success: bool = True):
+    def __init__(self, success: bool = True, **kwargs):
         self.__success = success
+        for key, value in kwargs.items():
+            setattr(self, key, value)
     
-    def to_string(self, *, level: int = 0, sep = '    '):
+    def to_string(self, *, level: int = 0, sep = '    ', nl: str = '\n'):
         """
         Returns a prettified string representation of the object
         
         :param level: starting level of indentation. Default: 0
-        :type level: int
         :param sep: character sequence for indentation. Default: 4 spaces
+        :param nl: new line sequence. Default '\\n'
+        :type level: int
         :type sep: str
+        :type nl: str
         """
         
         def recursion(obj, level: int = level, sep = sep):
             if isinstance(obj, RiotApiResponse):
                 return obj.to_string(level = level + 1, sep = sep)
             if isinstance(obj, list):
-                return f'[\n{sep * (level + 2)}' + (
-                    f',\n{sep * (level + 2)}'.join(
+                return f'[{nl}{sep * (level + 2)}' + (
+                    f',{nl}{sep * (level + 2)}'.join(
                         map(lambda x: recursion(x, level + 1, sep), obj)
                     )) + f'\n{sep * (level + 1)}]'
             return str(obj)
         
-        to_skip = ['success', 'error', '_RiotApiResponse__success', '_RiotApiResponse__error']
-        return '{}(\n{}{}\n{})'.format(
+        to_skip = ['success', 'error', '_RiotApiResponse__success']
+        return '{}({}{}{}{}{})'.format(
             type(self).__name__,
+            nl,
             sep * (level + 1),
-            f',\n{sep * (level + 1)}'.join(
+            f',{nl}{sep * (level + 1)}'.join(
                 '{} = {}'.format(*item) for item in map(
                     lambda x: (x[0], recursion(x[1])),
                     filter(lambda x: x[0] not in to_skip, vars(self).items())
                 )
             ),
+            nl,
             sep * level,
         )
+    
+    def __repr__(self):
+        return self.to_string()
     
     def __bool__(self):
         return self.__success
@@ -61,8 +70,8 @@ class RiotApiError(RiotApiResponse):
     :type status_code: int
     """
     
-    def __init__(self, message: str = 'Bad Request', status_code: int = 400):
-        super().__init__(False)
+    def __init__(self, message: str = 'Bad Request', status_code: int = 400, **kwargs):
+        super().__init__(False, **kwargs)
         self.message = message
         self.status_code = status_code
 
@@ -101,8 +110,8 @@ class ShortChampionDD(RiotApiResponse):
     """
     
     def __init__(self, blurb: str, id: str, image: dict, info: dict, key: str, name: str, partype: str, stats: dict,
-                 tags: List[str], title: str, version: str):
-        super().__init__()
+                 tags: List[str], title: str, version: str, **kwargs):
+        super().__init__(**kwargs)
         self.blurb = blurb
         self.id = id
         self.image: ChampionImageDD = ChampionImageDD(**image)
@@ -141,7 +150,7 @@ class ChampionDD(ShortChampionDD):
     
     def __init__(self, id: str, key: str, name: str, title: str, image: dict, skins: List[dict], lore: str, blurb: str,
                  allytips: List[str], enemytips: List[str], tags: List[str], partype: str, info: dict, stats: dict,
-                 spells: List[dict], passive: dict, recommended: list, version: str):
+                 spells: List[dict], passive: dict, recommended: list, version: str, **kwargs):
         super().__init__(
             blurb = blurb,
             id = id,
@@ -153,7 +162,8 @@ class ChampionDD(ShortChampionDD):
             stats = stats,
             tags = tags,
             title = title,
-            version = version
+            version = version,
+            **kwargs
         )
         self.skins: List[ChampionSkinsDD] = list(map(lambda x: ChampionSkinsDD(**x), skins))
         self.lore = lore
@@ -186,8 +196,8 @@ class ChampionImageDD(RiotApiResponse):
     :type h: int
     """
     
-    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
-        super().__init__()
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int, **kwargs):
+        super().__init__(**kwargs)
         self.full = full
         self.sprite = sprite
         self.group = group
@@ -206,8 +216,8 @@ class ChampionSkinsDD(RiotApiResponse):
     :param chromas:
     """
     
-    def __init__(self, id: str, num: int, name: str, chromas: bool):
-        super().__init__()
+    def __init__(self, id: str, num: int, name: str, chromas: bool, **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.num = num
         self.name = name
@@ -215,8 +225,8 @@ class ChampionSkinsDD(RiotApiResponse):
 
 
 class ChampionInfoDD(RiotApiResponse):
-    def __init__(self, attack: int, defense: int, magic: int, difficulty: int):
-        super().__init__()
+    def __init__(self, attack: int, defense: int, magic: int, difficulty: int, **kwargs):
+        super().__init__(**kwargs)
         self.attack = attack
         self.defense = defense
         self.magic = magic
@@ -227,8 +237,9 @@ class ChampionStatsDD(RiotApiResponse):
     def __init__(self, hp: int, hpperlevel: int, mp: int, mpperlevel: int, movespeed: int, armor: int,
                  armorperlevel: float, spellblock: int, spellblockperlevel: float, attackrange: int, hpregen: int,
                  hpregenperlevel: int, mpregen: int, mpregenperlevel: int, crit: int, critperlevel: int,
-                 attackdamage: int, attackdamageperlevel: int, attackspeedperlevel: float, attackspeed: float):
-        super().__init__()
+                 attackdamage: int, attackdamageperlevel: int, attackspeedperlevel: float, attackspeed: float,
+                 **kwargs):
+        super().__init__(**kwargs)
         self.hp = hp
         self.hpperlevel = hpperlevel
         self.mp = mp
@@ -255,8 +266,8 @@ class ChampionSpellsDD(RiotApiResponse):
     def __init__(self, id: str, name: str, description: str, tooltip: str, leveltip: dict, maxrank: int,
                  cooldown: List[int], cooldownBurn: str, cost: List[int], costBurn: str, datavalues: dict,
                  effect: List[Any], effectBurn: List[Any], vars: List[Any], costType: str, maxammo: str,
-                 range: List[int], rangeBurn: str, image: dict, resource: str):
-        super().__init__()
+                 range: List[int], rangeBurn: str, image: dict, resource: str, **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.name = name
         self.description = description
@@ -280,21 +291,21 @@ class ChampionSpellsDD(RiotApiResponse):
 
 
 class ChampionSpellLeveltipDD(RiotApiResponse):
-    def __init__(self, label: List[str], effect: List[str]):
-        super().__init__()
+    def __init__(self, label: List[str], effect: List[str], **kwargs):
+        super().__init__(**kwargs)
         self.label: List[str] = label
         self.effect: List[str] = effect
 
 
 class ChampionSpellDatavaluesDD(RiotApiResponse):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self.__dict__.update(kwargs)
 
 
 class ChampionSpellImageDD(RiotApiResponse):
-    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
-        super().__init__()
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int, **kwargs):
+        super().__init__(**kwargs)
         self.full = full
         self.sprite = sprite
         self.group = group
@@ -305,16 +316,16 @@ class ChampionSpellImageDD(RiotApiResponse):
 
 
 class ChampionPassiveDD(RiotApiResponse):
-    def __init__(self, name: str, description: str, image: dict):
-        super().__init__()
+    def __init__(self, name: str, description: str, image: dict, **kwargs):
+        super().__init__(**kwargs)
         self.name = name
         self.description = description
         self.image: ChampionPassiveImageDD = ChampionPassiveImageDD(**image)
 
 
 class ChampionPassiveImageDD(RiotApiResponse):
-    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int):
-        super().__init__()
+    def __init__(self, full: str, sprite: str, group: str, x: int, y: int, w: int, h: int, **kwargs):
+        super().__init__(**kwargs)
         self.full = full
         self.sprite = sprite
         self.group = group
@@ -324,18 +335,27 @@ class ChampionPassiveImageDD(RiotApiResponse):
         self.h = h
 
 
+class QueueDD(RiotApiResponse):
+    def __init__(self, queueId: int, map: str, description: str, notes: str, **kwargs):
+        super().__init__(**kwargs)
+        self.queueId = queueId
+        self.map = map
+        self.description = description
+        self.notes = notes
+
+
 # ACCOUNT-V1
 class AccountDto(RiotApiResponse):
-    def __init__(self, puuid: str, gameName: str, tagLine: str):
-        super().__init__()
+    def __init__(self, puuid: str, gameName: str, tagLine: str, **kwargs):
+        super().__init__(**kwargs)
         self.puuid = puuid
         self.gameName = gameName
         self.tagLine = tagLine
 
 
 class ActiveShardDto(RiotApiResponse):
-    def __init__(self, puuid: str, game: str, activeShard: str):
-        super().__init__()
+    def __init__(self, puuid: str, game: str, activeShard: str, **kwargs):
+        super().__init__(**kwargs)
         self.puuid = puuid
         self.game = game
         self.activeShard = activeShard
@@ -345,8 +365,8 @@ class ActiveShardDto(RiotApiResponse):
 class ChampionMasteryDto(RiotApiResponse):
     def __init__(self, championPointsUntilNextLevel: int, chestGranted: bool, championId: int, lastPlayTime: int,
                  championLevel: int, summonerId: str, championPoints: int, championPointsSinceLastLevel: int,
-                 tokensEarned: int):
-        super().__init__()
+                 tokensEarned: int, **kwargs):
+        super().__init__(**kwargs)
         self.championPointsUntilNextLevel = championPointsUntilNextLevel
         self.chestGranted = chestGranted
         self.championId = championId
@@ -360,8 +380,9 @@ class ChampionMasteryDto(RiotApiResponse):
 
 # CHAMPION-V3
 class ChampionInfo(RiotApiResponse):
-    def __init__(self, maxNewPlayerLevel: int, freeChampionIdsForNewPlayers: List[int], freeChampionIds: List[int]):
-        super().__init__()
+    def __init__(self, maxNewPlayerLevel: int, freeChampionIdsForNewPlayers: List[int], freeChampionIds: List[int],
+                 **kwargs):
+        super().__init__(**kwargs)
         self.maxNewPlayerLevel = maxNewPlayerLevel
         self.freeChampionIdsForNewPlayers = freeChampionIdsForNewPlayers
         self.freeChampionIds = freeChampionIds
@@ -369,8 +390,8 @@ class ChampionInfo(RiotApiResponse):
 
 # CLASH-V1
 class PlayerDto(RiotApiResponse):
-    def __init__(self, summonerId: str, teamId: str, position: str, role: str):
-        super().__init__()
+    def __init__(self, summonerId: str, teamId: str, position: str, role: str, **kwargs):
+        super().__init__(**kwargs)
         self.summonerId = summonerId
         self.teamId = teamId
         self.position = position
@@ -378,8 +399,8 @@ class PlayerDto(RiotApiResponse):
 
 
 class TournamentDto(RiotApiResponse):
-    def __init__(self, id: int, themeId: int, nameKey: str, nameKeySecondary: str, schedule: List[dict]):
-        super().__init__()
+    def __init__(self, id: int, themeId: int, nameKey: str, nameKeySecondary: str, schedule: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.themeId = themeId
         self.nameKey = nameKey
@@ -388,8 +409,8 @@ class TournamentDto(RiotApiResponse):
 
 
 class TournamentPhaseDto(RiotApiResponse):
-    def __init__(self, id: int, registrationTime: int, startTime: int, cancelled: bool):
-        super().__init__()
+    def __init__(self, id: int, registrationTime: int, startTime: int, cancelled: bool, **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.registrationTime = registrationTime
         self.startTime = startTime
@@ -398,8 +419,8 @@ class TournamentPhaseDto(RiotApiResponse):
 
 # LEAGUE-V4
 class LeagueListDTO(RiotApiResponse):
-    def __init__(self, tier: str, leagueId: str, queue: str, name: str, entries: List[dict]):
-        super().__init__()
+    def __init__(self, tier: str, leagueId: str, queue: str, name: str, entries: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.tier = tier
         self.leagueId = leagueId
         self.queue = queue
@@ -409,8 +430,9 @@ class LeagueListDTO(RiotApiResponse):
 
 class LeagueItemDTO(RiotApiResponse):
     def __init__(self, summonerId: str, summonerName: str, leaguePoints: int, rank: str, wins: int, losses: int,
-                 veteran: bool, inactive: bool, freshBlood: bool, hotStreak: bool, miniSeries: Optional[dict] = None):
-        super().__init__()
+                 veteran: bool, inactive: bool, freshBlood: bool, hotStreak: bool, miniSeries: Optional[dict] = None,
+                 **kwargs):
+        super().__init__(**kwargs)
         self.summonerId = summonerId
         self.summonerName = summonerName
         self.leaguePoints = leaguePoints
@@ -427,8 +449,8 @@ class LeagueItemDTO(RiotApiResponse):
 class LeagueEntryDTO(RiotApiResponse):
     def __init__(self, summonerId: str, summonerName: str, queueType: str, leaguePoints: int, wins: int, losses: int,
                  hotStreak: bool, veteran: bool, freshBlood: bool, inactive: bool, miniSeries: Optional[dict] = None,
-                 leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None):
-        super().__init__()
+                 leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None, **kwargs):
+        super().__init__(**kwargs)
         self.leagueId = leagueId
         self.summonerId = summonerId
         self.summonerName = summonerName
@@ -453,8 +475,8 @@ class LeagueEntryDTO(RiotApiResponse):
 
 
 class MiniSeriesDTO(RiotApiResponse):
-    def __init__(self, losses: int, progress: str, target: int, wins: int):
-        super().__init__()
+    def __init__(self, losses: int, progress: str, target: int, wins: int, **kwargs):
+        super().__init__(**kwargs)
         self.losses = losses
         self.progress = progress
         self.target = target
@@ -463,8 +485,9 @@ class MiniSeriesDTO(RiotApiResponse):
 
 # LOL-STATUS-V3
 class ShardStatus(RiotApiResponse):
-    def __init__(self, name: str, slug: str, locales: List[str], hostname: str, region_tag: str, services: List[dict]):
-        super().__init__()
+    def __init__(self, name: str, slug: str, locales: List[str], hostname: str, region_tag: str, services: List[dict],
+                 **kwargs):
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slug
         self.locales = locales
@@ -474,8 +497,8 @@ class ShardStatus(RiotApiResponse):
 
 
 class Service(RiotApiResponse):
-    def __init__(self, name: str, slug: str, status: str, incidents: List[dict]):
-        super().__init__()
+    def __init__(self, name: str, slug: str, status: str, incidents: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slug
         self.status = status
@@ -483,8 +506,8 @@ class Service(RiotApiResponse):
 
 
 class Incident(RiotApiResponse):
-    def __init__(self, id: int, active: bool, created_at: str, updates: List[dict]):
-        super().__init__()
+    def __init__(self, id: int, active: bool, created_at: str, updates: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.active = active
         self.created_at = created_at
@@ -493,8 +516,8 @@ class Incident(RiotApiResponse):
 
 class Message(RiotApiResponse):
     def __init__(self, id: str, author: str, heading: str, content: str, severity: str, created_at: str,
-                 updated_at: str, translations: List[dict]):
-        super().__init__()
+                 updated_at: str, translations: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.author = author
         self.heading = heading
@@ -506,8 +529,8 @@ class Message(RiotApiResponse):
 
 
 class Translation(RiotApiResponse):
-    def __init__(self, locale: str, heading: str, content: str):
-        super().__init__()
+    def __init__(self, locale: str, heading: str, content: str, **kwargs):
+        super().__init__(**kwargs)
         self.locale = locale
         self.heading = heading
         self.content = content
@@ -515,8 +538,9 @@ class Translation(RiotApiResponse):
 
 # LOL-STATUS-V4
 class PlatformDataDto(RiotApiResponse):
-    def __init__(self, id: str, name: str, locales: List[str], maintenances: List[dict], incidents: List[dict]):
-        super().__init__()
+    def __init__(self, id: str, name: str, locales: List[str], maintenances: List[dict], incidents: List[dict],
+                 **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.name = name
         self.locales = locales
@@ -527,8 +551,8 @@ class PlatformDataDto(RiotApiResponse):
 class StatusDto(RiotApiResponse):
     def __init__(self, id: int, maintenance_status: str, incident_severity: Optional[str], titles: List[dict],
                  updates: List[dict], created_at: str, archive_at: str, updated_at: Optional[str],
-                 platforms: List[str]):
-        super().__init__()
+                 platforms: List[str], **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.maintenance_status = maintenance_status
         self.incident_severity = incident_severity
@@ -541,16 +565,16 @@ class StatusDto(RiotApiResponse):
 
 
 class ContentDto(RiotApiResponse):
-    def __init__(self, locale: str, content: str):
-        super().__init__()
+    def __init__(self, locale: str, content: str, **kwargs):
+        super().__init__(**kwargs)
         self.locale = locale
         self.content = content
 
 
 class UpdateDto(RiotApiResponse):
     def __init__(self, id: int, author: str, publish: bool, publish_locations: List[str], translations: List[dict],
-                 created_at: str, updated_at: str):
-        super().__init__()
+                 created_at: str, updated_at: str, **kwargs):
+        super().__init__(**kwargs)
         self.id = id
         self.author = author
         self.publish = publish
@@ -562,15 +586,15 @@ class UpdateDto(RiotApiResponse):
 
 # LOR-MATCH-V1
 class LorMatchDto(RiotApiResponse):
-    def __init__(self, metadata: dict, info: dict):
-        super().__init__()
+    def __init__(self, metadata: dict, info: dict, **kwargs):
+        super().__init__(**kwargs)
         self.metadata: LorMetadataDto = LorMetadataDto(**metadata)
         self.info: LorInfoDto = LorInfoDto(**info)
 
 
 class LorMetadataDto(RiotApiResponse):
-    def __init__(self, data_version: str, match_id: str, participants: List[str]):
-        super().__init__()
+    def __init__(self, data_version: str, match_id: str, participants: List[str], **kwargs):
+        super().__init__(**kwargs)
         self.data_version = data_version
         self.match_id = match_id
         self.participants: List[str] = participants
@@ -578,8 +602,8 @@ class LorMetadataDto(RiotApiResponse):
 
 class LorInfoDto(RiotApiResponse):
     def __init__(self, game_mode: str, game_type: str, game_start_time_utc: str, game_version: str, players: List[dict],
-                 total_turn_count: int):
-        super().__init__()
+                 total_turn_count: int, **kwargs):
+        super().__init__(**kwargs)
         self.game_mode = game_mode
         self.game_type = game_type
         self.game_start_time_utc = game_start_time_utc
@@ -590,8 +614,8 @@ class LorInfoDto(RiotApiResponse):
 
 class LorPlayerDto(RiotApiResponse):
     def __init__(self, puuid: str, deck_id: str, deck_code: str, factions: List[str], game_outcome: str,
-                 order_of_play: int):
-        super().__init__()
+                 order_of_play: int, **kwargs):
+        super().__init__(**kwargs)
         self.puuid = puuid
         self.deck_id = deck_id
         self.deck_code = deck_code
@@ -602,14 +626,14 @@ class LorPlayerDto(RiotApiResponse):
 
 # LOR-RANKED-V1
 class LorLeaderboardDto(RiotApiResponse):
-    def __init__(self, players: List[dict]):
-        super().__init__()
+    def __init__(self, players: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.players: List[LorLeaderboardPlayerDto] = list(map(lambda x: LorLeaderboardPlayerDto(**x), players))
 
 
 class LorLeaderboardPlayerDto(RiotApiResponse):
-    def __init__(self, name: str, rank: int, lp: int):
-        super().__init__()
+    def __init__(self, name: str, rank: int, lp: int, **kwargs):
+        super().__init__(**kwargs)
         self.name = name
         self.rank = rank
         self.lp = lp
@@ -617,15 +641,15 @@ class LorLeaderboardPlayerDto(RiotApiResponse):
 
 # MATCH-V5
 class MatchDto(RiotApiResponse):
-    def __init__(self, metadata: dict, info: dict):
-        super().__init__()
+    def __init__(self, metadata: dict, info: dict, **kwargs):
+        super().__init__(**kwargs)
         self.metadata: MetadataDto = MetadataDto(**metadata)
         self.info: InfoDto = InfoDto(**info)
 
 
 class MetadataDto(RiotApiResponse):
-    def __init__(self, dataVersion: str, matchId: str, participants: List[str]):
-        super().__init__()
+    def __init__(self, dataVersion: str, matchId: str, participants: List[str], **kwargs):
+        super().__init__(**kwargs)
         self.dataVersion = dataVersion
         self.matchId = matchId
         self.participants = participants
@@ -635,8 +659,8 @@ class InfoDto(RiotApiResponse):
     def __init__(self, gameCreation: int, gameDuration: int, gameId: int, gameMode: str, gameName: str,
                  gameStartTimestamp: int, gameType: str, gameVersion: str, mapId: int, participants: List[str],
                  platformId: str, queueId: int, teams: List[dict], tournamentCode: Optional[str] = None,
-                 gameEndTimestamp: int = 0):
-        super().__init__()
+                 gameEndTimestamp: int = 0, **kwargs):
+        super().__init__(**kwargs)
         self.gameCreation = gameCreation
         self.gameDuration = gameDuration
         self.gameId = gameId
@@ -680,8 +704,8 @@ class ParticipantDto(RiotApiResponse):
                  tripleKills: int, trueDamageDealt: int, trueDamageDealtToChampions: int, trueDamageTaken: int,
                  turretKills: int, turretsLost: int, unrealKills: int, visionScore: int,
                  visionWardsBoughtInGame: int, wardsKilled: int, wardsPlaced: int, win: bool,
-                 inhibitorTakedowns: int = 0, nexusTakedowns: int = 0, turretTakedowns: int = 0):
-        super().__init__()
+                 inhibitorTakedowns: int = 0, nexusTakedowns: int = 0, turretTakedowns: int = 0, **kwargs):
+        super().__init__(**kwargs)
         self.assists = assists
         self.baronKills = baronKills
         self.bountyLevel = bountyLevel
@@ -790,31 +814,31 @@ class ParticipantDto(RiotApiResponse):
 
 
 class PerksDto(RiotApiResponse):
-    def __init__(self, statPerks: dict, styles: List[dict]):
-        super().__init__()
+    def __init__(self, statPerks: dict, styles: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.statPerks: PerkStatsDto = PerkStatsDto(**statPerks)
         self.styles: List[PerkStyleDto] = list(map(lambda x: PerkStyleDto(**x), styles))
 
 
 class PerkStatsDto(RiotApiResponse):
-    def __init__(self, defense: int, flex: int, offense: int):
-        super().__init__()
+    def __init__(self, defense: int, flex: int, offense: int, **kwargs):
+        super().__init__(**kwargs)
         self.defense = defense
         self.flex = flex
         self.offense = offense
 
 
 class PerkStyleDto(RiotApiResponse):
-    def __init__(self, description: str, selections: List[dict], style: int):
-        super().__init__()
+    def __init__(self, description: str, selections: List[dict], style: int, **kwargs):
+        super().__init__(**kwargs)
         self.description = description
         self.selections: List[PerkStyleSelectionDto] = list(map(lambda x: PerkStyleSelectionDto(**x), selections))
         self.style = style
 
 
 class PerkStyleSelectionDto(RiotApiResponse):
-    def __init__(self, perk: int, var1: int, var2: int, var3: int):
-        super().__init__()
+    def __init__(self, perk: int, var1: int, var2: int, var3: int, **kwargs):
+        super().__init__(**kwargs)
         self.perk = perk
         self.var1 = var1
         self.var2 = var2
@@ -822,8 +846,8 @@ class PerkStyleSelectionDto(RiotApiResponse):
 
 
 class TeamDto(RiotApiResponse):
-    def __init__(self, bans: List[dict], objectives: dict, teamId: int, win: bool):
-        super().__init__()
+    def __init__(self, bans: List[dict], objectives: dict, teamId: int, win: bool, **kwargs):
+        super().__init__(**kwargs)
         self.bans: List[BanDto] = list(map(lambda x: BanDto(**x), bans))
         self.objectives: ObjectivesDto = ObjectivesDto(**objectives)
         self.teamId = teamId
@@ -831,15 +855,16 @@ class TeamDto(RiotApiResponse):
 
 
 class BanDto(RiotApiResponse):
-    def __init__(self, championId: int, pickTurn: int):
-        super().__init__()
+    def __init__(self, championId: int, pickTurn: int, **kwargs):
+        super().__init__(**kwargs)
         self.championId = championId
         self.pickTurn = pickTurn
 
 
 class ObjectivesDto(RiotApiResponse):
-    def __init__(self, baron: dict, champion: dict, dragon: dict, inhibitor: dict, riftHerald: dict, tower: dict):
-        super().__init__()
+    def __init__(self, baron: dict, champion: dict, dragon: dict, inhibitor: dict, riftHerald: dict, tower: dict,
+                 **kwargs):
+        super().__init__(**kwargs)
         self.baron: ObjectiveDto = ObjectiveDto(**baron)
         self.champion: ObjectiveDto = ObjectiveDto(**champion)
         self.dragon: ObjectiveDto = ObjectiveDto(**dragon)
@@ -849,22 +874,22 @@ class ObjectivesDto(RiotApiResponse):
 
 
 class ObjectiveDto(RiotApiResponse):
-    def __init__(self, first: bool, kills: int):
-        super().__init__()
+    def __init__(self, first: bool, kills: int, **kwargs):
+        super().__init__(**kwargs)
         self.first = first
         self.kills = kills
 
 
 class MatchTimelineDto(RiotApiResponse):
-    def __init__(self, metadata: dict, info: dict):
-        super().__init__()
+    def __init__(self, metadata: dict, info: dict, **kwargs):
+        super().__init__(**kwargs)
         self.metadata: MetadataDto = MetadataDto(**metadata)
         self.info: MTLInfoDto = MTLInfoDto(**info)
 
 
 class MTLInfoDto(RiotApiResponse):
-    def __init__(self, frameInterval: int, frames: List[dict], gameId: int, participants: List[dict]):
-        super().__init__()
+    def __init__(self, frameInterval: int, frames: List[dict], gameId: int, participants: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.frameInterval = frameInterval
         self.frames: List[MTLFrameDto] = list(map(lambda x: MTLFrameDto(**x), frames))
         self.gameId = gameId
@@ -872,8 +897,8 @@ class MTLInfoDto(RiotApiResponse):
 
 
 class MTLFrameDto(RiotApiResponse):
-    def __init__(self, events: List[dict], participantFrames: dict, timestamp: int):
-        super().__init__()
+    def __init__(self, events: List[dict], participantFrames: dict, timestamp: int, **kwargs):
+        super().__init__(**kwargs)
         self.events: List[MTLEventDto] = list(map(lambda x: MTLEventDto(**x), events))
         self.participantFrames: MTLParticipantFramesDto = MTLParticipantFramesDto(
             **{f'f{k}': v for k, v in participantFrames.items()}
@@ -894,8 +919,8 @@ class MTLEventDto(RiotApiResponse):
                  laneType: Optional[str] = None, teamId: Optional[int] = None, killerTeamId: Optional[int] = None,
                  monsterSubType: Optional[str] = None, monsterType: Optional[str] = None,
                  buildingType: Optional[str] = None, towerType: Optional[str] = None, name: Optional[str] = None,
-                 gameId: Optional[int] = None, winningTeam: Optional[int] = None):
-        super().__init__()
+                 gameId: Optional[int] = None, winningTeam: Optional[int] = None, **kwargs):
+        super().__init__(**kwargs)
         self.timestamp = timestamp
         self.type = type
         self.levelUpType = levelUpType
@@ -937,8 +962,8 @@ class MTLEventDto(RiotApiResponse):
 
 class MTLDamageDto(RiotApiResponse):
     def __init__(self, basic: bool, magicDamage: int, name: str, participantId: int, physicalDamage: int,
-                 spellName: str, spellSlot: int, trueDamage: int, type: str):
-        super().__init__()
+                 spellName: str, spellSlot: int, trueDamage: int, type: str, **kwargs):
+        super().__init__(**kwargs)
         self.basic = basic
         self.magicDamage = magicDamage
         self.name = name
@@ -952,8 +977,8 @@ class MTLDamageDto(RiotApiResponse):
 
 class MTLParticipantFramesDto(RiotApiResponse):
     def __init__(self, f1: dict, f2: dict, f3: dict, f4: dict, f5: dict, f6: dict, f7: dict, f8: dict, f9: dict,
-                 f10: dict):
-        super().__init__()
+                 f10: dict, **kwargs):
+        super().__init__(**kwargs)
         self.f1: MTLParticipantFrameDto = MTLParticipantFrameDto(**f1)
         self.f2: MTLParticipantFrameDto = MTLParticipantFrameDto(**f2)
         self.f3: MTLParticipantFrameDto = MTLParticipantFrameDto(**f3)
@@ -969,8 +994,8 @@ class MTLParticipantFramesDto(RiotApiResponse):
 class MTLParticipantFrameDto(RiotApiResponse):
     def __init__(self, championStats: dict, currentGold: int, damageStats: dict, goldPerSecond: int,
                  jungleMinionsKilled: int, level: int, minionsKilled: int, participantId: int, position: dict,
-                 timeEnemySpentControlled: int, totalGold: int, xp: int):
-        super().__init__()
+                 timeEnemySpentControlled: int, totalGold: int, xp: int, **kwargs):
+        super().__init__(**kwargs)
         self.championStats: MTLChampionStatsDto = MTLChampionStatsDto(**championStats)
         self.currentGold = currentGold
         self.damageStats: MTLDamageStatsDto = MTLDamageStatsDto(**damageStats)
@@ -990,8 +1015,9 @@ class MTLChampionStatsDto(RiotApiResponse):
                  attackDamage: int, attackSpeed: int, bonusArmorPenPercent: int, bonusMagicPenPercent: int,
                  ccReduction: int, cooldownReduction: int, health: int, healthMax: int, healthRegen: int,
                  lifesteal: int, magicPen: int, magicPenPercent: int, magicResist: int, movementSpeed: int,
-                 omnivamp: int, physicalVamp: int, power: int, powerMax: int, powerRegen: int, spellVamp: int):
-        super().__init__()
+                 omnivamp: int, physicalVamp: int, power: int, powerMax: int, powerRegen: int, spellVamp: int,
+                 **kwargs):
+        super().__init__(**kwargs)
         self.abilityHaste = abilityHaste
         self.abilityPower = abilityPower
         self.armor = armor
@@ -1023,8 +1049,8 @@ class MTLDamageStatsDto(RiotApiResponse):
     def __init__(self, magicDamageDone: int, magicDamageDoneToChampions: int, magicDamageTaken: int,
                  physicalDamageDone: int, physicalDamageDoneToChampions: int, physicalDamageTaken: int,
                  totalDamageDone: int, totalDamageDoneToChampions: int, totalDamageTaken: int, trueDamageDone: int,
-                 trueDamageDoneToChampions: int, trueDamageTaken: int):
-        super().__init__()
+                 trueDamageDoneToChampions: int, trueDamageTaken: int, **kwargs):
+        super().__init__(**kwargs)
         self.magicDamageDone = magicDamageDone
         self.magicDamageDoneToChampions = magicDamageDoneToChampions
         self.magicDamageTaken = magicDamageTaken
@@ -1040,15 +1066,15 @@ class MTLDamageStatsDto(RiotApiResponse):
 
 
 class MTLPositionDto(RiotApiResponse):
-    def __init__(self, x: int, y: int):
-        super().__init__()
+    def __init__(self, x: int, y: int, **kwargs):
+        super().__init__(**kwargs)
         self.x = x
         self.y = y
 
 
 class MTLParticipantDto(RiotApiResponse):
-    def __init__(self, participantId: int, puuid: str):
-        super().__init__()
+    def __init__(self, participantId: int, puuid: str, **kwargs):
+        super().__init__(**kwargs)
         self.participantId = participantId
         self.puuid = puuid
 
@@ -1059,8 +1085,8 @@ class MTLParticipantDto(RiotApiResponse):
 class CurrentGameInfo(RiotApiResponse):
     def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
                  gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,
-                 participants: List[dict]):
-        super().__init__()
+                 participants: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.gameId = gameId
         self.gameType = gameType
         self.gameStartTime = gameStartTime
@@ -1075,8 +1101,8 @@ class CurrentGameInfo(RiotApiResponse):
 
 
 class BannedChampion(RiotApiResponse):
-    def __init__(self, championId: int, teamId: int, pickTurn: int):
-        super().__init__()
+    def __init__(self, championId: int, teamId: int, pickTurn: int, **kwargs):
+        super().__init__(**kwargs)
         self.pickTurn = pickTurn
         self.championId = championId
         self.teamId = teamId
@@ -1084,8 +1110,8 @@ class BannedChampion(RiotApiResponse):
 
 class CurrentGameParticipant(RiotApiResponse):
     def __init__(self, championId: int, perks: dict, profileIconId: int, bot: bool, teamId: int, summonerName: str,
-                 summonerId: str, spell1Id: int, spell2Id: int, gameCustomizationObjects: List[dict]):
-        super().__init__()
+                 summonerId: str, spell1Id: int, spell2Id: int, gameCustomizationObjects: List[dict], **kwargs):
+        super().__init__(**kwargs)
         self.championId = championId
         self.perks: Perks = Perks(**perks)
         self.profileIconId = profileIconId
@@ -1101,23 +1127,23 @@ class CurrentGameParticipant(RiotApiResponse):
 
 
 class Perks(RiotApiResponse):
-    def __init__(self, perkIds: List[int], perkStyle: int, perkSubStyle: int):
-        super().__init__()
+    def __init__(self, perkIds: List[int], perkStyle: int, perkSubStyle: int, **kwargs):
+        super().__init__(**kwargs)
         self.perkIds: List[int] = perkIds
         self.perkStyle = perkStyle
         self.perkSubStyle = perkSubStyle
 
 
 class GameCustomizationObject(RiotApiResponse):
-    def __init__(self, category: str, content: str):
-        super().__init__()
+    def __init__(self, category: str, content: str, **kwargs):
+        super().__init__(**kwargs)
         self.category = category
         self.content = content
 
 
 class FeaturedGames(RiotApiResponse):
-    def __init__(self, gameList: List[dict], clientRefreshInterval: int):
-        super().__init__()
+    def __init__(self, gameList: List[dict], clientRefreshInterval: int, **kwargs):
+        super().__init__(**kwargs)
         self.gameList: List[FeaturedGameInfo] = list(map(lambda x: FeaturedGameInfo(**x), gameList))
         self.clientRefreshInterval = clientRefreshInterval
 
@@ -1125,8 +1151,8 @@ class FeaturedGames(RiotApiResponse):
 class FeaturedGameInfo(RiotApiResponse):
     def __init__(self, gameMode: str, gameLength: int, mapId: int, gameType: str, bannedChampions: List[dict],
                  gameId: int, observers: dict, gameQueueConfigId: int, gameStartTime: int, participants: List[dict],
-                 platformId: str):
-        super().__init__()
+                 platformId: str, **kwargs):
+        super().__init__(**kwargs)
         self.gameMode = gameMode
         self.gameLength = gameLength
         self.mapId = mapId
@@ -1141,15 +1167,15 @@ class FeaturedGameInfo(RiotApiResponse):
 
 
 class Observer(RiotApiResponse):
-    def __init__(self, encryptionKey: str):
-        super().__init__()
+    def __init__(self, encryptionKey: str, **kwargs):
+        super().__init__(**kwargs)
         self.encryptionKey = encryptionKey
 
 
 class Participant(RiotApiResponse):
     def __init__(self, teamId: int, spell1Id: int, spell2Id: int, championId: int, profileIconId: int,
-                 summonerName: str, bot: bool):
-        super().__init__()
+                 summonerName: str, bot: bool, **kwargs):
+        super().__init__(**kwargs)
         self.teamId = teamId
         self.spell1Id = spell1Id
         self.spell2Id = spell2Id
@@ -1162,8 +1188,8 @@ class Participant(RiotApiResponse):
 # SUMMONER-V4
 class SummonerDTO(RiotApiResponse):
     def __init__(self, accountId: str, profileIconId: int, revisionDate: int, name: str, id: str, puuid: str,
-                 summonerLevel: int):
-        super().__init__()
+                 summonerLevel: int, **kwargs):
+        super().__init__(**kwargs)
         self.accountId = accountId
         self.profileIconId = profileIconId
         self.revisionDate = revisionDate

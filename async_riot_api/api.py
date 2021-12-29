@@ -24,6 +24,9 @@ class LoLAPI:
         else:
             print(summoner.to_string(sep = '|   '))
     
+    Another important thing to know is that some methods are simple functions, not coroutines,
+    meaning that they only work with offline data without making any request. They are usually static methods.
+    
     :param api_key: your API token
     :param region: region you want to use
     :param routing_value: one among 'AMERICA', 'ASIA', 'ESPORTS', 'EUROPE' or 'SEA. Needed for some API calls, depends on region
@@ -35,11 +38,14 @@ class LoLAPI:
     """
     
     __BASE_URL: str = 'https://{}.api.riotgames.com{}'
+    
     __VERSION: int = loads(requests.get('https://ddragon.leagueoflegends.com/api/versions.json').text)[0]
-    __QUEUES: Dict[int, str] = {
-        queue['queueId']: queue['description'].replace('games', '').strip() if queue['description'] else 'Custom'
-        for queue in loads(requests.get('https://static.developer.riotgames.com/docs/lol/queues.json').text)
+    
+    __QUEUES: Dict[int, types.QueueDD] = {
+        queue['queueId']: types.QueueDD(**queue) for queue in
+        loads(requests.get('https://static.developer.riotgames.com/docs/lol/queues.json').text)
     }
+    __QUEUES[-1] = types.QueueDD(-1, 'Unknown', 'Unknown', 'Wrong queue_id')
     
     # correct_champion_name -> ShortChampionDD
     __CHAMPS: Dict[str, types.ShortChampionDD] = {name: types.ShortChampionDD(**value) for name, value in loads(
@@ -50,6 +56,7 @@ class LoLAPI:
     __CHAMP_ID_TO_CORRECT_NAME: Dict[int, str] = {
         info.int_id: info.id for info in __CHAMPS.values()
     }
+    
     __LANGUAGES: List[str] = loads(requests.get('https://ddragon.leagueoflegends.com/cdn/languages.json').text)
     __LANG_SHORT_TO_LONG: Dict[str, str] = {
         'it': 'it_IT',
@@ -804,10 +811,32 @@ class LoLAPI:
         return loads(await self.__make_request(f'/lol/summoner/v4/summoners/me'))'''
     
     # UTILS
-    async def get_nth_match(self, puuid: str, n: int = 0) -> types.MatchDto:
+    async def get_nth_match(self, puuid: str, n: int = 0) -> Optional[types.MatchDto]:
+        """
+        Directly get information about a summoner's match given its index, starting from 0.
+        This is just a shorcut for :meth:`~async_riot_api.LoLAPI.get_matches` and :meth:`~async_riot_api.LoLAPI.get_match`.
+        
+        :param puuid: puuid of the summoner
+        :param n: index of the match, starting from 0. Default 0
+        :return: information about the match, if exists. None otherwise
+        :type puuid: str
+        :type n: int
+        :rtype: Optional[:class:`~types.MatchDto`]
+        """
+        
         return await self.get_match((await self.get_matches(puuid, start = n, count = 1) or [None])[0])
     
-    async def get_last_match(self, puuid: str) -> types.MatchDto:
+    async def get_last_match(self, puuid: str) -> Optional[types.MatchDto]:
+        """
+        Directly get information about a summoner's last match.
+        This is just a shortcut for :meth:`~async_riot_api.LoLAPI.get_nth_match`.
+        
+        :param puuid:
+        :return: same as :meth:`~async_riot_api.LoLAPI.get_nth_match`
+        :type puuid: str
+        :rtype: Optional[:class:`~types.MatchDto`]
+        """
+        
         return await self.get_nth_match(puuid)
     
     async def __get_league_type(self, summoner_id: str, league_type: str) -> Union[
@@ -817,17 +846,47 @@ class LoLAPI:
         if type(leagues) != set:
             return leagues
         for league in leagues:
-            if league_type in league.queueType.lower():
+            if league_type == league.queueType.lower():
                 return league
     
     async def get_solo_league(self, summoner_id: str) -> Optional[types.LeagueEntryDTO]:
-        return await self.__get_league_type(summoner_id, 'SOLO')
+        """
+        Directly get information about a summoner's SOLO rank.
+        
+        :param summoner_id:
+        :return: given summoner's SOLO rank, if exists.
+        :type summoner_id: str
+        :rtype: :class:`~types.LeagueEntryDTO`
+        """
+        
+        return await self.__get_league_type(summoner_id, 'RANKED_SOLO_5x5')
     
     async def get_flex_league(self, summoner_id: str) -> Optional[types.LeagueEntryDTO]:
-        return await self.__get_league_type(summoner_id, 'FLEX')
+        """
+        Same as :meth:`~async_riot_api.LoLAPI.get_solo_league`, but FLEX.
+        
+        :param summoner_id:
+        :return: given summoner's FLEX rank, if exists.
+        :type summoner_id: str
+        :rtype: :class:`~types.LeagueEntryDTO`
+        """
+        
+        return await self.__get_league_type(summoner_id, 'RANKED_FLEX_SR')
     
     @staticmethod
     def get_profile_icon_url(icon_id: int) -> str:
+        """
+        Returns the url to the given icon.
+        
+        ``IMPORTANT``: no check will be made about data existence, meaning that passing a wrong icon_id will simply result
+        in a broken url. No error will be raised.
+        
+        :param icon_id:
+        :return: url to the icon
+        :type icon_id: int
+        :rtype: str
+        """
+        
         return f'https://ddragon.leagueoflegends.com/cdn/{LoLAPI.__VERSION}/img/profileicon/{icon_id}.png'
     
     @staticmethod
@@ -841,7 +900,7 @@ class LoLAPI:
         :param champ_id: champion ID, corresponding to ``ShortChampionDD.int_id``
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
         :param type: type of image. Can be 'splash' or 'loading'. Default 'splash'
-        :return: url for the image
+        :return: url to the image
         :type champ_id: int
         :type skin: int
         :type type: str
@@ -851,6 +910,16 @@ class LoLAPI:
     
     @staticmethod
     def compute_champion_from_similar_name(search_name: str) -> types.ShortChampionDD:
+        """
+        Computes the most similar champion to the given name. The similarity computation
+        is made using `this library <https://pypi.org/project/fuzzywuzzy/>`_.
+        
+        :param search_name: name to search
+        :return: champion whose name is the most similar to the given one
+        :type search_name: str
+        :rtype: :class:`~types.ShortChampionDD`
+        """
+        
         max_ratio = 0
         matched_champ = None
         for champ_name in LoLAPI.__CHAMPS:
@@ -862,6 +931,16 @@ class LoLAPI:
     
     @staticmethod
     def compute_language(search_language: str) -> str:
+        """
+        Computes the most similar language available from `this list <https://ddragon.leagueoflegends.com/cdn/languages.json>`_.
+        The similarity computation is made using `this library <https://pypi.org/project/fuzzywuzzy/>`_.
+        
+        :param search_language: language to search
+        :return: most similar language
+        :type search_language: str
+        :rtype: str
+        """
+        
         max_ratio = 0
         matched_lang = None
         for language in LoLAPI.__LANGUAGES:
@@ -873,26 +952,69 @@ class LoLAPI:
     
     @staticmethod
     def get_version() -> int:
+        """
+        Get the latest version of the game.
+        
+        :return: latest version of the game
+        :rtype: int
+        """
+        
         return LoLAPI.__VERSION
     
     @staticmethod
-    def get_queue_description(queue_id: int) -> str:
-        return LoLAPI.__QUEUES.get(queue_id, LoLAPI.__QUEUES[0])
+    def get_queue(queue_id: int) -> types.QueueDD:
+        """
+        Get information about the given queue.
+        
+        :param queue_id: queue ID
+        :return: information about the queue
+        :type queue_id: int
+        :rtype: :class:`~types.QueueDD`
+        """
+        
+        return LoLAPI.__QUEUES.get(queue_id, LoLAPI.__QUEUES[-1])
+    
+    # @staticmethod
+    # def compute_queue_from_similar_description(search_queue: str):
+    #     pass
     
     @staticmethod
-    def get_champion_from_correct_name(name: str) -> types.ShortChampionDD:
+    def get_champion_from_correct_name(name: str) -> Optional[types.ShortChampionDD]:
+        """
+        Get the short champion given its correct name. Useful instead of :meth:`~async_riot_api.LoLAPI.compute_champion_from_similar_name`
+        if you already know the correct name.
+        
+        :param name: correct name of the champion, case-sensitive
+        :return: short information about the champion
+        :type name: str
+        :rtype: Optional[:class:`~types.ShortChampionDD`]
+        """
+        
         return LoLAPI.__CHAMPS.get(name)
     
     @staticmethod
-    def get_champion_from_id(champ_id: int) -> types.ShortChampionDD:
+    def get_champion_from_id(champ_id: int) -> Optional[types.ShortChampionDD]:
         """
-        :param champ_id: integer champion ID
+        Get the short champion given its ID. You can get a champ ID from many API calls.
+        
+        :param champ_id: integer champion ID, same as ``ShortChampionDD.int_id``
         :return: short champion
+        :type champ_id: int
+        :rtype: Optional[:class:`~types.ShortChampionDD`]
         """
+        
         return LoLAPI.get_champion_from_correct_name(LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(champ_id))
     
     @staticmethod
     async def get_full_champion_from_correct_name(name: str, language: str = 'en') -> types.ChampionDD:
+        """
+        Get the complete information about a champion given its correct name. Usually
+        
+        :param name: correct name of a champion, same as ``ShortChampionDD.id``
+        :param language:
+        :return:
+        """
+        
         if language not in LoLAPI.__LANGUAGES:
             language = LoLAPI.compute_language(language)
         response = (await LoLAPI.__make_request(
