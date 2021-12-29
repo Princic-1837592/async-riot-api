@@ -25,12 +25,12 @@ class LoLAPI:
             print(summoner.to_string(sep = '|   '))
     
     :param api_key: your API token
-    :type api_key: str
     :param region: region you want to use
-    :type region: str
     :param routing_value: one among 'AMERICA', 'ASIA', 'ESPORTS', 'EUROPE' or 'SEA. Needed for some API calls, depends on region
-    :type routing_value: str
     :param debug: if you want the LoLAPI object to print the url of every request made
+    :type api_key: str
+    :type region: str
+    :type routing_value: str
     :type debug: bool
     """
     
@@ -101,8 +101,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByPuuid>`_.
         
         :param puuid: puuid of the account
-        :type puuid: str
         :return: account data
+        :type puuid: str
         :rtype: :class:`~types.AccountDto`
         """
         
@@ -126,10 +126,10 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#account-v1/GET_getByRiotId>`_.
         
         :param game_name: in-game name of the account
-        :type game_name: str
         :param tag_line: no documentation found
-        :type tag_line: str
         :return: account data
+        :type game_name: str
+        :type tag_line: str
         :rtype: :class:`~types.AccountDto`
         """
         
@@ -153,10 +153,10 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#account-v1/GET_getActiveShard>`_.
         
         :param game: one of 'val' or 'lol'
-        :type game: str
         :param puuid: puuid of the account
-        :type puuid: str
         :return: shard data
+        :type game: str
+        :type puuid: str
         :rtype: :class:`~types.ActiveShardDto`
         """
         
@@ -181,8 +181,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries>`_.
         
         :param summoner_id: summoner ID
-        :type summoner_id: str
         :return: list of masteries for the given summoner
+        :type summoner_id: str
         :rtype: List[:class:`~types.ChampionMasteryDto`]
         """
         
@@ -200,10 +200,10 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery>`_.
         
         :param summoner_id:
-        :type summoner_id: str
         :param champion_id:
-        :type champion_id: int
         :return: champion mastery for given summoner and champion
+        :type summoner_id: str
+        :type champion_id: int
         :rtype: :class:`~types.ChampionMasteryDto`
         """
         
@@ -220,8 +220,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore>`_.
         
         :param summoner_id:
-        :type summoner_id: str
         :return: mastery score of the given summoner
+        :type summoner_id: str
         :rtype: int
         """
         
@@ -255,8 +255,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getPlayersBySummoner>`_.
         
         :param summoner_id:
-        :type summoner_id: str
         :return: list of players
+        :type summoner_id: str
         :rtype: List[:class:`~types.PlayerDto`]
         """
         
@@ -272,8 +272,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTeamById>`_.
         
         :param team_id:
-        :type team_id: str
         :return: information about the team
+        :type team_id: str
         :rtype: :class:`~types.TeamDto`
         """
         
@@ -304,8 +304,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentByTeam>`_.
         
         :param team_id:
-        :type team_id: str
         :return: information about tournament
+        :type team_id: str
         :rtype: :class:`~types.TournamentDto`
         """
         
@@ -321,8 +321,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#clash-v1/GET_getTournamentById>`_.
         
         :param tournament_id:
-        :type tournament_id: int
         :return: information about the tournament
+        :type tournament_id: int
         :rtype: :class:`~types.TournamentDto`
         """
         
@@ -342,14 +342,14 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries>`_..
         
         :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_TFT', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
-        :type queue: str
         :param tier: rank tier, between 'IRON' and 'CHALLENGER'
-        :type tier: str
         :param division: rank division, between 'I' and 'IV' (in roman numbers)
-        :type division: str
         :param page: page to select, starting from 1. Limited based on the number of entries, it's suggested to iter until results are found
-        :type page: int
         :return: set of summoners for the requested queue, tier and division
+        :type queue: str
+        :type tier: str
+        :type division: str
+        :type page: int
         :rtype: Set[:class:`~types.LeagueEntryDTO`]
         """
         
@@ -368,8 +368,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#league-v4/GET_getChallengerLeague>`_.
         
         :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
-        :type queue: str
         :return: set of challengers
+        :type queue: str
         :rtype: :class:`~types.LeagueListDTO`
         """
         
@@ -385,8 +385,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner>`_.
         
         :param summoner_id:
-        :type summoner_id: str
         :return: information about their ranks in every queue
+        :type summoner_id: str
         :rtype: Set[:class:`~types.LeagueEntryDTO`]
         """
         
@@ -406,14 +406,14 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntries>`_.
         
         :param queue: one among 'RANKED_SOLO_5x5', 'RANKED_FLEX_SR' or 'RANKED_FLEX_TT'
-        :type queue: str
         :param tier: rank tier, between 'IRON' and 'DIAMOND'
-        :type tier: str
         :param division: rank division, between 'I' and 'IV' (in roman numbers)
-        :type division: str
         :param page: page to select, starting from 1. Limited based on the number of entries, it's suggested to iter until results are found
-        :type page: int
         :return: set of summoners for the requested queue, tier and division
+        :type queue: str
+        :type tier: str
+        :type division: str
+        :type page: int
         :rtype: Set[:class:`~types.LeagueEntryDTO`]
         """
         
@@ -443,8 +443,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#league-v4/GET_getLeagueById>`_.
         
         :param league_id:
-        :type league_id: str
         :return: list of summoners currently in the given league
+        :type league_id: str
         :rtype: :class:`~types.LeagueListDTO`
         """
         
@@ -473,7 +473,7 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lol-status-v3/GET_getShardData>`_.
         
         :return: the current server status
-        :rtype: :class:`types.ShardStatus`
+        :rtype: :class:`~types.ShardStatus`
         """
         
         return await LoLAPI.__create_object(
@@ -489,7 +489,7 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lol-status-v4/GET_getPlatformData>`_.
         
         :return: the current LoL server status
-        :rtype: :class:`types.PlatformDataDto`
+        :rtype: :class:`~types.PlatformDataDto`
         """
         
         return await LoLAPI.__create_object(
@@ -505,8 +505,8 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatchIdsByPUUID>`_.
         
         :param puuid:
-        :type puuid: str
         :return: list of match IDs sorted by recent
+        :type puuid: str
         :rtype: List[str]
         """
         
@@ -526,9 +526,9 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lor-match-v1/GET_getMatch>`_.
         
         :param match_id:
+        :return: useful information about the given LoR match and its players
         :type match_id: str
-        :return: useful information about the given LoR match
-        :rtype: :class:`types.LorMatchDto`
+        :rtype: :class:`~types.LorMatchDto`
         """
         
         return await LoLAPI.__create_object(
@@ -549,7 +549,7 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards>`_.
         
         :return: players in LoR Master tier
-        :rtype: :class:`types.LorLeaderboardDto`
+        :rtype: :class:`~types.LorLeaderboardDto`
         """
         
         return await LoLAPI.__create_object(
@@ -570,7 +570,7 @@ class LoLAPI:
         `Original method <https://developer.riotgames.com/apis#lor-status-v1/GET_getPlatformData>`_.
         
         :return: the current LoR server status
-        :rtype: :class:`types.PlatformDataDto`
+        :rtype: :class:`~types.PlatformDataDto`
         """
         
         return await LoLAPI.__create_object(
@@ -588,15 +588,29 @@ class LoLAPI:
                           queue: Optional[int] = None, type: Optional[str] = None, start: int = 0,
                           count: int = 20) -> List[str]:
         """
-        /lol/match/v5/matches/by-puuid/{puuid}/ids
+        Get the list of LoL matches played by the given summoner. Often used before :meth:`~async_riot_api.LoLAPI.get_match`.
+        Allows filtering by start/end time, queue and type of match.
+        
+        `Original method <https://developer.riotgames.com/apis#match-v5/GET_getMatchIdsByPUUID>`_.
+        
         :param puuid:
-        :param queue:
-        :param startTime:
-        :param endTime:
-        :param type:
-        :param start:
-        :param count:
-        :return:
+        :param startTime: epoch timestamp in seconds. The matchlist started storing timestamps on June 16th, 2021.
+            Any matches played before June 16th, 2021 won't be included in the results if the startTime filter is set
+        :param endTime: epoch timestamp in seconds
+        :param queue: queue filter for the list. Queue IDs can be found `here <https://static.developer.riotgames.com/docs/lol/queues.json>`_.
+            Queue and type parameters are mutually inclusive
+        :param type: one among 'ranked', 'normal', 'tourney' or 'tutorial'
+        :param start: start index, starting from 0. Default 0
+        :param count: number of match IDs to return. Must be in the range 0-100. Default 20
+        :return: list of match IDs sorted by recent
+        :type puuid: str
+        :type startTime: int
+        :type endTime: int
+        :type queue: int
+        :type type: str
+        :type start: int
+        :type count: int
+        :rtype: List[str]
         """
         
         url = f'/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}'
@@ -619,9 +633,14 @@ class LoLAPI:
     
     async def get_match(self, match_id: str) -> types.MatchDto:
         """
-        /lol/match/v5/matches/{matchId}
+        Get information about the given LoL match. Often used after :meth:`~async_riot_api.LoLAPI.get_matches`.
+        
+        `Original method <https://developer.riotgames.com/apis#match-v5/GET_getMatch>`_.
+        
         :param match_id:
-        :return:
+        :return: useful information about the given LoR match and its players
+        :type match_id: str
+        :rtype: :class:`~types.MatchDto`
         """
         
         return await LoLAPI.__create_object(
@@ -638,6 +657,20 @@ class LoLAPI:
         )
     
     async def get_timeline(self, match_id: str) -> types.MatchTimelineDto:
+        """
+        Get additional information about a match, ordered by time, organized in "frames".
+        This kind of response contains information about items bought, skills unlocked, summoners position and more.
+        Unfortunately on the original doc this method is not documented at all. Not even the return type is documented except for its name,
+        so anything about this method comes from experimentation.
+        
+        `Original method <https://developer.riotgames.com/apis#match-v5/GET_getTimeline>`_.
+        
+        :param match_id:
+        :return: more data about the match, ordered by time
+        :type match_id: str
+        :rtype: :class:`~types.MatchTimelineDto`
+        """
+        
         return await LoLAPI.__create_object(
             await LoLAPI.__make_request(
                 'GET',
@@ -654,9 +687,16 @@ class LoLAPI:
     # SPECTATOR-V4
     async def get_active_games(self, summoner_id: str) -> types.CurrentGameInfo:
         """
-        /lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}
+        Get information about the active game played by the given summoner.
+        
+        ``IMPORTANT`` This method returns a :class:`~types.RiotApiError` if the summoner is not in a game.
+        
+        `Original method <https://developer.riotgames.com/apis#spectator-v4/GET_getCurrentGameInfoBySummoner>`_.
+        
         :param summoner_id:
-        :return:
+        :return: information about the current match and its players, if exists
+        :type summoner_id: str
+        :rtype: :class:`~types.CurrentGameInfo`
         """
         
         return await LoLAPI.__create_object(
@@ -666,8 +706,14 @@ class LoLAPI:
     
     async def get_featured_games(self) -> types.FeaturedGames:
         """
-        /lol/spectator/v4/featured-games
-        :return:
+        Get a list of games that are currently being played. It is not clear to me what are the criteria for a game
+        to be listed here, and I haven't found anything on the documentation. Anyway, this method could be useful
+        for those who need to harvest a large amount of data from real matches.
+        
+        `Original method <https://developer.riotgames.com/apis#spectator-v4/GET_getFeaturedGames>`_.
+        
+        :return: games that are currently being played
+        :rtype: :class:`~types.FeaturedGames`
         """
         
         return await LoLAPI.__create_object(
@@ -678,9 +724,15 @@ class LoLAPI:
     # SUMMONER-V4
     async def get_summoner_by_account_id(self, account_id: str) -> types.SummonerDTO:
         """
-        /lol/summoner/v4/summoners/by-account/{encryptedAccountId}
+        Get information about a summoner by its account ID. You can get an account ID using
+        `this method <:meth:`~async_riot_api.LoLAPI.get_summoner_by_name`>`_.
+        
+        `Original method <https://developer.riotgames.com/apis#summoner-v4/GET_getByAccountId>`_.
+        
         :param account_id:
-        :return:
+        :return: basic information about the summoner
+        :type account_id: str
+        :rtype:
         """
         
         return await LoLAPI.__create_object(
@@ -690,9 +742,16 @@ class LoLAPI:
     
     async def get_summoner_by_name(self, summoner_name: str) -> types.SummonerDTO:
         """
-        /lol/summoner/v4/summoners/by-name/{summonerName}
-        :param summoner_name:
-        :return:
+        Probably the first method you will need to call at the beginning of any program involving Riot Games API.
+        This method allows accessing basic information about a summoner given its name. With this information you will
+        be able to use any other method requiring a summoner ID, account ID or puuid.
+        
+        `Original method <https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName>`_.
+        
+        :param summoner_name: name of the summoner you are looking for
+        :return: basic information about the summoner
+        :type summoner_name: str
+        :rtype: :class:`~types.SummonerDTO`
         """
         
         return await LoLAPI.__create_object(
@@ -733,17 +792,8 @@ class LoLAPI:
         return loads(await self.__make_request(f'/lol/summoner/v4/summoners/me'))'''
     
     # UTILS
-    '''async def get_match_number(self, account_id: str) -> int:
-        return (await self.get_matches(account_id, 101))['totalGames']
-
-    async def get_nth_match(self, account_id: str, n: int = 0) -> Dict[str, Any]:
-        return await self.get_match((await self.get_matches(account_id, n))['matches'][0]['gameId'])'''
-    
     async def get_nth_match(self, puuid: str, n: int = 0) -> types.MatchDto:
         return await self.get_match((await self.get_matches(puuid, start = n, count = 1) or [None])[0])
-    
-    '''async def get_first_match(self, account_id: str) -> Dict[str, Any]:
-        return await self.get_nth_match(account_id, await self.get_match_number(account_id) - 1)'''
     
     async def get_last_match(self, puuid: str) -> types.MatchDto:
         return await self.get_nth_match(puuid)
@@ -773,16 +823,16 @@ class LoLAPI:
         """
         Returns the url to the image for the given champion, skin and type.
         
-        IMPORTANT: no check will be made about data existence, meaning that passing a wrong champ_id, skin or type will simply result
+        ``IMPORTANT``: no check will be made about data existence, meaning that passing a wrong champ_id, skin or type will simply result
         in a broken url. No error will be raised.
         
         :param champ_id: champion ID, corresponding to ``ShortChampionDD.int_id``
-        :type champ_id: int
         :param skin: number of the requested skin, starting from 0 for the default skin. Default 0
-        :type skin: int
         :param type: type of image. Can be 'splash' or 'loading'. Default 'splash'
-        :type type: str
         :return: url for the image
+        :type champ_id: int
+        :type skin: int
+        :type type: str
         :rtype: str
         """
         return f'https://ddragon.leagueoflegends.com/cdn/img/champion/{type}/{LoLAPI.__CHAMP_ID_TO_CORRECT_NAME.get(int(champ_id))}_{skin}.jpg'
