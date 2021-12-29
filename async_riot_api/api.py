@@ -725,14 +725,14 @@ class LoLAPI:
     async def get_summoner_by_account_id(self, account_id: str) -> types.SummonerDTO:
         """
         Get information about a summoner by its account ID. You can get an account ID using
-        `this method <:meth:`~async_riot_api.LoLAPI.get_summoner_by_name`>`_.
+        :meth:`~async_riot_api.LoLAPI.get_summoner_by_name`.
         
         `Original method <https://developer.riotgames.com/apis#summoner-v4/GET_getByAccountId>`_.
         
         :param account_id:
         :return: basic information about the summoner
         :type account_id: str
-        :rtype:
+        :rtype: :class:`~types.SummonerDTO`
         """
         
         return await LoLAPI.__create_object(
@@ -761,9 +761,15 @@ class LoLAPI:
     
     async def get_summoner_by_puuid(self, puuid: str) -> types.SummonerDTO:
         """
-        /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID}
+        Get information about a summoner by its puuid. You can get a puuid using
+        :meth:`~async_riot_api.LoLAPI.get_summoner_by_name`.
+        
+        `Original method <https://developer.riotgames.com/apis#summoner-v4/GET_getByPUUID>`_.
+        
         :param puuid:
-        :return:
+        :return: basic information about the summoner
+        :type puuid: str
+        :rtype: :class:`~types.SummonerDTO`
         """
         
         return await LoLAPI.__create_object(
@@ -773,9 +779,15 @@ class LoLAPI:
     
     async def get_summoner_by_summoner_id(self, summoner_id: str) -> types.SummonerDTO:
         """
-        /lol/summoner/v4/summoners/{encryptedSummonerId}
+        Get information about a summoner by its summoner ID. You can get a summoner ID using
+        :meth:`~async_riot_api.LoLAPI.get_summoner_by_name`.
+        
+        `Original method <https://developer.riotgames.com/apis#summoner-v4/GET_getByPUUID>`_.
+        
         :param summoner_id:
-        :return:
+        :return: basic information about the summoner
+        :type summoner_id: str
+        :rtype: :class:`~types.SummonerDTO`
         """
         
         return await LoLAPI.__create_object(
