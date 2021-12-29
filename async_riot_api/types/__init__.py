@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 # SUPER-CLASS
 class RiotApiResponse:
     """
-    Superclass of all API responses
+    Superclass of all API responses.
     
     :param success: wether the response was successful. Useful to spot errors
     :type success: bool
@@ -17,7 +17,7 @@ class RiotApiResponse:
     
     def to_string(self, *, level: int = 0, sep = '    ', nl: str = '\n'):
         """
-        Returns a prettified string representation of the object
+        Returns a prettified string representation of the object.
         
         :param level: starting level of indentation. Default: 0
         :param sep: character sequence for indentation. Default: 4 spaces
@@ -62,11 +62,11 @@ class RiotApiResponse:
 # ERROR
 class RiotApiError(RiotApiResponse):
     """
-    General API response error
+    General API response error.
     
     :param message: message contained in the response. Default 'Bad Request'
-    :type message: str
     :param status_code: error code from the response. Default 400
+    :type message: str
     :type status_code: int
     """
     
@@ -81,26 +81,26 @@ class ShortChampionDD(RiotApiResponse):
     Short information about a champion
     
     :param blurb: short description
-    :type blurb: str
     :param id: name of the champion without non-alphabetic characters
-    :type id: str
     :param image: information about the images of a champion
-    :type image: :class:`ChampionImageDD`
     :param info: schematic information about the champion
-    :type info: :class:`ChampionInfoDD`
     :param key: unique key for a champion. For some reason this is originally a string, despite representing an integer
-    :type key: str
     :param name: complete name of the champion
-    :type name: str
     :param partype: type of energy used by the champion. Usually 'Mana' but could be 'Energy' or others
-    :type partype: str
     :param stats: statistics of the champion
-    :type stats: :class:`ChampionStatsDD`
     :param tags: tags about the champion, like 'Fighter', 'Mage'
-    :type tags: List[str]
     :param title: short title of the champion
-    :type title: str
     :param version: valid version for this object
+    :type blurb: str
+    :type id: str
+    :type image: :class:`ChampionImageDD`
+    :type info: :class:`ChampionInfoDD`
+    :type key: str
+    :type name: str
+    :type partype: str
+    :type stats: :class:`ChampionStatsDD`
+    :type tags: List[str]
+    :type title: str
     :type version: str
     
     Other attributes:
@@ -128,23 +128,23 @@ class ShortChampionDD(RiotApiResponse):
 
 class ChampionDD(ShortChampionDD):
     """
-    Complete information about a champion
+    Complete information about a champion.
     
-    Look at :class:`ShortChampionDD` for the complete list of parameters
+    Look at :class:`ShortChampionDD` for the complete list of parameters.
     
     :param skins: list of skins
-    :type skins: List[:class:`ChampionSkinsDD`]
     :param lore: lore of the champion
-    :type lore: str
     :param allytips: list of tips for summoners playing the champion
-    :type allytips: List[str]
     :param enemytips: list of tipo for summoners playing against the champion
-    :type enemytips: List[str]
     :param spells: list of information about this champion's spells
-    :type spells: List[:class:`ChampionSpellsDD`]
     :param passive: information about this champion's passive ability
-    :type passive: :class:`ChampionPassiveDD`
     :param recommended: no idea of what this is, haven't found any champion with a non-empty list of ``recommended``
+    :type skins: List[:class:`ChampionSkinsDD`]
+    :type lore: str
+    :type allytips: List[str]
+    :type enemytips: List[str]
+    :type spells: List[:class:`ChampionSpellsDD`]
+    :type passive: :class:`ChampionPassiveDD`
     :type recommended: List[unknown]
     """
     
@@ -176,23 +176,23 @@ class ChampionDD(ShortChampionDD):
 
 class ChampionImageDD(RiotApiResponse):
     """
-    Details about the champion's image
+    Details about the champion's image.
     
     :param full: file name of the image. The complete url can be obtained from
         :meth:`~async_riot_api.LoLAPI.get_champion_image_url_from_id`
-    :type full: str
     :param sprite: don't really know what this is, some kind of image with more images inside.
         You can find more info `here <https://developer.riotgames.com/docs/lol>`_
-    :type sprite: str
     :param group: sub-category in which you can find the sprite of this image, more info in the same link as above
-    :type group: str
     :param x: x coordinate of the sprite in which you can find this image
-    :type x: int
     :param y: y coordinate of the sprite in which you can find this image
-    :type y: int
     :param w: width of the image in the sprite, starting from coordinates (x, y)
-    :type w: int
     :param h: height of the image in the sprite, starting from coordinates (x, y)
+    :type full: str
+    :type sprite: str
+    :type group: str
+    :type x: int
+    :type y: int
+    :type w: int
     :type h: int
     """
     
@@ -209,11 +209,17 @@ class ChampionImageDD(RiotApiResponse):
 
 class ChampionSkinsDD(RiotApiResponse):
     """
+    Details about the champion's skins.
     
-    :param id:
-    :param num:
-    :param name:
-    :param chromas:
+    :param id: unique id of the skin. It is made by concatenating the champ ID and the skin number (with 3 digits).
+        Example: champion "Veigar" (ID 45), skin "Final Boss" (num 8), result: "45008"
+    :param num: number of the skin
+    :param name: name of the skin, including the champion name (if present)
+    :param chromas: if the skin has got chromas
+    :type id: str
+    :type num: int
+    :type name: str
+    :type chromas: bool
     """
     
     def __init__(self, id: str, num: int, name: str, chromas: bool, **kwargs):
@@ -225,6 +231,19 @@ class ChampionSkinsDD(RiotApiResponse):
 
 
 class ChampionInfoDD(RiotApiResponse):
+    """
+    Schematic information about the champion. You can find this information in the LoL client by going to a champion's page.
+    
+    :param attack: the higher this value, the higher the champion deals damage using auto attacks
+    :param defense: the higher this value, the higher the champion is tanky
+    :param magic: the higher this value, the higher the champion deals damage using spells
+    :param difficulty: the higher this value, the more difficult is to master this champion
+    :type attack: int
+    :type defense: int
+    :type magic: int
+    :type difficulty: int
+    """
+    
     def __init__(self, attack: int, defense: int, magic: int, difficulty: int, **kwargs):
         super().__init__(**kwargs)
         self.attack = attack
@@ -234,6 +253,55 @@ class ChampionInfoDD(RiotApiResponse):
 
 
 class ChampionStatsDD(RiotApiResponse):
+    """
+    Detailed information about a champion's base stats and how they increase when leveling up.
+    Here i list their meanings and their unit of measurement where:
+        - `u` stands for "unit"
+        - `l` stands for "level"
+        - `s` stands for "second"
+    
+    :param hp: base health points (u)
+    :param hpperlevel: extra HP per level (u/l)
+    :param mp: base mana points (u)
+    :param mpperlevel: extra mana points per level (u/l)
+    :param movespeed: base movement speed (u/s)
+    :param armor: base armor (u)
+    :param armorperlevel: extra armor per level (u/l)
+    :param spellblock: base magic resistance (u)
+    :param spellblockperlevel: extra magic resistance per level (u/l)
+    :param attackrange: base attack range (u)
+    :param hpregen: base HP regeneration (u/5s)
+    :param hpregenperlevel: extra HP regeneration per level ((u/5s)/l)
+    :param mpregen: base mana regeneration (u/5s)
+    :param mpregenperlevel: extra mana regeneration per level ((u/5s)/l)
+    :param crit: base critical chance (u)
+    :param critperlevel: extra critical chance per level (u/l)
+    :param attackdamage: base attack damage (u)
+    :param attackdamageperlevel: extra attack damage per level (u/l)
+    :param attackspeedperlevel: extra attack speed per level ((u/s)/l)
+    :param attackspeed: base attack speed (u/s)
+    :type hp: int
+    :type hpperlevel: int
+    :type mp: int
+    :type mpperlevel: int
+    :type movespeed: int
+    :type armor: int
+    :type armorperlevel: float
+    :type spellblock: int
+    :type spellblockperlevel: float
+    :type attackrange: int
+    :type hpregen: int
+    :type hpregenperlevel: int
+    :type mpregen: int
+    :type mpregenperlevel: int
+    :type crit: int
+    :type critperlevel: int
+    :type attackdamage: int
+    :type attackdamageperlevel: int
+    :type attackspeedperlevel: float
+    :type attackspeed: float
+    """
+    
     def __init__(self, hp: int, hpperlevel: int, mp: int, mpperlevel: int, movespeed: int, armor: int,
                  armorperlevel: float, spellblock: int, spellblockperlevel: float, attackrange: int, hpregen: int,
                  hpregenperlevel: int, mpregen: int, mpregenperlevel: int, crit: int, critperlevel: int,
