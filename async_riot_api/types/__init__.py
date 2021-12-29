@@ -452,6 +452,19 @@ class ChampionPassiveImageDD(RiotApiResponse):
 
 
 class QueueDD(RiotApiResponse):
+    """
+    Representation of a queue. Not actually returned by any API call, but still usefu sometimes.
+    
+    :param queueId: queue ID
+    :param map: map name
+    :param description: description of the queue
+    :param notes: notes about the queue, like 'deprecated since version x'
+    :type queueId: int
+    :type map: str
+    :type description: str
+    :type notes: str
+    """
+    
     def __init__(self, queueId: int, map: str, description: str, notes: str, **kwargs):
         super().__init__(**kwargs)
         self.queueId = queueId
@@ -462,6 +475,17 @@ class QueueDD(RiotApiResponse):
 
 # ACCOUNT-V1
 class AccountDto(RiotApiResponse):
+    """
+    Basic information about a Riot Games account.
+    
+    :param puuid: puuid of the account. Useful for many API methods
+    :param gameName: in-game name of the account
+    :param tagLine: tag line of the account
+    :type puuid: str
+    :type gameName: str
+    :type tagLine: str
+    """
+    
     def __init__(self, puuid: str, gameName: str, tagLine: str, **kwargs):
         super().__init__(**kwargs)
         self.puuid = puuid
@@ -470,6 +494,17 @@ class AccountDto(RiotApiResponse):
 
 
 class ActiveShardDto(RiotApiResponse):
+    """
+    No idea about what this is. Probably the server in which the summoner plays.
+    
+    :param puuid: puuid
+    :param game: game. Can be 'val' or 'lor'
+    :param activeShard: probably the server in which the summoner plays
+    :type puuid: str
+    :type game: str
+    :type activeShard: str
+    """
+    
     def __init__(self, puuid: str, game: str, activeShard: str, **kwargs):
         super().__init__(**kwargs)
         self.puuid = puuid
@@ -479,6 +514,29 @@ class ActiveShardDto(RiotApiResponse):
 
 # CHAMPION-MASTERY-V4
 class ChampionMasteryDto(RiotApiResponse):
+    """
+    Information about a summoner's mastery levels, tokens and chests.
+    
+    :param championPointsUntilNextLevel: points needed for the mastery to upgrade to the next level
+    :param chestGranted: if the player already got the weekly chest on the champion
+    :param championId: champion ID
+    :param lastPlayTime: laste time the player played the champion
+    :param championLevel: mastery level for the champion. Min 1, max 7
+    :param summonerId: summoner ID
+    :param championPoints: mastery points for the champion
+    :param championPointsSinceLastLevel: points earned since last mastery level
+    :param tokensEarned: tokens earned to upgrade the mastery level to level 6 (0 - 2) or 7 (0 - 3). Min 0, max 3
+    :type championPointsUntilNextLevel: int
+    :type chestGranted: bool
+    :type championId: int
+    :type lastPlayTime: int
+    :type championLevel: int
+    :type summonerId: str
+    :type championPoints: int
+    :type championPointsSinceLastLevel: int
+    :type tokensEarned: int
+    """
+    
     def __init__(self, championPointsUntilNextLevel: int, chestGranted: bool, championId: int, lastPlayTime: int,
                  championLevel: int, summonerId: str, championPoints: int, championPointsSinceLastLevel: int,
                  tokensEarned: int, **kwargs):
@@ -496,6 +554,17 @@ class ChampionMasteryDto(RiotApiResponse):
 
 # CHAMPION-V3
 class ChampionInfo(RiotApiResponse):
+    """
+    Information about the current champion rotation and the new players' champion rotation.
+    
+    :param maxNewPlayerLevel: max level for a player to have the beginner rotation available
+    :param freeChampionIdsForNewPlayers: list of champion IDs free-to-play for beginners
+    :param freeChampionIds: list of champion IDs free-to-play for non-beginner players
+    :type maxNewPlayerLevel: int
+    :type freeChampionIdsForNewPlayers: List[int]
+    :type freeChampionIds: List[int[
+    """
+    
     def __init__(self, maxNewPlayerLevel: int, freeChampionIdsForNewPlayers: List[int], freeChampionIds: List[int],
                  **kwargs):
         super().__init__(**kwargs)
@@ -506,6 +575,19 @@ class ChampionInfo(RiotApiResponse):
 
 # CLASH-V1
 class PlayerDto(RiotApiResponse):
+    """
+    Data about a player in a clash.
+    
+    :param summonerId: summoner ID
+    :param teamId: team ID
+    :param position: position selected by the summoner
+    :param role: role selected by the summoner
+    :type summonerId: str
+    :type teamId: str
+    :type position: str
+    :type role: str
+    """
+    
     def __init__(self, summonerId: str, teamId: str, position: str, role: str, **kwargs):
         super().__init__(**kwargs)
         self.summonerId = summonerId
@@ -515,6 +597,21 @@ class PlayerDto(RiotApiResponse):
 
 
 class TournamentDto(RiotApiResponse):
+    """
+    Information about a tournament.
+    
+    :param id: tournament ID
+    :param themeId: no idea, not originally documented
+    :param nameKey: no idea, not originally documented
+    :param nameKeySecondary: no idea, not originally documented
+    :param schedule: schedule for this tournament
+    :type id: int
+    :type themeId: int
+    :type nameKey: str
+    :type nameKeySecondary: str
+    :type schedule: :class:`TournamentPhaseDto`
+    """
+    
     def __init__(self, id: int, themeId: int, nameKey: str, nameKeySecondary: str, schedule: List[dict], **kwargs):
         super().__init__(**kwargs)
         self.id = id
@@ -525,6 +622,19 @@ class TournamentDto(RiotApiResponse):
 
 
 class TournamentPhaseDto(RiotApiResponse):
+    """
+    Schedule information for a tournament.
+    
+    :param id: ID
+    :param registrationTime: timestamp in ms
+    :param startTime: timestamp in ms
+    :param cancelled: wether the tournament is cancelled
+    :type id: int
+    :type registrationTime: int
+    :type startTime: int
+    :type cancelled: bool
+    """
+    
     def __init__(self, id: int, registrationTime: int, startTime: int, cancelled: bool, **kwargs):
         super().__init__(**kwargs)
         self.id = id
@@ -535,6 +645,21 @@ class TournamentPhaseDto(RiotApiResponse):
 
 # LEAGUE-V4
 class LeagueListDTO(RiotApiResponse):
+    """
+    List of information about leagues for summoners in the same queue.
+    
+    :param tier: rank tier, like 'CHALLENGER' or 'MASTER'
+    :param leagueId: league ID
+    :param queue: queue type, like 'RANKED_SOLO_5x5'
+    :param name: list name
+    :param entries: entries for this list
+    :type tier: str
+    :type leagueId: str
+    :type queue: str
+    :type name: str
+    :type entries: List[:class:`LeagueItemDTO`]
+    """
+    
     def __init__(self, tier: str, leagueId: str, queue: str, name: str, entries: List[dict], **kwargs):
         super().__init__(**kwargs)
         self.tier = tier
@@ -545,6 +670,34 @@ class LeagueListDTO(RiotApiResponse):
 
 
 class LeagueItemDTO(RiotApiResponse):
+    """
+    Simplified information about a summoner's rank in a queue, returned by methods for apex tiers.
+    Some information are missing since they are included in the `higher level object <:class:`LeagueListDTO`>`_ containing this object.
+    
+    :param summonerId: summoner ID
+    :param summonerName: summoner name
+    :param leaguePoints: aka LP
+    :param rank: rank of the summoner, between 'I' and 'IV' (in roman numbers)
+    :param wins: wins for this season
+    :param losses: losses for this season
+    :param veteran: wether the summoner is a veteran in this rank
+    :param inactive: wether the summoner is inactive
+    :param freshBlood: wether the summoner is a new entry in this rank
+    :param hotStreak: wether the summoner is on a hot streak (winning streak)
+    :param miniSeries: information about a summoner miniseries, if they are about to get promoted from a tier to the next
+    :type summonerId: str
+    :type summonerName: str
+    :type leaguePoints: int
+    :type rank: str
+    :type wins: int
+    :type losses: int
+    :type veteran: bool
+    :type inactive: bool
+    :type freshBlood: bool
+    :type hotStreak: bool
+    :type miniSeries: Optional[:class:`MiniSeriesDTO`]
+    """
+    
     def __init__(self, summonerId: str, summonerName: str, leaguePoints: int, rank: str, wins: int, losses: int,
                  veteran: bool, inactive: bool, freshBlood: bool, hotStreak: bool, miniSeries: Optional[dict] = None,
                  **kwargs):
@@ -562,35 +715,71 @@ class LeagueItemDTO(RiotApiResponse):
         self.miniSeries: Optional[MiniSeriesDTO] = None if miniSeries is None else MiniSeriesDTO(**miniSeries)
 
 
-class LeagueEntryDTO(RiotApiResponse):
+class LeagueEntryDTO(LeagueItemDTO):
+    """
+    Complete information about summoner's league.
+
+    Look at :class:`LeagueItemDTO` for the complete list of parameters.
+    
+    :param queueType: queue for this entry, like 'RANKED_SOLO_5x5'
+    :param leagueId: league ID
+    :param tier: tier for this entry, like 'SILVER' or 'DIAMOND'
+    :type queueType: str
+    :type leagueId: Optional[str]
+    :type tier: Optional[str]
+    
+    Other attributes:
+        short (``Optional[str]`):
+            short representation of rank and tier. For example 'DIAMOND III' becomes 'D3'.
+            Exception is made for 'GRANDMASTER x' which becomes 'GMx' due to the ambuguity between 'GOLD' and 'GRANDMASTER'
+    """
+    
     def __init__(self, summonerId: str, summonerName: str, queueType: str, leaguePoints: int, wins: int, losses: int,
                  hotStreak: bool, veteran: bool, freshBlood: bool, inactive: bool, miniSeries: Optional[dict] = None,
                  leagueId: Optional[str] = None, tier: Optional[str] = None, rank: Optional[str] = None, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(
+            summonerId = summonerId,
+            summonerName = summonerName,
+            leaguePoints = leaguePoints,
+            rank = rank,
+            wins = wins,
+            losses = losses,
+            veteran = veteran,
+            inactive = inactive,
+            freshBlood = freshBlood,
+            hotStreak = hotStreak,
+            miniSeries = miniSeries,
+            **kwargs
+        )
         self.leagueId = leagueId
-        self.summonerId = summonerId
-        self.summonerName = summonerName
         self.queueType = queueType
         self.tier = tier
-        self.rank = rank
-        self.leaguePoints = leaguePoints
-        self.wins = wins
-        self.losses = losses
-        self.hotStreak = hotStreak
-        self.veteran = veteran
-        self.freshBlood = freshBlood
-        self.inactive = inactive
-        self.miniSeries: Optional[MiniSeriesDTO] = None if miniSeries is None else MiniSeriesDTO(**miniSeries)
-        self.short: str = LeagueEntryDTO.__get_short(self.tier, self.rank)
+        self.short: Optional[str] = LeagueEntryDTO.__get_short(self.tier, self.rank)
     
     @staticmethod
-    def __get_short(tier: str, rank: str) -> str:
+    def __get_short(tier: str, rank: str) -> Optional[str]:
         if not (tier and rank):
-            return '??'
+            return None
         return f"{('GM' if tier.startswith('GR') else tier[0])}{'4' if rank.lower() == 'iv' else len(rank)}"
 
 
 class MiniSeriesDTO(RiotApiResponse):
+    """
+    Information about a summoner's miniseries, if they are about to get promoted to the next tier.
+    Miniseries consist in 5 matches in which you have to win 3 times to get promoted.
+    Before season 11, miniseries were also required when passing from a rank to another,
+    with 3 matches instead of 5 and 2 victories instead of 3.
+    
+    :param losses: losses in this miniseries
+    :param progress: string representing wins and losses. for example 'WWLNN' means two wins, one loss and two matches remained
+    :param target: number of wins to reach
+    :param wins: wins in this miniseries
+    :type losses: int
+    :type progress: str
+    :type target: int
+    :type wins: int
+    """
+    
     def __init__(self, losses: int, progress: str, target: int, wins: int, **kwargs):
         super().__init__(**kwargs)
         self.losses = losses
@@ -821,6 +1010,219 @@ class ParticipantDto(RiotApiResponse):
                  turretKills: int, turretsLost: int, unrealKills: int, visionScore: int,
                  visionWardsBoughtInGame: int, wardsKilled: int, wardsPlaced: int, win: bool,
                  inhibitorTakedowns: int = 0, nexusTakedowns: int = 0, turretTakedowns: int = 0, **kwargs):
+        """
+        
+        :param assists: 
+        :param baronKills: 
+        :param bountyLevel: 
+        :param champExperience: 
+        :param champLevel: 
+        :param championId: 
+        :param championName: 
+        :param championTransform: 
+        :param consumablesPurchased: 
+        :param damageDealtToBuildings: 
+        :param damageDealtToObjectives: 
+        :param damageDealtToTurrets: 
+        :param damageSelfMitigated: 
+        :param deaths: 
+        :param detectorWardsPlaced: 
+        :param doubleKills: 
+        :param dragonKills: 
+        :param firstBloodAssist: 
+        :param firstBloodKill: 
+        :param firstTowerAssist: 
+        :param firstTowerKill: 
+        :param gameEndedInEarlySurrender: 
+        :param gameEndedInSurrender: 
+        :param goldEarned: 
+        :param goldSpent: 
+        :param individualPosition: 
+        :param inhibitorKills: 
+        :param inhibitorsLost: 
+        :param item0: 
+        :param item1: 
+        :param item2: 
+        :param item3: 
+        :param item4: 
+        :param item5: 
+        :param item6: 
+        :param itemsPurchased: 
+        :param killingSprees: 
+        :param kills: 
+        :param lane: 
+        :param largestCriticalStrike: 
+        :param largestKillingSpree: 
+        :param largestMultiKill: 
+        :param longestTimeSpentLiving: 
+        :param magicDamageDealt: 
+        :param magicDamageDealtToChampions: 
+        :param magicDamageTaken: 
+        :param neutralMinionsKilled: 
+        :param nexusKills: 
+        :param nexusLost: 
+        :param objectivesStolen: 
+        :param objectivesStolenAssists: 
+        :param participantId: 
+        :param pentaKills: 
+        :param perks: 
+        :param physicalDamageDealt: 
+        :param physicalDamageDealtToChampions: 
+        :param physicalDamageTaken: 
+        :param profileIcon: 
+        :param puuid: 
+        :param quadraKills: 
+        :param riotIdName: 
+        :param riotIdTagline: 
+        :param role: 
+        :param sightWardsBoughtInGame: 
+        :param spell1Casts: 
+        :param spell2Casts: 
+        :param spell3Casts: 
+        :param spell4Casts: 
+        :param summoner1Casts: 
+        :param summoner1Id: 
+        :param summoner2Casts: 
+        :param summoner2Id: 
+        :param summonerId: 
+        :param summonerLevel: 
+        :param summonerName: 
+        :param teamEarlySurrendered: 
+        :param teamId: 
+        :param teamPosition: 
+        :param timeCCingOthers: 
+        :param timePlayed: 
+        :param totalDamageDealt: 
+        :param totalDamageDealtToChampions: 
+        :param totalDamageShieldedOnTeammates: 
+        :param totalDamageTaken: 
+        :param totalHeal: 
+        :param totalHealsOnTeammates: 
+        :param totalMinionsKilled: 
+        :param totalTimeCCDealt: 
+        :param totalTimeSpentDead: 
+        :param totalUnitsHealed: 
+        :param tripleKills: 
+        :param trueDamageDealt: 
+        :param trueDamageDealtToChampions: 
+        :param trueDamageTaken: 
+        :param turretKills: 
+        :param turretsLost: 
+        :param unrealKills: 
+        :param visionScore: 
+        :param visionWardsBoughtInGame: 
+        :param wardsKilled: 
+        :param wardsPlaced: 
+        :param win: 
+        :param inhibitorTakedowns: 
+        :param nexusTakedowns: 
+        :param turretTakedowns: 
+        :type assists: 
+        :type baronKills: 
+        :type bountyLevel: 
+        :type champExperience: 
+        :type champLevel: 
+        :type championId: 
+        :type championName: 
+        :type championTransform: 
+        :type consumablesPurchased: 
+        :type damageDealtToBuildings: 
+        :type damageDealtToObjectives: 
+        :type damageDealtToTurrets: 
+        :type damageSelfMitigated: 
+        :type deaths: 
+        :type detectorWardsPlaced: 
+        :type doubleKills: 
+        :type dragonKills: 
+        :type firstBloodAssist: 
+        :type firstBloodKill: 
+        :type firstTowerAssist: 
+        :type firstTowerKill: 
+        :type gameEndedInEarlySurrender: 
+        :type gameEndedInSurrender: 
+        :type goldEarned: 
+        :type goldSpent: 
+        :type individualPosition: 
+        :type inhibitorKills: 
+        :type inhibitorsLost: 
+        :type item0: 
+        :type item1: 
+        :type item2: 
+        :type item3: 
+        :type item4: 
+        :type item5: 
+        :type item6: 
+        :type itemsPurchased: 
+        :type killingSprees: 
+        :type kills: 
+        :type lane: 
+        :type largestCriticalStrike: 
+        :type largestKillingSpree: 
+        :type largestMultiKill: 
+        :type longestTimeSpentLiving: 
+        :type magicDamageDealt: 
+        :type magicDamageDealtToChampions: 
+        :type magicDamageTaken: 
+        :type neutralMinionsKilled: 
+        :type nexusKills: 
+        :type nexusLost: 
+        :type objectivesStolen: 
+        :type objectivesStolenAssists: 
+        :type participantId: 
+        :type pentaKills: 
+        :type perks: 
+        :type physicalDamageDealt: 
+        :type physicalDamageDealtToChampions: 
+        :type physicalDamageTaken: 
+        :type profileIcon: 
+        :type puuid: 
+        :type quadraKills: 
+        :type riotIdName: 
+        :type riotIdTagline: 
+        :type role: 
+        :type sightWardsBoughtInGame: 
+        :type spell1Casts: 
+        :type spell2Casts: 
+        :type spell3Casts: 
+        :type spell4Casts: 
+        :type summoner1Casts: 
+        :type summoner1Id: 
+        :type summoner2Casts: 
+        :type summoner2Id: 
+        :type summonerId: 
+        :type summonerLevel: 
+        :type summonerName: 
+        :type teamEarlySurrendered: 
+        :type teamId: 
+        :type teamPosition: 
+        :type timeCCingOthers: 
+        :type timePlayed: 
+        :type totalDamageDealt: 
+        :type totalDamageDealtToChampions: 
+        :type totalDamageShieldedOnTeammates: 
+        :type totalDamageTaken: 
+        :type totalHeal: 
+        :type totalHealsOnTeammates: 
+        :type totalMinionsKilled: 
+        :type totalTimeCCDealt: 
+        :type totalTimeSpentDead: 
+        :type totalUnitsHealed: 
+        :type tripleKills: 
+        :type trueDamageDealt: 
+        :type trueDamageDealtToChampions: 
+        :type trueDamageTaken: 
+        :type turretKills: 
+        :type turretsLost: 
+        :type unrealKills: 
+        :type visionScore: 
+        :type visionWardsBoughtInGame: 
+        :type wardsKilled: 
+        :type wardsPlaced: 
+        :type win: 
+        :type inhibitorTakedowns: 
+        :type nexusTakedowns: 
+        :type turretTakedowns: 
+        """
         super().__init__(**kwargs)
         self.assists = assists
         self.baronKills = baronKills

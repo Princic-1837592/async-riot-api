@@ -159,7 +159,7 @@ class LoLAPI:
         
         `Original method <https://developer.riotgames.com/apis#account-v1/GET_getActiveShard>`_.
         
-        :param game: one of 'val' or 'lol'
+        :param game: one of 'val' or 'lor'
         :param puuid: puuid of the account
         :return: shard data
         :type game: str
