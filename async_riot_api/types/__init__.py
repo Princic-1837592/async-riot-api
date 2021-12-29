@@ -256,30 +256,30 @@ class ChampionStatsDD(RiotApiResponse):
     """
     Detailed information about a champion's base stats and how they increase when leveling up.
     Here i list their meanings and their unit of measurement where:
-        - `u` stands for "unit"
-        - `l` stands for "level"
-        - `s` stands for "second"
+        - ``u`` stands for "unit"
+        - ``l`` stands for "level"
+        - ``s`` stands for "second"
     
-    :param hp: base health points (u)
-    :param hpperlevel: extra HP per level (u/l)
-    :param mp: base mana points (u)
-    :param mpperlevel: extra mana points per level (u/l)
-    :param movespeed: base movement speed (u/s)
-    :param armor: base armor (u)
-    :param armorperlevel: extra armor per level (u/l)
-    :param spellblock: base magic resistance (u)
-    :param spellblockperlevel: extra magic resistance per level (u/l)
-    :param attackrange: base attack range (u)
-    :param hpregen: base HP regeneration (u/5s)
-    :param hpregenperlevel: extra HP regeneration per level ((u/5s)/l)
-    :param mpregen: base mana regeneration (u/5s)
-    :param mpregenperlevel: extra mana regeneration per level ((u/5s)/l)
-    :param crit: base critical chance (u)
-    :param critperlevel: extra critical chance per level (u/l)
-    :param attackdamage: base attack damage (u)
-    :param attackdamageperlevel: extra attack damage per level (u/l)
-    :param attackspeedperlevel: extra attack speed per level ((u/s)/l)
-    :param attackspeed: base attack speed (u/s)
+    :param hp: base health points (``u``)
+    :param hpperlevel: extra HP per level (``u / l``)
+    :param mp: base mana points (``u``)
+    :param mpperlevel: extra mana points per level (``u / l``)
+    :param movespeed: base movement speed (``u / s``)
+    :param armor: base armor (``u``)
+    :param armorperlevel: extra armor per level (``u / l``)
+    :param spellblock: base magic resistance (``u``)
+    :param spellblockperlevel: extra magic resistance per level (``u / l``)
+    :param attackrange: base attack range (``u``)
+    :param hpregen: base HP regeneration (``u / 5s``)
+    :param hpregenperlevel: extra HP regeneration per level (``u / 5s / l``)
+    :param mpregen: base mana regeneration (``u / 5s``)
+    :param mpregenperlevel: extra mana regeneration per level (``u / 5s / l``)
+    :param crit: base critical chance (``u``)
+    :param critperlevel: extra critical chance per level (``u / l``)
+    :param attackdamage: base attack damage (``u``)
+    :param attackdamageperlevel: extra attack damage per level (``u / l``)
+    :param attackspeedperlevel: extra attack speed per level (``u / s / l``)
+    :param attackspeed: base attack speed (``u / s``)
     :type hp: int
     :type hpperlevel: int
     :type mp: int
@@ -335,6 +335,49 @@ class ChampionSpellsDD(RiotApiResponse):
                  cooldown: List[int], cooldownBurn: str, cost: List[int], costBurn: str, datavalues: dict,
                  effect: List[Any], effectBurn: List[Any], vars: List[Any], costType: str, maxammo: str,
                  range: List[int], rangeBurn: str, image: dict, resource: str, **kwargs):
+        """
+        
+        :param id: 
+        :param name: 
+        :param description: 
+        :param tooltip: 
+        :param leveltip: 
+        :param maxrank: 
+        :param cooldown: 
+        :param cooldownBurn: 
+        :param cost: 
+        :param costBurn: 
+        :param datavalues: 
+        :param effect: 
+        :param effectBurn: 
+        :param vars: 
+        :param costType: 
+        :param maxammo: 
+        :param range: 
+        :param rangeBurn: 
+        :param image: 
+        :param resource: 
+        :type id: 
+        :type name: 
+        :type description: 
+        :type tooltip: 
+        :type leveltip: 
+        :type maxrank: 
+        :type cooldown: 
+        :type cooldownBurn: 
+        :type cost: 
+        :type costBurn: 
+        :type datavalues: 
+        :type effect: 
+        :type effectBurn: 
+        :type vars: 
+        :type costType: 
+        :type maxammo: 
+        :type range: 
+        :type rangeBurn: 
+        :type image: 
+        :type resource: 
+        """
         super().__init__(**kwargs)
         self.id = id
         self.name = name
