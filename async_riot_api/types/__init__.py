@@ -672,7 +672,7 @@ class LeagueListDTO(RiotApiResponse):
 class LeagueItemDTO(RiotApiResponse):
     """
     Simplified information about a summoner's rank in a queue, returned by methods for apex tiers.
-    Some information are missing since they are included in the `higher level object <:class:`~async_riot_api.types.LeagueListDTO`>`_ containing this object.
+    Some information are missing since they are included in the `higher level object <async_riot_api.types.LeagueListDTO>`_ containing this object.
     
     :param summonerId: summoner ID
     :param summonerName: summoner name
