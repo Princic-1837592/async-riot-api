@@ -672,7 +672,7 @@ class LeagueListDTO(RiotApiResponse):
 class LeagueItemDTO(RiotApiResponse):
     """
     Simplified information about a summoner's rank in a queue, returned by methods for apex tiers.
-    Some information are missing since they are included in the :ref:`higher level object <async_riot_api.types.LeagueListDTO>` containing this object.
+    Some information are missing since they are included in the higher level object ``LeagueListDTO`` containing this object.
     
     :param summonerId: summoner ID
     :param summonerName: summoner name
@@ -891,6 +891,15 @@ class UpdateDto(RiotApiResponse):
 
 # LOR-MATCH-V1
 class LorMatchDto(RiotApiResponse):
+    """
+    Base object containing inforamtion about a LoR match.
+    
+    :param metadata: to access the ordered list of participants
+    :param info: more detailed infor about players
+    :type metadata: :class:`LorMetadataDto`
+    :type info: :class:`LorInfoDto`
+    """
+    
     def __init__(self, metadata: dict, info: dict, **kwargs):
         super().__init__(**kwargs)
         self.metadata: LorMetadataDto = LorMetadataDto(**metadata)
@@ -899,6 +908,15 @@ class LorMatchDto(RiotApiResponse):
 
 class LorMetadataDto(RiotApiResponse):
     def __init__(self, data_version: str, match_id: str, participants: List[str], **kwargs):
+        """
+        
+        :param data_version: version of the game
+        :param match_id: match ID
+        :param participants: ordered list of participants, represented by their puuid
+        :type data_version: str
+        :type match_id: str
+        :type participants: List[str]
+        """
         super().__init__(**kwargs)
         self.data_version = data_version
         self.match_id = match_id
@@ -906,6 +924,23 @@ class LorMetadataDto(RiotApiResponse):
 
 
 class LorInfoDto(RiotApiResponse):
+    """
+    Detailed information about a LoR match. Contains information about mode, duration and players.
+    
+    :param game_mode: game mode
+    :param game_type: game type
+    :param game_start_time_utc: game start time utc
+    :param game_version: game version
+    :param players: list of detailed information about the players involved in the match, in the same order as :class:`LorMetadataDto`
+    :param total_turn_count: total turn count
+    :type game_mode: str
+    :type game_type: str
+    :type game_start_time_utc: str
+    :type game_version: str
+    :type players: List[:class:`LorPlayerDto`]
+    :type total_turn_count: int
+    """
+    
     def __init__(self, game_mode: str, game_type: str, game_start_time_utc: str, game_version: str, players: List[dict],
                  total_turn_count: int, **kwargs):
         super().__init__(**kwargs)
