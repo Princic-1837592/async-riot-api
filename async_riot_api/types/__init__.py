@@ -729,7 +729,7 @@ class LeagueEntryDTO(LeagueItemDTO):
     :type tier: Optional[str]
     
     Other attributes:
-        short (``Optional[str]`):
+        short (``Optional[str]``):
             short representation of rank and tier. For example 'DIAMOND III' becomes 'D3'.
             Exception is made for 'GRANDMASTER x' which becomes 'GMx' due to the ambuguity between 'GOLD' and 'GRANDMASTER'
     """
@@ -907,16 +907,18 @@ class LorMatchDto(RiotApiResponse):
 
 
 class LorMetadataDto(RiotApiResponse):
+    """
+    Metadata about the match.
+    
+    :param data_version: version of the game
+    :param match_id: match ID
+    :param participants: ordered list of participants, represented by their puuid
+    :type data_version: str
+    :type match_id: str
+    :type participants: List[str]
+    """
+    
     def __init__(self, data_version: str, match_id: str, participants: List[str], **kwargs):
-        """
-        
-        :param data_version: version of the game
-        :param match_id: match ID
-        :param participants: ordered list of participants, represented by their puuid
-        :type data_version: str
-        :type match_id: str
-        :type participants: List[str]
-        """
         super().__init__(**kwargs)
         self.data_version = data_version
         self.match_id = match_id
@@ -953,6 +955,23 @@ class LorInfoDto(RiotApiResponse):
 
 
 class LorPlayerDto(RiotApiResponse):
+    """
+    Detailed information about a player in a LoR match.
+    
+    :param puuid: puuid
+    :param deck_id: deck ID
+    :param deck_code: deck code
+    :param factions: factions persent in the deck
+    :param game_outcome: result of the game
+    :param order_of_play: order if play in the game
+    :type puuid: str
+    :type deck_id: str
+    :type deck_code: str
+    :type factions: List[str]
+    :type game_outcome: str
+    :type order_of_play: int
+    """
+    
     def __init__(self, puuid: str, deck_id: str, deck_code: str, factions: List[str], game_outcome: str,
                  order_of_play: int, **kwargs):
         super().__init__(**kwargs)
@@ -966,12 +985,29 @@ class LorPlayerDto(RiotApiResponse):
 
 # LOR-RANKED-V1
 class LorLeaderboardDto(RiotApiResponse):
+    """
+    List of players in LoR Master tier.
+    :param players: list of players
+    :type players: List[:class:`LorLeaderboardPlayerDto`]
+    """
+    
     def __init__(self, players: List[dict], **kwargs):
         super().__init__(**kwargs)
         self.players: List[LorLeaderboardPlayerDto] = list(map(lambda x: LorLeaderboardPlayerDto(**x), players))
 
 
 class LorLeaderboardPlayerDto(RiotApiResponse):
+    """
+    Information about a player in LoR Master tier.
+    
+    :param name: summoner's name
+    :param rank: summoner's rank
+    :param lp: summoner's LP
+    :type name: str
+    :type rank: int
+    :type lp: int
+    """
+    
     def __init__(self, name: str, rank: int, lp: int, **kwargs):
         super().__init__(**kwargs)
         self.name = name
