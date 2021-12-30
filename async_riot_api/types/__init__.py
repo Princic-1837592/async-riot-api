@@ -525,7 +525,7 @@ class ChampionMasteryDto(RiotApiResponse):
     :param summonerId: summoner ID
     :param championPoints: mastery points for the champion
     :param championPointsSinceLastLevel: points earned since last mastery level
-    :param tokensEarned: tokens earned to upgrade the mastery level to level 6 (0 - 2) or 7 (0 - 3). Min 0, max 3
+    :param tokensEarned: tokens earned to upgrade the mastery level to level 6 (0-2) or 7 (0-3)
     :type championPointsUntilNextLevel: int
     :type chestGranted: bool
     :type championId: int
@@ -672,7 +672,7 @@ class LeagueListDTO(RiotApiResponse):
 class LeagueItemDTO(RiotApiResponse):
     """
     Simplified information about a summoner's rank in a queue, returned by methods for apex tiers.
-    Some information are missing since they are included in the `higher level object <:class:`LeagueListDTO`>`_ containing this object.
+    Some information are missing since they are included in the `higher level object <:class:`~async_riot_api.types.LeagueListDTO`>`_ containing this object.
     
     :param summonerId: summoner ID
     :param summonerName: summoner name

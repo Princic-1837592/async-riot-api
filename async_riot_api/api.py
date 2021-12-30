@@ -802,14 +802,6 @@ class LoLAPI:
             types.SummonerDTO
         )
     
-    '''async def get_me(self) -> Dict[str, Any]:
-        """
-        /lol/summoner/v4/summoners/me
-        :return:
-        """
-
-        return loads(await self.__make_request(f'/lol/summoner/v4/summoners/me'))'''
-    
     # UTILS
     async def get_nth_match(self, puuid: str, n: int = 0) -> Optional[types.MatchDto]:
         """
