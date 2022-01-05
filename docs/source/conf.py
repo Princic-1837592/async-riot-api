@@ -9,7 +9,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.abspath("../.."))
 
 project = 'async-riot-api'
-copyright = f'2017-{datetime.now().year}, Princic-1837592'
+copyright = f'2021-{datetime.now().year}, Princic-1837592'
 author = 'Princic-1837592'
 
 release = '0.1'
