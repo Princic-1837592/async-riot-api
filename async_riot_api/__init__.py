@@ -1,1 +1,1 @@
-from .api import LoLAPI
+from .api import LoLAPI, types
