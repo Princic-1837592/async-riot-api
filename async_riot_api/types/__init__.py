@@ -1,4 +1,5 @@
-from typing import Any, List, Optional
+import json
+from typing import Any, List, Optional, Tuple
 
 
 # SUPER-CLASS
@@ -57,6 +58,9 @@ class RiotApiResponse:
     
     def __bool__(self):
         return self.__success
+    
+    def toJSON(self, indent: Optional[int] = None, separators: Optional[Tuple[str, str]] = None):
+        return json.dumps(self, default = lambda o: o.__dict__, indent = indent, separators = separators)
 
 
 # ERROR
