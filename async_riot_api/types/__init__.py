@@ -2,6 +2,15 @@ import json
 from typing import Any, List, Optional, Tuple
 
 
+def _to_seconds(timestamp: int) -> int:
+    """
+    Converts a milliseconds timestamp in a seconds timestamp. Supports until 31/12/2999 23:59:59
+    :param timestamp: seconds or milliseconds timestamp to convert
+    :return: seconds timestamp
+    """
+    return timestamp // 1000 if timestamp >= 32503680000 else timestamp
+
+
 # SUPER-CLASS
 class RiotApiResponse:
     """
@@ -525,6 +534,7 @@ class ChampionMasteryDto(RiotApiResponse):
     :param chestGranted: if the player already got the weekly chest on the champion
     :param championId: champion ID
     :param lastPlayTime: laste time the player played the champion
+    :param lastPlayTimeSeconds: laste time the player played the champion (granted to be in seconds)
     :param championLevel: mastery level for the champion. Min 1, max 7
     :param summonerId: summoner ID
     :param championPoints: mastery points for the champion
@@ -534,6 +544,7 @@ class ChampionMasteryDto(RiotApiResponse):
     :type chestGranted: bool
     :type championId: int
     :type lastPlayTime: int
+    :type lastPlayTimeSeconds: int
     :type championLevel: int
     :type summonerId: str
     :type championPoints: int
@@ -549,6 +560,7 @@ class ChampionMasteryDto(RiotApiResponse):
         self.chestGranted = chestGranted
         self.championId = championId
         self.lastPlayTime = lastPlayTime
+        self.lastPlayTimeSeconds = _to_seconds(lastPlayTime)
         self.championLevel = championLevel
         self.summonerId = summonerId
         self.championPoints = championPoints
@@ -631,11 +643,15 @@ class TournamentPhaseDto(RiotApiResponse):
     
     :param id: ID
     :param registrationTime: timestamp in ms
+    :param registrationTimeSeconds: timestamp in seconds
     :param startTime: timestamp in ms
+    :param startTimeSeconds: timestamp in seconds
     :param cancelled: wether the tournament is cancelled
     :type id: int
     :type registrationTime: int
+    :type registrationTimeSeconds: int
     :type startTime: int
+    :type startTimeSeconds: int
     :type cancelled: bool
     """
     
@@ -643,7 +659,9 @@ class TournamentPhaseDto(RiotApiResponse):
         super().__init__(**kwargs)
         self.id = id
         self.registrationTime = registrationTime
+        self.registrationTimeSeconds = _to_seconds(registrationTime)
         self.startTime = startTime
+        self.startTimeSeconds = _to_seconds(startTime)
         self.cancelled = cancelled
 
 
@@ -1673,8 +1691,6 @@ class MTLParticipantDto(RiotApiResponse):
 
 
 # SPECTATOR-V4
-
-
 class CurrentGameInfo(RiotApiResponse):
     def __init__(self, gameId: int, gameType: str, gameStartTime: int, mapId: int, gameLength: int, platformId: str,
                  gameMode: str, bannedChampions: List[dict], gameQueueConfigId: int, observers: dict,
@@ -1683,6 +1699,7 @@ class CurrentGameInfo(RiotApiResponse):
         self.gameId = gameId
         self.gameType = gameType
         self.gameStartTime = gameStartTime
+        self.gameStartTimeSeconds = _to_seconds(gameStartTime)
         self.mapId = mapId
         self.gameLength = gameLength
         self.platformId = platformId
@@ -1754,6 +1771,7 @@ class FeaturedGameInfo(RiotApiResponse):
         self.gameId = gameId
         self.gameQueueConfigId = gameQueueConfigId
         self.gameStartTime = gameStartTime
+        self.gameStartTimeSeconds = _to_seconds(gameStartTime)
         self.participants: List[Participant] = list(map(lambda x: Participant(**x), participants))
         self.platformId = platformId
         self.observers: Observer = Observer(**observers)
