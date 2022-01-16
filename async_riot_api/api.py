@@ -272,7 +272,7 @@ class LoLAPI:
             types.PlayerDto
         )
     
-    async def get_clash_team_by_id(self, team_id: str) -> types.TeamDto:
+    async def get_clash_team_by_id(self, team_id: str) -> types.ClashTeamDto:
         """
         Get a clash team by its ID.
         
@@ -286,7 +286,7 @@ class LoLAPI:
         
         return await LoLAPI.__create_object(
             await self.__make_api_request(f'/lol/clash/v1/teams/{team_id}'),
-            types.TeamDto
+            types.ClashTeamDto
         )
     
     async def get_clash_tournaments(self) -> List[types.TournamentDto]:

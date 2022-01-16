@@ -612,6 +612,20 @@ class PlayerDto(RiotApiResponse):
         self.role = role
 
 
+class ClashTeamDto(RiotApiResponse):
+    def __init__(self, id: str, tournamentId: int, name: str, iconId: int, tier: int, captain: str, abbreviation: str,
+                 players: List[dict], **kwargs):
+        super().__init__()
+        self.id = id
+        self.tournamentId = tournamentId
+        self.name = name
+        self.iconId = iconId
+        self.tier = tier
+        self.captain = captain
+        self.abbreviation = abbreviation
+        self.players: List[PlayerDto] = list(map(lambda x: PlayerDto(**x), players))
+
+
 class TournamentDto(RiotApiResponse):
     """
     Information about a tournament.
